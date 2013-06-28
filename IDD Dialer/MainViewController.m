@@ -267,7 +267,7 @@
     NSString* number = [self getClipboardText];
     if(number){
         [inputTF setText:[self getClipboardText]];
-        [self processWithoutChecking];
+        [self processWithoutChecking:NO];
     }
 }
 
@@ -277,15 +277,17 @@
         [self showAlertViewWithTitle:@"Uh oh!" msg:@"Enter something plz >_<"];
         [resultLabel setText:@"Enter again plz~"];
     }else{
-        [self processWithoutChecking];
+        [self processWithoutChecking:NO];
     }
 }
 
--(void)processWithoutChecking{
+-(void)processWithoutChecking:(BOOL)isFromCell{
     NSString* prefix;
     NSString* countryCode;
     NSString* normalNumber = [self getNormalNumber:inputTF.text];
+    if(!isFromCell){
     [self setDefaultSelections:normalNumber];
+    }
     [inputTF setText:normalNumber];
     prefix = [[[IDDTV cellForRowAtIndexPath:[IDDTV indexPathForSelectedRow]]textLabel]text];
     
@@ -304,7 +306,7 @@
     if([[inputTF text] isEqualToString:@""]){
         
     }else{
-        [self processWithoutChecking];
+        [self processWithoutChecking:YES];
     }
 }
 
