@@ -16,8 +16,8 @@
 		3D592E61177DFD9800C82F74 /* Default.png in Resources */ = {isa = PBXBuildFile; fileRef = 3D592E60177DFD9800C82F74 /* Default.png */; };
 		3D592E63177DFD9800C82F74 /* Default@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 3D592E62177DFD9800C82F74 /* Default@2x.png */; };
 		3D592E65177DFD9800C82F74 /* Default-568h@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 3D592E64177DFD9800C82F74 /* Default-568h@2x.png */; };
-		3D592E68177DFD9800C82F74 /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3D592E67177DFD9800C82F74 /* ViewController.m */; };
-		3D592E6B177DFD9900C82F74 /* ViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 3D592E69177DFD9900C82F74 /* ViewController.xib */; };
+		3D592E68177DFD9800C82F74 /* MainViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3D592E67177DFD9800C82F74 /* MainViewController.m */; };
+		3D592E6B177DFD9900C82F74 /* MainViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 3D592E69177DFD9900C82F74 /* MainViewController.xib */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -34,9 +34,9 @@
 		3D592E60177DFD9800C82F74 /* Default.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Default.png; sourceTree = "<group>"; };
 		3D592E62177DFD9800C82F74 /* Default@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default@2x.png"; sourceTree = "<group>"; };
 		3D592E64177DFD9800C82F74 /* Default-568h@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default-568h@2x.png"; sourceTree = "<group>"; };
-		3D592E66177DFD9800C82F74 /* ViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ViewController.h; sourceTree = "<group>"; };
-		3D592E67177DFD9800C82F74 /* ViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ViewController.m; sourceTree = "<group>"; };
-		3D592E6A177DFD9900C82F74 /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = en.lproj/ViewController.xib; sourceTree = "<group>"; };
+		3D592E66177DFD9800C82F74 /* MainViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MainViewController.h; sourceTree = "<group>"; };
+		3D592E67177DFD9800C82F74 /* MainViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MainViewController.m; sourceTree = "<group>"; };
+		3D592E6A177DFD9900C82F74 /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = en.lproj/MainViewController.xib; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -85,9 +85,9 @@
 			children = (
 				3D592E5D177DFD9800C82F74 /* AppDelegate.h */,
 				3D592E5E177DFD9800C82F74 /* AppDelegate.m */,
-				3D592E66177DFD9800C82F74 /* ViewController.h */,
-				3D592E67177DFD9800C82F74 /* ViewController.m */,
-				3D592E69177DFD9900C82F74 /* ViewController.xib */,
+				3D592E66177DFD9800C82F74 /* MainViewController.h */,
+				3D592E67177DFD9800C82F74 /* MainViewController.m */,
+				3D592E69177DFD9900C82F74 /* MainViewController.xib */,
 				3D592E55177DFD9800C82F74 /* Supporting Files */,
 			);
 			path = "IDD Dialer";
@@ -162,7 +162,7 @@
 				3D592E61177DFD9800C82F74 /* Default.png in Resources */,
 				3D592E63177DFD9800C82F74 /* Default@2x.png in Resources */,
 				3D592E65177DFD9800C82F74 /* Default-568h@2x.png in Resources */,
-				3D592E6B177DFD9900C82F74 /* ViewController.xib in Resources */,
+				3D592E6B177DFD9900C82F74 /* MainViewController.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -175,7 +175,7 @@
 			files = (
 				3D592E5B177DFD9800C82F74 /* main.m in Sources */,
 				3D592E5F177DFD9800C82F74 /* AppDelegate.m in Sources */,
-				3D592E68177DFD9800C82F74 /* ViewController.m in Sources */,
+				3D592E68177DFD9800C82F74 /* MainViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -190,12 +190,12 @@
 			name = InfoPlist.strings;
 			sourceTree = "<group>";
 		};
-		3D592E69177DFD9900C82F74 /* ViewController.xib */ = {
+		3D592E69177DFD9900C82F74 /* MainViewController.xib */ = {
 			isa = PBXVariantGroup;
 			children = (
 				3D592E6A177DFD9900C82F74 /* en */,
 			);
-			name = ViewController.xib;
+			name = MainViewController.xib;
 			sourceTree = "<group>";
 		};
 /* End PBXVariantGroup section */
