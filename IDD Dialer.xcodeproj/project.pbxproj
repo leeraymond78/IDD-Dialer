@@ -18,6 +18,8 @@
 		3D592E65177DFD9800C82F74 /* Default-568h@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 3D592E64177DFD9800C82F74 /* Default-568h@2x.png */; };
 		3D592E68177DFD9800C82F74 /* MainViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3D592E67177DFD9800C82F74 /* MainViewController.m */; };
 		3D592E6B177DFD9900C82F74 /* MainViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 3D592E69177DFD9900C82F74 /* MainViewController.xib */; };
+		3D592E77177E3A3B00C82F74 /* SettingViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3D592E75177E3A3B00C82F74 /* SettingViewController.m */; };
+		3D592E78177E3A3B00C82F74 /* SettingViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 3D592E76177E3A3B00C82F74 /* SettingViewController.xib */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -37,6 +39,9 @@
 		3D592E66177DFD9800C82F74 /* MainViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MainViewController.h; sourceTree = "<group>"; };
 		3D592E67177DFD9800C82F74 /* MainViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MainViewController.m; sourceTree = "<group>"; };
 		3D592E6A177DFD9900C82F74 /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = en.lproj/MainViewController.xib; sourceTree = "<group>"; };
+		3D592E74177E3A3B00C82F74 /* SettingViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SettingViewController.h; sourceTree = "<group>"; };
+		3D592E75177E3A3B00C82F74 /* SettingViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SettingViewController.m; sourceTree = "<group>"; };
+		3D592E76177E3A3B00C82F74 /* SettingViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = SettingViewController.xib; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -88,6 +93,9 @@
 				3D592E66177DFD9800C82F74 /* MainViewController.h */,
 				3D592E67177DFD9800C82F74 /* MainViewController.m */,
 				3D592E69177DFD9900C82F74 /* MainViewController.xib */,
+				3D592E74177E3A3B00C82F74 /* SettingViewController.h */,
+				3D592E75177E3A3B00C82F74 /* SettingViewController.m */,
+				3D592E76177E3A3B00C82F74 /* SettingViewController.xib */,
 				3D592E55177DFD9800C82F74 /* Supporting Files */,
 			);
 			path = "IDD Dialer";
@@ -163,6 +171,7 @@
 				3D592E63177DFD9800C82F74 /* Default@2x.png in Resources */,
 				3D592E65177DFD9800C82F74 /* Default-568h@2x.png in Resources */,
 				3D592E6B177DFD9900C82F74 /* MainViewController.xib in Resources */,
+				3D592E78177E3A3B00C82F74 /* SettingViewController.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -176,6 +185,7 @@
 				3D592E5B177DFD9800C82F74 /* main.m in Sources */,
 				3D592E5F177DFD9800C82F74 /* AppDelegate.m in Sources */,
 				3D592E68177DFD9800C82F74 /* MainViewController.m in Sources */,
+				3D592E77177E3A3B00C82F74 /* SettingViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

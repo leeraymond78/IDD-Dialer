@@ -19,13 +19,23 @@
 @synthesize countryCode     = _countryCode;
 @synthesize number          = _number;
 
+#define IDD @"IDD"
+#define IDD_WITH00 @"IDD00"
+#define COUNTRY_CODE @"CC"
+#define COUNTRY_NAME @"CN"
 - (void)viewDidLoad
 {
     [super viewDidLoad];
 	// Do any additional setup after loading the view, typically from a nib.
+    settingVC = [[SettingViewController alloc]initWithNibName:@"SettingViewController" bundle:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(fillInputTF) name:UIApplicationDidBecomeActiveNotification object:nil];
+    
     [self setupInitialData];
-    [self setDefaultSelections];
     [self fillInputTF];
+    
+    if([[[NSUserDefaults standardUserDefaults] objectForKey:@"isOnAppCall"] boolValue]){
+        [self call];
+    }
 }
 
 - (void)didReceiveMemoryWarning
@@ -37,73 +47,220 @@
 #pragma mark - methods
 
 -(void)setupInitialData{
-    countryCodeDict = [[NSDictionary alloc] initWithObjectsAndKeys:
-                       @"852"   , @"Hong Kong",
-                       @"86"    , @"China",
-                       @"886"   , @"Taiwan",
-                       @"81"    , @"Japan",
-                       @"65"    , @"Singapore",
-                       @"44"    , @"United Kingdom",
-                       @"1"     , @"United State",
-                       nil];
-    prefixArray = [[NSMutableDictionary alloc]initWithObjectsAndKeys:
-                   [NSNumber numberWithBool:NO]     ,@"1678",
-                   [NSNumber numberWithBool:YES]    ,@"12593",
-                   nil];
+    countryCodeArray = [NSArray arrayWithObjects:
+                        [NSDictionary dictionaryWithObjectsAndKeys:
+                         @"852", COUNTRY_CODE,
+                         @"Hong Kong", COUNTRY_NAME,
+                         nil],
+                        [NSDictionary dictionaryWithObjectsAndKeys:
+                         @"86", COUNTRY_CODE,
+                         @"China", COUNTRY_NAME,
+                         nil],
+                        [NSDictionary dictionaryWithObjectsAndKeys:
+                         @"886", COUNTRY_CODE,
+                         @"Taiwan", COUNTRY_NAME,
+                         nil],
+                        [NSDictionary dictionaryWithObjectsAndKeys:
+                         @"81", COUNTRY_CODE,
+                         @"Japan", COUNTRY_NAME,
+                         nil],
+                        [NSDictionary dictionaryWithObjectsAndKeys:
+                         @"65", COUNTRY_CODE,
+                         @"Singapore", COUNTRY_NAME,
+                         nil],
+                        [NSDictionary dictionaryWithObjectsAndKeys:
+                         @"44", COUNTRY_CODE,
+                         @"United Kingdom", COUNTRY_NAME,
+                         nil],
+                        [NSDictionary dictionaryWithObjectsAndKeys:
+                         @"1", COUNTRY_CODE,
+                         @"United State", COUNTRY_NAME,
+                         nil],
+                        nil];
+    prefixArray = [NSArray arrayWithObjects:
+                        [NSDictionary dictionaryWithObjectsAndKeys:
+                         [NSNumber numberWithBool:NO], IDD_WITH00,
+                         @"1678", IDD,
+                         nil],
+                        [NSDictionary dictionaryWithObjectsAndKeys:
+                         [NSNumber numberWithBool:YES], IDD_WITH00,
+                         @"12593", IDD,
+                         nil],
+                        nil];
 }
 
--(void)setDefaultSelections{
-    [IDDTV selectRowAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:0] animated:YES scrollPosition:UITableViewScrollPositionNone];
-     [countryCodeTV selectRowAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:0] animated:YES scrollPosition:UITableViewScrollPositionNone];
+-(id)getObjectFromArrayWithValue:(NSString*)value Key:(NSString*)key wantedKey:(NSString*)wantedKey array:(NSArray*)array{
+    id result = nil;
+    for(NSDictionary* dict in array){
+        id dictFromKey = [dict objectForKey:key];
+        if(dictFromKey){
+            if([dictFromKey isEqualToString:value]){
+                result = [dict objectForKey:wantedKey];
+                break;
+            }
+        }
+    }
+    return result;
+}
+-(void)setDefaultSelections:(NSString*)number{
+    NSInteger targetIndexIDD = 0;
+    NSInteger targetIndexCC = 0;
+    NSString* targetCountryCode;
+    NSString* targetPrefix;
+    if(number){
+        NSRange range;// non-plain number
+        if([number characterAtIndex:0] == '+'){
+            range.location = 1;
+        }else if([[number substringToIndex:2] isEqualToString:@"00"]){
+            range.location = 2;
+        }else{
+            range.location = 0;
+        }
+        for (int x = 3; x > 0; x--) {
+            range.length = x;
+            NSString* firstChars = [number substringWithRange:range];
+            for(NSDictionary* countryCodeDict in countryCodeArray){
+                NSString* countryCode = [countryCodeDict objectForKey:COUNTRY_CODE];
+                if ([firstChars isEqualToString:countryCode]) {
+                    targetCountryCode = countryCode;
+                    targetIndexCC = [countryCodeArray indexOfObject:countryCodeDict];
+                    break;
+                }
+            }
+        }
+    NSDictionary* infoDict = [self getInfoWithNumber:number];
+    if(infoDict){//plain number
+        targetCountryCode = [infoDict objectForKey:COUNTRY_CODE];
+        targetPrefix = [infoDict objectForKey:IDD];
+        
+        for(NSDictionary* countryCodeDict in countryCodeArray){
+            NSString* countryCode = [countryCodeDict objectForKey:COUNTRY_CODE];
+            if ([targetCountryCode isEqualToString:countryCode]) {
+                targetIndexCC = [countryCodeArray indexOfObject:countryCodeDict];
+                break;
+            }
+        }
+        for(NSDictionary* prefixDict in prefixArray){
+            NSString* prefix = [prefixDict objectForKey:IDD];
+            if ([targetPrefix isEqualToString:prefix]) {
+                targetIndexIDD = [prefixArray indexOfObject:prefixDict];
+                break;
+            }
+        }
+    }
+}
+    NSLog(@"selected idd for row %d %@, cc for row %d %@", targetIndexIDD,targetPrefix, targetIndexCC,targetCountryCode);
+    [IDDTV selectRowAtIndexPath:[NSIndexPath indexPathForRow:targetIndexIDD inSection:0] animated:YES scrollPosition:UITableViewScrollPositionNone];
+    [countryCodeTV selectRowAtIndexPath:[NSIndexPath indexPathForRow:targetIndexCC inSection:0] animated:YES scrollPosition:UITableViewScrollPositionNone];
+    
+
+}
+
+-(NSDictionary*)getInfoWithNumber:(NSString*)number{
+    NSMutableDictionary* resultDict = nil;
+    unichar firstChar = [number characterAtIndex:0];
+    if([number length] == 8 && (firstChar == '3' || firstChar == '2' || firstChar == '6' || firstChar == '9')){
+        resultDict = [NSMutableDictionary dictionaryWithObjectsAndKeys:
+                      @"852",COUNTRY_CODE,
+                      @"12593",IDD,nil];
+    }else if([number length] == 11 && (firstChar == '1')){
+        resultDict = [NSMutableDictionary dictionaryWithObjectsAndKeys:
+                      @"86",COUNTRY_CODE,
+                      @"1678",IDD,nil];
+    }else if([number length] == 11 && (firstChar == '0')){
+        resultDict = [NSMutableDictionary dictionaryWithObjectsAndKeys:
+                      @"44",COUNTRY_CODE,
+                      @"1678",IDD,nil];
+    }else if([number length] == 10 && (firstChar == '0')){
+        resultDict = [NSMutableDictionary dictionaryWithObjectsAndKeys:
+                      @"886",COUNTRY_CODE,
+                      @"1678",IDD,nil];
+    }
+    return resultDict;
 }
 
 -(IBAction)processAction:(id)sender{
     [self process];
+    [self call];
+}
+
+-(void)call{
+    NSLog(@"calling %@",resultLabel.text);
     [[UIApplication sharedApplication] openURL:[NSURL URLWithString:[NSString stringWithFormat:@"tel:%@",resultLabel.text]]];
 }
 
 -(NSString *)processNumberWithPrefix:(NSString *)prefix countryCode:(NSString *)countryCode number:(NSString *)number{
     NSString* result = @"";
-    BOOL withDoubleZero = [[prefixArray objectForKey:prefix] boolValue];
+    BOOL withDoubleZero = [[self getObjectFromArrayWithValue:prefix Key:IDD wantedKey:IDD_WITH00 array:prefixArray] boolValue];
     NSString* doubleZero = withDoubleZero?@"00":@"";
     
-    NSString* finalNumber = [self removeFirstZero:number];
-    
-    result = [NSString stringWithFormat:@"%@-%@%@-%@",prefix,doubleZero,countryCode,finalNumber];
+    NSString* finalNumber = [self changeNumberToPlainNumber:number];
+    if(prefix && countryCode && ![finalNumber isEqualToString:@""]){
+        result = [NSString stringWithFormat:@"%@-%@%@-%@",prefix,doubleZero,countryCode,finalNumber];
+    }
     return result;
 }
 
--(NSString*)removeFirstZero:(NSString*)number{
+-(NSString*)changeNumberToPlainNumber:(NSString*)number{
     NSString* result = @"";
-    BOOL haveZeroOnFirstCharater = YES;
-    if(![number isEqualToString:@""]){
-        result = number;
-        while (haveZeroOnFirstCharater) {
-            unichar firstChar = [result characterAtIndex:0];
-            if(firstChar != '0' && firstChar != '+'){
-                haveZeroOnFirstCharater = NO;
-            }else{
-                result = [result substringFromIndex:1];
+    if(number && [number length] >= 7){
+        BOOL haveZeroOnFirstCharater = YES;
+        NSRange range;
+        if([number characterAtIndex:0] == '+'){
+            range.location = 1;
+        }else if([[number substringToIndex:2] isEqualToString:@"00"]){
+            range.location = 2;
+        }else{
+            range.location = 0;
+        }
+        for (int x = 3; x > 0; x--) {
+            range.length = x;
+            NSString* firstChars = [number substringWithRange:range];
+            for(NSDictionary* countryCodeDict in countryCodeArray){
+                NSString* countryCode = [countryCodeDict objectForKey:COUNTRY_CODE];
+                if ([firstChars isEqualToString:countryCode]) {
+                    number = [number substringFromIndex:range.location + x];
+                    break;
+                }
+            }
+        }
+        NSLog(@"number = %@",number);
+        if(![number isEqualToString:@""]){
+            result = number;
+            while (haveZeroOnFirstCharater) {
+                unichar temp_firstChar = [result characterAtIndex:0];
+                if(temp_firstChar != '0' && temp_firstChar != '+'){
+                    haveZeroOnFirstCharater = NO;
+                }else{
+                    result = [result substringFromIndex:1];
+                }
             }
         }
     }
     return result;
 }
 
--(NSString *)getClipboardText{
-    NSString* clipboardText = [[UIPasteboard generalPasteboard] valueForPasteboardType:@"public.utf8-plain-text"];
-    NSLog(@"clipboard = %@",clipboardText);
+-(NSString*)getNormalNumber:(NSString*)number{
     BOOL isValidNumber = YES;
-    for (int x = 0; x < [clipboardText length]; x++) {
-        unichar aChar = [clipboardText characterAtIndex:x];
-        if (aChar == '+' || (aChar >= '0' && aChar <= '9')) {
+    for (int x = 0; x < [number length]; x++) {
+        unichar aChar = [number characterAtIndex:x];
+        if (aChar == '+' || aChar == ' ' || aChar == '-' ||  (aChar >= '0' && aChar <= '9')) {
         }else{
             isValidNumber = NO;
         }
     }
-    if(isValidNumber)
-        return clipboardText;
+    if(isValidNumber){
+        [number stringByReplacingOccurrencesOfString:@" " withString:@""];
+        [number stringByReplacingOccurrencesOfString:@"-" withString:@""];
+        
+        return number;
+    }
     return nil;
+}
+-(NSString *)getClipboardText{
+    NSString* clipboardText = [[UIPasteboard generalPasteboard] valueForPasteboardType:@"public.utf8-plain-text"];
+    NSLog(@"clipboard = %@",clipboardText);
+    return [self getNormalNumber:clipboardText];
 }
 
 -(void)fillInputTF{
@@ -127,11 +284,14 @@
 -(void)processWithoutChecking{
     NSString* prefix;
     NSString* countryCode;
+    NSString* normalNumber = [self getNormalNumber:inputTF.text];
+    [self setDefaultSelections:normalNumber];
+    [inputTF setText:normalNumber];
     prefix = [[[IDDTV cellForRowAtIndexPath:[IDDTV indexPathForSelectedRow]]textLabel]text];
     
-    NSString* countryCodeKey = [[[countryCodeTV cellForRowAtIndexPath:[countryCodeTV indexPathForSelectedRow]]textLabel]text];
-    countryCode = [countryCodeDict objectForKey:countryCodeKey];
-    [resultLabel setText:[self processNumberWithPrefix:prefix countryCode:countryCode number:inputTF.text]];
+    countryCode = [[countryCodeArray objectAtIndex:[countryCodeTV indexPathForSelectedRow].row] objectForKey:COUNTRY_CODE];
+    
+    [resultLabel setText:[self processNumberWithPrefix:prefix countryCode:countryCode number:normalNumber]];
 }
 
 -(IBAction)hideAndProcess:(id)sender{
@@ -153,6 +313,15 @@
     UIAlertView* alertView = [[UIAlertView alloc] initWithTitle:title message:msg delegate:self cancelButtonTitle:@"I got it" otherButtonTitles:nil];
     [alertView show];
 }
+
+-(IBAction)gotoSetting:(id)sender{
+    UIViewAnimationTransition trans = UIViewAnimationTransitionFlipFromLeft;
+    [UIView beginAnimations: nil context: nil];
+    [UIView setAnimationDuration:.6f];
+    [UIView setAnimationTransition:trans forView:[self.view window] cache: YES];
+    [self presentViewController:settingVC animated:NO completion:nil];
+    [UIView commitAnimations];
+}
 #pragma mark - textfield delegates
 
 -(BOOL)textFieldShouldReturn:(UITextField *)textField{
@@ -168,7 +337,7 @@
     if(tableView == IDDTV){
         return [prefixArray count];
     }else if(tableView == countryCodeTV){
-        return [countryCodeDict count];
+        return [countryCodeArray count];
     }
     return 0;
 }
@@ -201,9 +370,9 @@
     }
     
     if(tableView == IDDTV){
-        [[cell textLabel] setText:[[prefixArray allKeys] objectAtIndex:indexPath.row]];
+        [[cell textLabel] setText:[[prefixArray objectAtIndex:indexPath.row] objectForKey:IDD]];
     }else if(tableView == countryCodeTV){
-        [[cell textLabel] setText:[[countryCodeDict allKeys] objectAtIndex:indexPath.row]];
+        [[cell textLabel] setText:[[countryCodeArray objectAtIndex:indexPath.row] objectForKey:COUNTRY_NAME]];
     }
     return cell;
 }

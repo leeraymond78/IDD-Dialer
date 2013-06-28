@@ -7,6 +7,7 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "SettingViewController.h"
 
 @interface MainViewController : UIViewController<UITextFieldDelegate,UITableViewDataSource,UITableViewDelegate>{
     
@@ -16,14 +17,16 @@
     NSString*       _number;
     
 @private
-    NSMutableDictionary*     prefixArray;
-    const   NSDictionary*       countryCodeDict;
+    NSArray*  prefixArray;
+    NSArray*  countryCodeArray;
     
     IBOutlet    UITextField*    inputTF;
     IBOutlet    UILabel*        resultLabel;
     IBOutlet    UIButton*       processBtn;
     IBOutlet    UITableView*    IDDTV;
     IBOutlet    UITableView*    countryCodeTV;
+    
+    SettingViewController* settingVC;
 }
 
 @property (nonatomic        ) BOOL			isDoubleZero;
