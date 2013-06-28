@@ -8,6 +8,35 @@
 
 #import <UIKit/UIKit.h>
 
-@interface MainViewController : UIViewController
+@interface MainViewController : UIViewController<UITextFieldDelegate,UITableViewDataSource,UITableViewDelegate>{
+    
+    BOOL            _isDoubleZero;
+    NSString*       _prefix;
+    NSString*       _countryCode;
+    NSString*       _number;
+    
+@private
+    NSMutableDictionary*     prefixArray;
+    const   NSDictionary*       countryCodeDict;
+    
+    IBOutlet    UITextField*    inputTF;
+    IBOutlet    UILabel*        resultLabel;
+    IBOutlet    UIButton*       processBtn;
+    IBOutlet    UITableView*    IDDTV;
+    IBOutlet    UITableView*    countryCodeTV;
+}
 
+@property (nonatomic        ) BOOL			isDoubleZero;
+@property (nonatomic, retain) NSString*	prefix;
+@property (nonatomic, retain) NSString*  countryCode;
+@property (nonatomic, retain) NSString*  number;
+
+
+-(NSString*)getClipboardText;
+
+-(NSString*)processNumberWithPrefix:(NSString*)prefix countryCode:(NSString*)countryCode number:(NSString*)number;
+
+-(IBAction)processAction:(id)sender;
+
+-(IBAction)hideAndProcess:(id)sender;
 @end
