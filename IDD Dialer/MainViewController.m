@@ -74,7 +74,7 @@
                          nil],
                         [NSDictionary dictionaryWithObjectsAndKeys:
                          @"1", COUNTRY_CODE,
-                         @"United State", COUNTRY_NAME,
+                         @"United States", COUNTRY_NAME,
                          nil],
                         nil];
     prefixArray = [NSArray arrayWithObjects:
