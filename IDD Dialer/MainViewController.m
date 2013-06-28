@@ -59,6 +59,7 @@
 
 -(IBAction)processAction:(id)sender{
     [self process];
+    [[UIApplication sharedApplication] openURL:[NSURL URLWithString:[NSString stringWithFormat:@"tel:%@",resultLabel.text]]];
 }
 
 -(NSString *)processNumberWithPrefix:(NSString *)prefix countryCode:(NSString *)countryCode number:(NSString *)number{
@@ -68,7 +69,7 @@
     
     NSString* finalNumber = [self removeFirstZero:number];
     
-    result = [NSString stringWithFormat:@"%@%@%@%@",prefix,doubleZero,countryCode,finalNumber];
+    result = [NSString stringWithFormat:@"%@-%@%@-%@",prefix,doubleZero,countryCode,finalNumber];
     return result;
 }
 
@@ -106,8 +107,11 @@
 }
 
 -(void)fillInputTF{
-    [inputTF setText:[self getClipboardText]];
-    [self processWithoutChecking];
+    NSString* number = [self getClipboardText];
+    if(number){
+        [inputTF setText:[self getClipboardText]];
+        [self processWithoutChecking];
+    }
 }
 
 -(void)process{
