@@ -20,6 +20,8 @@
 		3D592E6B177DFD9900C82F74 /* MainViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 3D592E69177DFD9900C82F74 /* MainViewController.xib */; };
 		3D592E77177E3A3B00C82F74 /* SettingViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3D592E75177E3A3B00C82F74 /* SettingViewController.m */; };
 		3D592E78177E3A3B00C82F74 /* SettingViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 3D592E76177E3A3B00C82F74 /* SettingViewController.xib */; };
+		3D592E7E177E43F700C82F74 /* icon@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 3D592E7D177E43F700C82F74 /* icon@2x.png */; };
+		3D592E80177E43FB00C82F74 /* icon.png in Resources */ = {isa = PBXBuildFile; fileRef = 3D592E7F177E43FB00C82F74 /* icon.png */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -42,6 +44,8 @@
 		3D592E74177E3A3B00C82F74 /* SettingViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SettingViewController.h; sourceTree = "<group>"; };
 		3D592E75177E3A3B00C82F74 /* SettingViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SettingViewController.m; sourceTree = "<group>"; };
 		3D592E76177E3A3B00C82F74 /* SettingViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = SettingViewController.xib; sourceTree = "<group>"; };
+		3D592E7D177E43F700C82F74 /* icon@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "icon@2x.png"; sourceTree = "<group>"; };
+		3D592E7F177E43FB00C82F74 /* icon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = icon.png; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -61,6 +65,8 @@
 		3D592E42177DFD9800C82F74 = {
 			isa = PBXGroup;
 			children = (
+				3D592E7F177E43FB00C82F74 /* icon.png */,
+				3D592E7D177E43F700C82F74 /* icon@2x.png */,
 				3D592E54177DFD9800C82F74 /* IDD Dialer */,
 				3D592E4D177DFD9800C82F74 /* Frameworks */,
 				3D592E4C177DFD9800C82F74 /* Products */,
@@ -172,6 +178,8 @@
 				3D592E65177DFD9800C82F74 /* Default-568h@2x.png in Resources */,
 				3D592E6B177DFD9900C82F74 /* MainViewController.xib in Resources */,
 				3D592E78177E3A3B00C82F74 /* SettingViewController.xib in Resources */,
+				3D592E7E177E43F700C82F74 /* icon@2x.png in Resources */,
+				3D592E80177E43FB00C82F74 /* icon.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
