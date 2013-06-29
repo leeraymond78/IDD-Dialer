@@ -10,6 +10,12 @@
 #import "MainViewController.h"
 #import "AddIDDViewController.h"
 
+@interface SectionView : UIView{
+    IBOutlet UILabel* titleLabel;
+}
+
+@end
+
 @interface SettingViewController : MainViewController{
     IBOutlet UISwitch * onAppCallSiwtch;
     BOOL isEditing;
@@ -19,6 +25,10 @@
     NSArray* _disabledCountryCodeArray;
     
     AddIDDViewController * addIDDVC;
+    
+    IBOutlet SectionView* sectionViewIDD;
+    IBOutlet SectionView* sectionViewCCE;
+    IBOutlet SectionView* sectionViewCCD;
     
 }
 

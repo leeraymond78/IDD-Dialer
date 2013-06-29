@@ -8,6 +8,14 @@
 
 #import "SettingViewController.h"
 
+@implementation SectionView
+
+-(void)setSectionTitle:(NSString*)title{
+    [titleLabel setText:title];
+}
+
+@end
+
 @implementation SettingViewController
 
 @synthesize disabledCountryCodeArray = _disabledCountryCodeArray;
@@ -16,7 +24,6 @@
 {
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
     if (self) {
-        // Custom initialization
     }
     return self;
 }
@@ -59,7 +66,13 @@
 
 -(void)addIDDDone:(NSNotification*)notification{
     NSDictionary* infoDict = [notification userInfo];
-    if(![[infoDict objectForKey:IDD] isEqual:@""]){
+    NSString* targetIDD = [infoDict objectForKey:IDD];
+    if(![targetIDD isEqual:@""]){
+        for(NSDictionary* IDDDict in self.prefixArray){
+            if([[IDDDict objectForKey:IDD] isEqual:targetIDD]){
+                return;
+            }
+        }
         NSMutableArray* tempPrefixArray = [NSMutableArray arrayWithArray:self.prefixArray];
         [tempPrefixArray addObject:infoDict];
         self.prefixArray = tempPrefixArray;
@@ -106,6 +119,17 @@
     return [super numberOfSectionsInTableView:tableView];
 }
 
+-(UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section{
+    if(tableView == IDDTV){
+        return sectionViewIDD;
+    }else if(tableView == countryCodeTV){
+        if(section == 0){
+            return sectionViewCCE;
+        }else if(section == 1){
+            return sectionViewCCD;
+        }
+    }
+}
 -(NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section{
     if(countryCodeTV == tableView){
         if(section == 0){
@@ -212,6 +236,7 @@
             self.disabledCountryCodeArray = tempDistinationCountryCodeArray;
         }
     }
+    [tableView reloadData];
 }
 
 -(UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath{
