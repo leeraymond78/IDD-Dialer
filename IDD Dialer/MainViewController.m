@@ -113,42 +113,42 @@
             range.location = 1;
         }else if([[number substringToIndex:2] isEqualToString:@"00"]){
             range.location = 2;
-        }else{
-            range.location = 0;
         }
-        for (int x = 3; x > 0; x--) {
-            range.length = x;
-            NSString* firstChars = [number substringWithRange:range];
+        if(range.location == 1 || range.location == 2){
+            for (int x = 3; x > 0; x--) {
+                range.length = x;
+                NSString* firstChars = [number substringWithRange:range];
+                for(NSDictionary* countryCodeDict in countryCodeArray){
+                    NSString* countryCode = [countryCodeDict objectForKey:COUNTRY_CODE];
+                    if ([firstChars isEqualToString:countryCode]) {
+                        targetCountryCode = countryCode;
+                        targetIndexCC = [countryCodeArray indexOfObject:countryCodeDict];
+                        break;
+                    }
+                }
+            }
+        }
+        NSDictionary* infoDict = [self getInfoWithNumber:number];
+        if(infoDict){//plain number
+            targetCountryCode = [infoDict objectForKey:COUNTRY_CODE];
+            targetPrefix = [infoDict objectForKey:IDD];
+            
             for(NSDictionary* countryCodeDict in countryCodeArray){
                 NSString* countryCode = [countryCodeDict objectForKey:COUNTRY_CODE];
-                if ([firstChars isEqualToString:countryCode]) {
-                    targetCountryCode = countryCode;
+                if ([targetCountryCode isEqualToString:countryCode]) {
                     targetIndexCC = [countryCodeArray indexOfObject:countryCodeDict];
                     break;
                 }
             }
-        }
-    NSDictionary* infoDict = [self getInfoWithNumber:number];
-    if(infoDict){//plain number
-        targetCountryCode = [infoDict objectForKey:COUNTRY_CODE];
-        targetPrefix = [infoDict objectForKey:IDD];
-        
-        for(NSDictionary* countryCodeDict in countryCodeArray){
-            NSString* countryCode = [countryCodeDict objectForKey:COUNTRY_CODE];
-            if ([targetCountryCode isEqualToString:countryCode]) {
-                targetIndexCC = [countryCodeArray indexOfObject:countryCodeDict];
-                break;
-            }
-        }
-        for(NSDictionary* prefixDict in prefixArray){
-            NSString* prefix = [prefixDict objectForKey:IDD];
-            if ([targetPrefix isEqualToString:prefix]) {
-                targetIndexIDD = [prefixArray indexOfObject:prefixDict];
-                break;
+            for(NSDictionary* prefixDict in prefixArray){
+                NSString* prefix = [prefixDict objectForKey:IDD];
+                if ([targetPrefix isEqualToString:prefix]) {
+                    targetIndexIDD = [prefixArray indexOfObject:prefixDict];
+                    break;
+                }
             }
         }
     }
-}
     NSLog(@"selected idd for row %d %@, cc for row %d %@", targetIndexIDD,targetPrefix, targetIndexCC,targetCountryCode);
     [IDDTV selectRowAtIndexPath:[NSIndexPath indexPathForRow:targetIndexIDD inSection:0] animated:YES scrollPosition:UITableViewScrollPositionNone];
     [countryCodeTV selectRowAtIndexPath:[NSIndexPath indexPathForRow:targetIndexCC inSection:0] animated:YES scrollPosition:UITableViewScrollPositionNone];
@@ -157,26 +157,30 @@
 }
 
 -(NSDictionary*)getInfoWithNumber:(NSString*)number{
-    NSMutableDictionary* resultDict = nil;
-    unichar firstChar = [number characterAtIndex:0];
-    if([number length] == 8 && (firstChar == '3' || firstChar == '2' || firstChar == '6' || firstChar == '9')){
-        resultDict = [NSMutableDictionary dictionaryWithObjectsAndKeys:
-                      @"852",COUNTRY_CODE,
-                      @"12593",IDD,nil];
-    }else if([number length] == 11 && (firstChar == '1')){
-        resultDict = [NSMutableDictionary dictionaryWithObjectsAndKeys:
-                      @"86",COUNTRY_CODE,
-                      @"1678",IDD,nil];
-    }else if([number length] == 11 && (firstChar == '0')){
-        resultDict = [NSMutableDictionary dictionaryWithObjectsAndKeys:
-                      @"44",COUNTRY_CODE,
-                      @"1678",IDD,nil];
-    }else if([number length] == 10 && (firstChar == '0')){
-        resultDict = [NSMutableDictionary dictionaryWithObjectsAndKeys:
-                      @"886",COUNTRY_CODE,
-                      @"1678",IDD,nil];
+    number = [self getNormalNumber:number];
+    if(number){
+        NSMutableDictionary* resultDict = nil;
+        unichar firstChar = [number characterAtIndex:0];
+        if([number length] == 8 && (firstChar == '3' || firstChar == '2' || firstChar == '6' || firstChar == '9')){
+            resultDict = [NSMutableDictionary dictionaryWithObjectsAndKeys:
+                          @"852",COUNTRY_CODE,
+                          @"12593",IDD,nil];
+        }else if([number length] == 11 && (firstChar == '1')){
+            resultDict = [NSMutableDictionary dictionaryWithObjectsAndKeys:
+                          @"86",COUNTRY_CODE,
+                          @"1678",IDD,nil];
+        }else if([number length] == 11 && (firstChar == '0')){
+            resultDict = [NSMutableDictionary dictionaryWithObjectsAndKeys:
+                          @"44",COUNTRY_CODE,
+                          @"1678",IDD,nil];
+        }else if([number length] == 10 && (firstChar == '0')){
+            resultDict = [NSMutableDictionary dictionaryWithObjectsAndKeys:
+                          @"886",COUNTRY_CODE,
+                          @"1678",IDD,nil];
+        }
+        return resultDict;
     }
-    return resultDict;
+    return nil;
 }
 
 -(IBAction)processAction:(id)sender{
@@ -210,26 +214,25 @@
             range.location = 1;
         }else if([[number substringToIndex:2] isEqualToString:@"00"]){
             range.location = 2;
-        }else{
-            range.location = 0;
         }
-        for (int x = 3; x > 0; x--) {
-            range.length = x;
-            NSString* firstChars = [number substringWithRange:range];
-            for(NSDictionary* countryCodeDict in countryCodeArray){
-                NSString* countryCode = [countryCodeDict objectForKey:COUNTRY_CODE];
-                if ([firstChars isEqualToString:countryCode]) {
-                    number = [number substringFromIndex:range.location + x];
-                    break;
+        if(range.location == 1 || range.location == 2){
+            for (int x = 3; x > 0; x--) {
+                range.length = x;
+                NSString* firstChars = [number substringWithRange:range];
+                for(NSDictionary* countryCodeDict in countryCodeArray){
+                    NSString* countryCode = [countryCodeDict objectForKey:COUNTRY_CODE];
+                    if ([firstChars isEqualToString:countryCode]) {
+                        number = [number substringFromIndex:range.location + x];
+                        break;
+                    }
                 }
             }
         }
-        NSLog(@"number = %@",number);
         if(![number isEqualToString:@""]){
             result = number;
             while (haveZeroOnFirstCharater) {
                 unichar temp_firstChar = [result characterAtIndex:0];
-                if(temp_firstChar != '0' && temp_firstChar != '+'){
+                if(temp_firstChar != '0'){
                     haveZeroOnFirstCharater = NO;
                 }else{
                     result = [result substringFromIndex:1];
@@ -237,6 +240,8 @@
             }
         }
     }
+    
+    NSLog(@"plain = %@",result);
     return result;
 }
 
@@ -250,8 +255,8 @@
         }
     }
     if(isValidNumber){
-        [number stringByReplacingOccurrencesOfString:@" " withString:@""];
-        [number stringByReplacingOccurrencesOfString:@"-" withString:@""];
+        number = [number stringByReplacingOccurrencesOfString:@" " withString:@""];
+        number = [number stringByReplacingOccurrencesOfString:@"-" withString:@""];
         
         return number;
     }
