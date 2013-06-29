@@ -25,6 +25,8 @@
 {
     [super viewDidLoad];
     // Do any additional setup after loading the view from its nib.
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(addIDDDone:) name:@"AddIDDDone" object:nil];
+    addIDDVC = [[AddIDDViewController alloc] initWithNibName:@"AddIDDViewController" bundle:nil];
 }
 
 -(void)viewWillAppear:(BOOL)animated{
@@ -52,7 +54,17 @@
 }
 
 -(IBAction)addIDD:(id)sender{
-    
+    [self presentViewController:addIDDVC animated:YES completion:nil];
+}
+
+-(void)addIDDDone:(NSNotification*)notification{
+    NSDictionary* infoDict = [notification userInfo];
+    if(![[infoDict objectForKey:IDD] isEqual:@""]){
+        NSMutableArray* tempPrefixArray = [NSMutableArray arrayWithArray:self.prefixArray];
+        [tempPrefixArray addObject:infoDict];
+        self.prefixArray = tempPrefixArray;
+        [IDDTV reloadData];
+    }
 }
 
 -(IBAction)editTV:(id)sender{

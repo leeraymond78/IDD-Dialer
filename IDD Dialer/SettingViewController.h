@@ -8,7 +8,7 @@
 
 #import <UIKit/UIKit.h>
 #import "MainViewController.h"
-
+#import "AddIDDViewController.h"
 
 @interface SettingViewController : MainViewController{
     IBOutlet UISwitch * onAppCallSiwtch;
@@ -17,6 +17,8 @@
     IBOutlet UIButton * backbtn;
     
     NSArray* _disabledCountryCodeArray;
+    
+    AddIDDViewController * addIDDVC;
     
 }
 
