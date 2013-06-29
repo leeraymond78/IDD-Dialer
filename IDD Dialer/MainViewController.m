@@ -8,21 +8,14 @@
 
 #import "MainViewController.h"
 
-@interface MainViewController ()
+#import "SettingViewController.h"
 
-@end
 
 @implementation MainViewController
 
-@synthesize isDoubleZero    = _isDoubleZero;
-@synthesize prefix          = _prefix;
-@synthesize countryCode     = _countryCode;
-@synthesize number          = _number;
+@synthesize prefixArray = _prefixArray;
+@synthesize countryCodeArray = _countryCodeArray;
 
-#define IDD @"IDD"
-#define IDD_WITH00 @"IDD00"
-#define COUNTRY_CODE @"CC"
-#define COUNTRY_NAME @"CN"
 - (void)viewDidLoad
 {
     [super viewDidLoad];
@@ -30,12 +23,13 @@
     settingVC = [[SettingViewController alloc]initWithNibName:@"SettingViewController" bundle:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(fillInputTF) name:UIApplicationDidBecomeActiveNotification object:nil];
     
-    [self setupInitialData];
+    [self reloadInitialData];
     [self fillInputTF];
     
     if([[[NSUserDefaults standardUserDefaults] objectForKey:@"isOnAppCall"] boolValue]){
         [self call];
     }
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(renewView) name:@"settingBackPressed" object:nil];
 }
 
 - (void)didReceiveMemoryWarning
@@ -46,17 +40,33 @@
 
 #pragma mark - methods
 
--(void)setupInitialData{
-    NSString *path = [[NSBundle mainBundle] pathForResource:
-                      @"prefix" ofType:@"plist"];
+-(void)renewView{
+    [self reloadInitialData];
+    [IDDTV reloadData];
+    [countryCodeTV reloadData];
+}
+-(void)reloadInitialData{
+    NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
+    NSString *documentsDirectory = [paths objectAtIndex:0];
+    NSString *path = [documentsDirectory stringByAppendingPathComponent:@"prefix_data.plist"];
+    self.prefixArray = [NSArray arrayWithContentsOfFile:path];
+    path = [documentsDirectory stringByAppendingPathComponent:@"countryCode_data.plist"];
+    self.countryCodeArray = [NSArray arrayWithContentsOfFile:path];
     
-    prefixArray = [[NSMutableArray alloc] initWithContentsOfFile:path];
-    
-    path = [[NSBundle mainBundle] pathForResource:
-            @"countryCode" ofType:@"plist"];
-    
-    countryCodeArray = [[NSMutableArray alloc] initWithContentsOfFile:path];}
-
+        //write default
+    if(!self.prefixArray || [self.prefixArray count] == 0){
+        NSString *path = [[NSBundle mainBundle] pathForResource:
+                          @"prefix" ofType:@"plist"];
+        
+        self.prefixArray = [[NSMutableArray alloc] initWithContentsOfFile:path];
+    }
+    if(!self.countryCodeArray || [self.countryCodeArray count] == 0){
+        path = [[NSBundle mainBundle] pathForResource:
+                @"countryCode" ofType:@"plist"];
+        
+        self.countryCodeArray = [[NSMutableArray alloc] initWithContentsOfFile:path];
+    }
+}
 -(id)getObjectFromArrayWithValue:(NSString*)value Key:(NSString*)key wantedKey:(NSString*)wantedKey array:(NSArray*)array{
     id result = nil;
     for(NSDictionary* dict in array){
@@ -86,11 +96,11 @@
             for (int x = 3; x > 0; x--) {
                 range.length = x;
                 NSString* firstChars = [number substringWithRange:range];
-                for(NSDictionary* countryCodeDict in countryCodeArray){
+                for(NSDictionary* countryCodeDict in self.countryCodeArray){
                     NSString* countryCode = [countryCodeDict objectForKey:COUNTRY_CODE];
                     if ([firstChars isEqualToString:countryCode]) {
                         targetCountryCode = countryCode;
-                        targetIndexCC = [countryCodeArray indexOfObject:countryCodeDict];
+                        targetIndexCC = [self.countryCodeArray indexOfObject:countryCodeDict];
                         break;
                     }
                 }
@@ -101,17 +111,17 @@
             targetCountryCode = [infoDict objectForKey:COUNTRY_CODE];
             targetPrefix = [infoDict objectForKey:IDD];
             
-            for(NSDictionary* countryCodeDict in countryCodeArray){
+            for(NSDictionary* countryCodeDict in self.countryCodeArray){
                 NSString* countryCode = [countryCodeDict objectForKey:COUNTRY_CODE];
                 if ([targetCountryCode isEqualToString:countryCode]) {
-                    targetIndexCC = [countryCodeArray indexOfObject:countryCodeDict];
+                    targetIndexCC = [self.countryCodeArray indexOfObject:countryCodeDict];
                     break;
                 }
             }
-            for(NSDictionary* prefixDict in prefixArray){
+            for(NSDictionary* prefixDict in self.prefixArray){
                 NSString* prefix = [prefixDict objectForKey:IDD];
                 if ([targetPrefix isEqualToString:prefix]) {
-                    targetIndexIDD = [prefixArray indexOfObject:prefixDict];
+                    targetIndexIDD = [self.prefixArray indexOfObject:prefixDict];
                     break;
                 }
             }
@@ -163,7 +173,7 @@
 
 -(NSString *)processNumberWithPrefix:(NSString *)prefix countryCode:(NSString *)countryCode number:(NSString *)number{
     NSString* result = @"";
-    BOOL withDoubleZero = [[self getObjectFromArrayWithValue:prefix Key:IDD wantedKey:IDD_WITH00 array:prefixArray] boolValue];
+    BOOL withDoubleZero = [[self getObjectFromArrayWithValue:prefix Key:IDD wantedKey:IDD_WITH00 array:self.prefixArray] boolValue];
     NSString* doubleZero = withDoubleZero?@"00":@"";
     
     NSString* finalNumber = [self changeNumberToPlainNumber:number];
@@ -187,7 +197,7 @@
             for (int x = 3; x > 0; x--) {
                 range.length = x;
                 NSString* firstChars = [number substringWithRange:range];
-                for(NSDictionary* countryCodeDict in countryCodeArray){
+                for(NSDictionary* countryCodeDict in self.countryCodeArray){
                     NSString* countryCode = [countryCodeDict objectForKey:COUNTRY_CODE];
                     if ([firstChars isEqualToString:countryCode]) {
                         number = [number substringFromIndex:range.location + x];
@@ -264,7 +274,7 @@
     [inputTF setText:normalNumber];
     prefix = [[[IDDTV cellForRowAtIndexPath:[IDDTV indexPathForSelectedRow]]textLabel]text];
     
-    countryCode = [[countryCodeArray objectAtIndex:[countryCodeTV indexPathForSelectedRow].row] objectForKey:COUNTRY_CODE];
+    countryCode = [[self.countryCodeArray objectAtIndex:[countryCodeTV indexPathForSelectedRow].row] objectForKey:COUNTRY_CODE];
     
     [resultLabel setText:[self processNumberWithPrefix:prefix countryCode:countryCode number:normalNumber]];
 }
@@ -297,6 +307,7 @@
     [self presentViewController:settingVC animated:NO completion:nil];
     [UIView commitAnimations];
 }
+
 #pragma mark - textfield delegates
 
 -(BOOL)textFieldShouldReturn:(UITextField *)textField{
@@ -310,9 +321,9 @@
 
 -(NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section{
     if(tableView == IDDTV){
-        return [prefixArray count];
+        return [self.prefixArray count];
     }else if(tableView == countryCodeTV){
-        return [countryCodeArray count];
+        return [self.countryCodeArray count];
     }
     return 0;
 }
@@ -344,10 +355,12 @@
         [[cell textLabel] setTextColor:[UIColor redColor]];
     }
     
-    if(tableView == IDDTV){
-        [[cell textLabel] setText:[[prefixArray objectAtIndex:indexPath.row] objectForKey:IDD]];
-    }else if(tableView == countryCodeTV){
-        [[cell textLabel] setText:[[countryCodeArray objectAtIndex:indexPath.row] objectForKey:COUNTRY_NAME]];
+    if(indexPath.section == 0){
+        if(tableView == IDDTV){
+            [[cell textLabel] setText:[[self.prefixArray objectAtIndex:indexPath.row] objectForKey:IDD]];
+        }else if(tableView == countryCodeTV){
+            [[cell textLabel] setText:[[self.countryCodeArray objectAtIndex:indexPath.row] objectForKey:COUNTRY_NAME]];
+        }
     }
     return cell;
 }

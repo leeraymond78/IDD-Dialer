@@ -7,33 +7,36 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "SettingViewController.h"
+
+@class SettingViewController;
+
+#define IDD @"IDD"
+#define IDD_WITH00 @"IDD00"
+#define COUNTRY_CODE @"CC"
+#define COUNTRY_NAME @"CN"
 
 @interface MainViewController : UIViewController<UITextFieldDelegate,UITableViewDataSource,UITableViewDelegate>{
+
     
-    BOOL            _isDoubleZero;
-    NSString*       _prefix;
-    NSString*       _countryCode;
-    NSString*       _number;
+    IBOutlet    UITableView*    IDDTV;
+    IBOutlet    UITableView*    countryCodeTV;
     
 @private
-    NSArray*  prefixArray;
-    NSArray*  countryCodeArray;
+    NSArray*  _prefixArray;
+    NSArray*  _countryCodeArray;
     
     IBOutlet    UITextField*    inputTF;
     IBOutlet    UILabel*        resultLabel;
     IBOutlet    UIButton*       processBtn;
-    IBOutlet    UITableView*    IDDTV;
-    IBOutlet    UITableView*    countryCodeTV;
     
     SettingViewController* settingVC;
 }
 
-@property (nonatomic        ) BOOL			isDoubleZero;
-@property (nonatomic, retain) NSString*	prefix;
-@property (nonatomic, retain) NSString*  countryCode;
-@property (nonatomic, retain) NSString*  number;
+@property (nonatomic, retain) NSArray* prefixArray;
 
+@property (nonatomic, retain) NSArray* countryCodeArray;
+
+-(void)reloadInitialData;
 
 -(NSString*)getClipboardText;
 

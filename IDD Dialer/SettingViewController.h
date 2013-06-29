@@ -7,9 +7,19 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "MainViewController.h"
 
-@interface SettingViewController : UIViewController{
+
+@interface SettingViewController : MainViewController{
     IBOutlet UISwitch * onAppCallSiwtch;
+    BOOL isEditing;
+    
+    IBOutlet UIButton * backbtn;
+    
+    NSArray* _disabledCountryCodeArray;
+    
 }
+
+@property (nonatomic, retain) NSArray* disabledCountryCodeArray;
 
 @end
