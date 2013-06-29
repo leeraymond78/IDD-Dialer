@@ -47,47 +47,15 @@
 #pragma mark - methods
 
 -(void)setupInitialData{
-    countryCodeArray = [NSArray arrayWithObjects:
-                        [NSDictionary dictionaryWithObjectsAndKeys:
-                         @"852", COUNTRY_CODE,
-                         @"Hong Kong", COUNTRY_NAME,
-                         nil],
-                        [NSDictionary dictionaryWithObjectsAndKeys:
-                         @"86", COUNTRY_CODE,
-                         @"China", COUNTRY_NAME,
-                         nil],
-                        [NSDictionary dictionaryWithObjectsAndKeys:
-                         @"886", COUNTRY_CODE,
-                         @"Taiwan", COUNTRY_NAME,
-                         nil],
-                        [NSDictionary dictionaryWithObjectsAndKeys:
-                         @"81", COUNTRY_CODE,
-                         @"Japan", COUNTRY_NAME,
-                         nil],
-                        [NSDictionary dictionaryWithObjectsAndKeys:
-                         @"65", COUNTRY_CODE,
-                         @"Singapore", COUNTRY_NAME,
-                         nil],
-                        [NSDictionary dictionaryWithObjectsAndKeys:
-                         @"44", COUNTRY_CODE,
-                         @"United Kingdom", COUNTRY_NAME,
-                         nil],
-                        [NSDictionary dictionaryWithObjectsAndKeys:
-                         @"1", COUNTRY_CODE,
-                         @"United States", COUNTRY_NAME,
-                         nil],
-                        nil];
-    prefixArray = [NSArray arrayWithObjects:
-                        [NSDictionary dictionaryWithObjectsAndKeys:
-                         [NSNumber numberWithBool:NO], IDD_WITH00,
-                         @"1678", IDD,
-                         nil],
-                        [NSDictionary dictionaryWithObjectsAndKeys:
-                         [NSNumber numberWithBool:YES], IDD_WITH00,
-                         @"12593", IDD,
-                         nil],
-                        nil];
-}
+    NSString *path = [[NSBundle mainBundle] pathForResource:
+                      @"prefix" ofType:@"plist"];
+    
+    prefixArray = [[NSMutableArray alloc] initWithContentsOfFile:path];
+    
+    path = [[NSBundle mainBundle] pathForResource:
+            @"countryCode" ofType:@"plist"];
+    
+    countryCodeArray = [[NSMutableArray alloc] initWithContentsOfFile:path];}
 
 -(id)getObjectFromArrayWithValue:(NSString*)value Key:(NSString*)key wantedKey:(NSString*)wantedKey array:(NSArray*)array{
     id result = nil;
