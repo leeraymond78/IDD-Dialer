@@ -162,7 +162,6 @@
 }
 
 -(IBAction)processAction:(id)sender{
-    [self process];
     [self call];
 }
 
