@@ -46,7 +46,7 @@
     [[NSNotificationCenter defaultCenter] postNotificationName:@"AddIDDDone" object:nil userInfo:infoDict];
     [iddTF resignFirstResponder];
     [iddTF setText:@""];
-    [self dismissViewControllerAnimated:self completion:nil];
+    [self dismissViewControllerAnimated:YES completion:nil];
 }
 
 @end
