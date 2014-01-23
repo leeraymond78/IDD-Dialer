@@ -7,6 +7,9 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		1D0C47F21890F52C006F35C0 /* WYPopoverController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1D0C47EF1890F52C006F35C0 /* WYPopoverController.m */; };
+		1D0C47F31890F52C006F35C0 /* WYStoryboardPopoverSegue.m in Sources */ = {isa = PBXBuildFile; fileRef = 1D0C47F11890F52C006F35C0 /* WYStoryboardPopoverSegue.m */; };
+		1D0C47FC1890F6EE006F35C0 /* SelectorTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1D0C47FB1890F6EE006F35C0 /* SelectorTableViewController.m */; };
 		3D592E4F177DFD9800C82F74 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3D592E4E177DFD9800C82F74 /* UIKit.framework */; };
 		3D592E51177DFD9800C82F74 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3D592E50177DFD9800C82F74 /* Foundation.framework */; };
 		3D592E53177DFD9800C82F74 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3D592E52177DFD9800C82F74 /* CoreGraphics.framework */; };
@@ -23,12 +26,18 @@
 		3D592E7E177E43F700C82F74 /* icon@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 3D592E7D177E43F700C82F74 /* icon@2x.png */; };
 		3D592E80177E43FB00C82F74 /* icon.png in Resources */ = {isa = PBXBuildFile; fileRef = 3D592E7F177E43FB00C82F74 /* icon.png */; };
 		3D6C52F7177EB89500203EB6 /* countryCode.plist in Resources */ = {isa = PBXBuildFile; fileRef = 3D6C52F5177EB89500203EB6 /* countryCode.plist */; };
-		3D6C52F8177EB89500203EB6 /* prefix.plist in Resources */ = {isa = PBXBuildFile; fileRef = 3D6C52F6177EB89500203EB6 /* prefix.plist */; };
+		3D6C52F8177EB89500203EB6 /* idd.plist in Resources */ = {isa = PBXBuildFile; fileRef = 3D6C52F6177EB89500203EB6 /* idd.plist */; };
 		3D6C52FC177EE19200203EB6 /* AddIDDViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3D6C52FA177EE19200203EB6 /* AddIDDViewController.m */; };
 		3D6C52FD177EE19200203EB6 /* AddIDDViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 3D6C52FB177EE19200203EB6 /* AddIDDViewController.xib */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		1D0C47EE1890F52C006F35C0 /* WYPopoverController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WYPopoverController.h; sourceTree = "<group>"; };
+		1D0C47EF1890F52C006F35C0 /* WYPopoverController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WYPopoverController.m; sourceTree = "<group>"; };
+		1D0C47F01890F52C006F35C0 /* WYStoryboardPopoverSegue.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WYStoryboardPopoverSegue.h; sourceTree = "<group>"; };
+		1D0C47F11890F52C006F35C0 /* WYStoryboardPopoverSegue.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WYStoryboardPopoverSegue.m; sourceTree = "<group>"; };
+		1D0C47FA1890F6EE006F35C0 /* SelectorTableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SelectorTableViewController.h; sourceTree = "<group>"; };
+		1D0C47FB1890F6EE006F35C0 /* SelectorTableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SelectorTableViewController.m; sourceTree = "<group>"; };
 		3D592E4B177DFD9800C82F74 /* IDD Dialer.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "IDD Dialer.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		3D592E4E177DFD9800C82F74 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		3D592E50177DFD9800C82F74 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
@@ -51,7 +60,7 @@
 		3D592E7D177E43F700C82F74 /* icon@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "icon@2x.png"; sourceTree = "<group>"; };
 		3D592E7F177E43FB00C82F74 /* icon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = icon.png; sourceTree = "<group>"; };
 		3D6C52F5177EB89500203EB6 /* countryCode.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = countryCode.plist; sourceTree = "<group>"; };
-		3D6C52F6177EB89500203EB6 /* prefix.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = prefix.plist; sourceTree = "<group>"; };
+		3D6C52F6177EB89500203EB6 /* idd.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = idd.plist; sourceTree = "<group>"; };
 		3D6C52F9177EE19200203EB6 /* AddIDDViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AddIDDViewController.h; sourceTree = "<group>"; };
 		3D6C52FA177EE19200203EB6 /* AddIDDViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AddIDDViewController.m; sourceTree = "<group>"; };
 		3D6C52FB177EE19200203EB6 /* AddIDDViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = AddIDDViewController.xib; sourceTree = "<group>"; };
@@ -71,6 +80,17 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		1D0C47ED1890F52C006F35C0 /* WYPopoverController */ = {
+			isa = PBXGroup;
+			children = (
+				1D0C47EE1890F52C006F35C0 /* WYPopoverController.h */,
+				1D0C47EF1890F52C006F35C0 /* WYPopoverController.m */,
+				1D0C47F01890F52C006F35C0 /* WYStoryboardPopoverSegue.h */,
+				1D0C47F11890F52C006F35C0 /* WYStoryboardPopoverSegue.m */,
+			);
+			path = WYPopoverController;
+			sourceTree = "<group>";
+		};
 		3D592E42177DFD9800C82F74 = {
 			isa = PBXGroup;
 			children = (
@@ -103,11 +123,14 @@
 		3D592E54177DFD9800C82F74 /* IDD Dialer */ = {
 			isa = PBXGroup;
 			children = (
+				1D0C47ED1890F52C006F35C0 /* WYPopoverController */,
 				3D592E5D177DFD9800C82F74 /* AppDelegate.h */,
 				3D592E5E177DFD9800C82F74 /* AppDelegate.m */,
 				3D592E66177DFD9800C82F74 /* MainViewController.h */,
 				3D592E67177DFD9800C82F74 /* MainViewController.m */,
 				3D592E69177DFD9900C82F74 /* MainViewController.xib */,
+				1D0C47FA1890F6EE006F35C0 /* SelectorTableViewController.h */,
+				1D0C47FB1890F6EE006F35C0 /* SelectorTableViewController.m */,
 				3D592E74177E3A3B00C82F74 /* SettingViewController.h */,
 				3D592E75177E3A3B00C82F74 /* SettingViewController.m */,
 				3D592E76177E3A3B00C82F74 /* SettingViewController.xib */,
@@ -123,7 +146,7 @@
 			isa = PBXGroup;
 			children = (
 				3D6C52F5177EB89500203EB6 /* countryCode.plist */,
-				3D6C52F6177EB89500203EB6 /* prefix.plist */,
+				3D6C52F6177EB89500203EB6 /* idd.plist */,
 				3D592E56177DFD9800C82F74 /* IDD Dialer-Info.plist */,
 				3D592E57177DFD9800C82F74 /* InfoPlist.strings */,
 				3D592E5A177DFD9800C82F74 /* main.m */,
@@ -196,7 +219,7 @@
 				3D592E7E177E43F700C82F74 /* icon@2x.png in Resources */,
 				3D592E80177E43FB00C82F74 /* icon.png in Resources */,
 				3D6C52F7177EB89500203EB6 /* countryCode.plist in Resources */,
-				3D6C52F8177EB89500203EB6 /* prefix.plist in Resources */,
+				3D6C52F8177EB89500203EB6 /* idd.plist in Resources */,
 				3D6C52FD177EE19200203EB6 /* AddIDDViewController.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -227,6 +250,9 @@
 				3D592E5B177DFD9800C82F74 /* main.m in Sources */,
 				3D592E5F177DFD9800C82F74 /* AppDelegate.m in Sources */,
 				3D592E68177DFD9800C82F74 /* MainViewController.m in Sources */,
+				1D0C47F31890F52C006F35C0 /* WYStoryboardPopoverSegue.m in Sources */,
+				1D0C47F21890F52C006F35C0 /* WYPopoverController.m in Sources */,
+				1D0C47FC1890F6EE006F35C0 /* SelectorTableViewController.m in Sources */,
 				3D592E77177E3A3B00C82F74 /* SettingViewController.m in Sources */,
 				3D6C52FC177EE19200203EB6 /* AddIDDViewController.m in Sources */,
 			);
@@ -313,6 +339,7 @@
 		3D592E6F177DFD9900C82F74 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CLANG_ENABLE_OBJC_ARC = YES;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "IDD Dialer/IDD Dialer-Prefix.pch";
 				INFOPLIST_FILE = "IDD Dialer/IDD Dialer-Info.plist";
@@ -325,6 +352,7 @@
 		3D592E70177DFD9900C82F74 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CLANG_ENABLE_OBJC_ARC = YES;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "IDD Dialer/IDD Dialer-Prefix.pch";
 				INFOPLIST_FILE = "IDD Dialer/IDD Dialer-Info.plist";

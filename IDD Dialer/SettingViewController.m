@@ -8,17 +8,15 @@
 
 #import "SettingViewController.h"
 
-@implementation SectionView
-
--(void)setSectionTitle:(NSString*)title{
-    [titleLabel setText:title];
-}
-
+@interface SettingViewController()
+@property (nonatomic, strong) NSArray * iddArray;
+@property (nonatomic, strong) NSArray * countryArray;
+@property (nonatomic, strong) IBOutlet UITableView * tableView;
+@property (nonatomic, strong) NSArray * disabledCountryArray;
 @end
 
 @implementation SettingViewController
 
-@synthesize disabledCountryCodeArray = _disabledCountryCodeArray;
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -34,6 +32,7 @@
     // Do any additional setup after loading the view from its nib.
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(addIDDDone:) name:@"AddIDDDone" object:nil];
     addIDDVC = [[AddIDDViewController alloc] initWithNibName:@"AddIDDViewController" bundle:nil];
+	[self reloadInitialData];
 }
 
 -(void)viewWillAppear:(BOOL)animated{
@@ -47,11 +46,29 @@
 }
 
 -(void)reloadInitialData{
-    [super reloadInitialData];
-    NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
+	NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
     NSString *documentsDirectory = [paths objectAtIndex:0];
-    NSString *path = [documentsDirectory stringByAppendingPathComponent:@"disabled_countryCode_data.plist"];
-    self.disabledCountryCodeArray = [NSArray arrayWithContentsOfFile:path];
+    NSString *path = [documentsDirectory stringByAppendingPathComponent:@"idd_data.plist"];
+    self.iddArray = [NSArray arrayWithContentsOfFile:path];
+    path = [documentsDirectory stringByAppendingPathComponent:@"countryCode_data.plist"];
+    self.countryArray = [NSArray arrayWithContentsOfFile:path];
+    
+	//write default
+    if(!self.iddArray || [self.iddArray count] == 0){
+        NSString *path = [[NSBundle mainBundle] pathForResource:
+                          @"idd" ofType:@"plist"];
+        
+        self.iddArray = [[NSMutableArray alloc] initWithContentsOfFile:path];
+    }
+    if(!self.countryArray || [self.countryArray count] == 0){
+        path = [[NSBundle mainBundle] pathForResource:
+                @"countryCode" ofType:@"plist"];
+        
+        self.countryArray = [[NSMutableArray alloc] initWithContentsOfFile:path];
+    }
+    path = [documentsDirectory stringByAppendingPathComponent:@"disabled_countryCode_data.plist"];
+	
+    self.disabledCountryArray = [NSArray arrayWithContentsOfFile:path];
 }
 
 -(IBAction)switchValueChanged:(id)sender{
@@ -68,21 +85,20 @@
     NSDictionary* infoDict = [notification userInfo];
     NSString* targetIDD = [infoDict objectForKey:IDD];
     if(![targetIDD isEqual:@""]){
-        for(NSDictionary* IDDDict in self.prefixArray){
+        for(NSDictionary* IDDDict in self.iddArray){
             if([[IDDDict objectForKey:IDD] isEqual:targetIDD]){
                 return;
             }
         }
-        NSMutableArray* tempPrefixArray = [NSMutableArray arrayWithArray:self.prefixArray];
-        [tempPrefixArray addObject:infoDict];
-        self.prefixArray = tempPrefixArray;
-        [IDDTV reloadData];
+        NSMutableArray* tempiddArray = [NSMutableArray arrayWithArray:self.iddArray];
+        [tempiddArray addObject:infoDict];
+        self.iddArray = tempiddArray;
+        [self.tableView reloadData];
     }
 }
 
 -(IBAction)editTV:(id)sender{
-    [IDDTV setEditing:!isEditing animated:YES];
-    [countryCodeTV setEditing:!isEditing animated:YES];
+    [self.tableView setEditing:!isEditing animated:YES];
     isEditing = !isEditing;
     [backbtn setHidden:isEditing];
     
@@ -102,54 +118,38 @@
 -(void)updatePlits{
     NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
     NSString *documentsDirectory = [paths objectAtIndex:0];
-    NSString *path = [documentsDirectory stringByAppendingPathComponent:@"prefix_data.plist"];
-    [self.prefixArray writeToFile:path atomically:YES];
+    NSString *path = [documentsDirectory stringByAppendingPathComponent:@"idd_data.plist"];
+    [self.iddArray writeToFile:path atomically:YES];
     path = [documentsDirectory stringByAppendingPathComponent:@"countryCode_data.plist"];
-    [self.countryCodeArray writeToFile:path atomically:YES];
+    [self.countryArray writeToFile:path atomically:YES];
     path = [documentsDirectory stringByAppendingPathComponent:@"disabled_countryCode_data.plist"];
-    [self.disabledCountryCodeArray writeToFile:path atomically:YES];
+    [self.disabledCountryArray writeToFile:path atomically:YES];
 }
 
 #pragma mark - table view delegate
 
 -(NSInteger)numberOfSectionsInTableView:(UITableView *)tableView{
-    if(countryCodeTV == tableView){
-        return 2;
-    }
-    return [super numberOfSectionsInTableView:tableView];
+    return 3;
 }
 
--(UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section{
-    if(tableView == IDDTV){
-        return sectionViewIDD;
-    }else if(tableView == countryCodeTV){
-        if(section == 0){
-            return sectionViewCCE;
-        }else if(section == 1){
-            return sectionViewCCD;
-        }
-    }
-    return nil;
-}
 -(NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section{
-    if(countryCodeTV == tableView){
-        if(section == 0){
-            return @"Enabled";
-        }else if(section == 1){
-            return @"Disabled";
-        }
-    }
+	if(section == 0){
+		return @"IDD Codes";
+	}else if(section == 1){
+		return @"Country Codes - Enabled";
+	}else if(section == 2){
+		return @"Country Codes - Disabled";
+	}
     return @"";
 }
 -(NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section{
-    if(tableView == countryCodeTV){
-        if(section == 0){
-            return [self.countryCodeArray count];
-        }else if(section == 1){
-            return [self.disabledCountryCodeArray count];
-        }
-    }
-    return [super tableView:tableView numberOfRowsInSection:section];
+	if(section == 1){
+		return [self.countryArray count];
+	}else if(section == 2){
+		return [self.disabledCountryArray count];
+	}
+	return [self.iddArray count];
+	
 }
 
 -(BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath{
@@ -161,91 +161,114 @@
 }
 
 -(UITableViewCellEditingStyle)tableView:(UITableView *)tableView editingStyleForRowAtIndexPath:(NSIndexPath *)indexPath{
-    if(tableView == IDDTV){
-        return UITableViewCellEditingStyleDelete;
+    if(indexPath.section==2){
+        return UITableViewCellEditingStyleInsert;
     }else{
-        return (indexPath.section == 0) ?  UITableViewCellEditingStyleDelete:UITableViewCellEditingStyleInsert;
+        return UITableViewCellEditingStyleDelete;
     }
 }
 -(void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath{
-    if(tableView == IDDTV){
-        NSMutableArray* tempPrefixArray = [NSMutableArray arrayWithArray:self.prefixArray];
-        [tempPrefixArray removeObjectAtIndex:indexPath.row];
-        self.prefixArray = tempPrefixArray;
+	NSInteger section = indexPath.section;
+    if(section == 0){
+        NSMutableArray* tempiddArray = [NSMutableArray arrayWithArray:self.iddArray];
+        [tempiddArray removeObjectAtIndex:indexPath.row];
+        self.iddArray = tempiddArray;
         [tableView reloadSections:[NSIndexSet indexSetWithIndex:indexPath.section] withRowAnimation:UITableViewRowAnimationAutomatic];
         [tableView reloadData];
     }else{
         if(editingStyle == UITableViewCellEditingStyleDelete){
-            NSMutableArray* tempCountryCodeArray = [NSMutableArray arrayWithArray:self.countryCodeArray];
-            NSMutableArray* tempDisabledCountryCodeArray = [NSMutableArray arrayWithArray:self.disabledCountryCodeArray];
-            NSDictionary* removingObj = [tempCountryCodeArray objectAtIndex:indexPath.row];
-            [tempDisabledCountryCodeArray insertObject:removingObj atIndex:0];
-            self.disabledCountryCodeArray = tempDisabledCountryCodeArray;
-            [tempCountryCodeArray removeObjectAtIndex:indexPath.row];
-            self.countryCodeArray = tempCountryCodeArray;
+            NSMutableArray* tempcountryArray = [NSMutableArray arrayWithArray:self.countryArray];
+            NSMutableArray* tempdisabledCountryArray = [NSMutableArray arrayWithArray:self.disabledCountryArray];
+            NSDictionary* removingObj = [tempcountryArray objectAtIndex:indexPath.row];
+            [tempdisabledCountryArray insertObject:removingObj atIndex:0];
+            self.disabledCountryArray = tempdisabledCountryArray;
+            [tempcountryArray removeObjectAtIndex:indexPath.row];
+            self.countryArray = tempcountryArray;
         }else if(editingStyle == UITableViewCellEditingStyleInsert){
-            NSMutableArray* tempDisabledCountryCodeArray = [NSMutableArray arrayWithArray:self.disabledCountryCodeArray];
-            NSMutableArray* tempCountryCodeArray = [NSMutableArray arrayWithArray:self.countryCodeArray];
-            NSDictionary* removingObj = [tempDisabledCountryCodeArray objectAtIndex:indexPath.row];
-            [tempCountryCodeArray insertObject:removingObj atIndex:0];
-            self.countryCodeArray = tempCountryCodeArray;
-            [tempDisabledCountryCodeArray removeObjectAtIndex:indexPath.row];
-            self.disabledCountryCodeArray = tempDisabledCountryCodeArray;
+            NSMutableArray* tempdisabledCountryArray = [NSMutableArray arrayWithArray:self.disabledCountryArray];
+            NSMutableArray* tempcountryArray = [NSMutableArray arrayWithArray:self.countryArray];
+            NSDictionary* removingObj = [tempdisabledCountryArray objectAtIndex:indexPath.row];
+            [tempcountryArray insertObject:removingObj atIndex:0];
+            self.countryArray = tempcountryArray;
+            [tempdisabledCountryArray removeObjectAtIndex:indexPath.row];
+            self.disabledCountryArray = tempdisabledCountryArray;
         }
-        [tableView reloadData];
-        [tableView reloadSections:[NSIndexSet indexSetWithIndexesInRange:NSMakeRange(0, 2)] withRowAnimation:UITableViewRowAnimationAutomatic];
+//        [tableView reloadData];
+        [tableView reloadSections:[NSIndexSet indexSetWithIndexesInRange:NSMakeRange(1, 2)] withRowAnimation:UITableViewRowAnimationAutomatic];
+		[tableView reloadData];
     }
 }
 
 -(void)tableView:(UITableView *)tableView moveRowAtIndexPath:(NSIndexPath *)sourceIndexPath toIndexPath:(NSIndexPath *)destinationIndexPath{
-    if(tableView == IDDTV){
-        NSMutableArray* tempPrefixArray = [NSMutableArray arrayWithArray:self.prefixArray];
-        NSDictionary* removingObj = [tempPrefixArray objectAtIndex:sourceIndexPath.row];
-        [tempPrefixArray removeObjectAtIndex:sourceIndexPath.row];
-        [tempPrefixArray insertObject:removingObj atIndex:destinationIndexPath.row];
-        self.prefixArray = tempPrefixArray;
-    }else{
-        if(sourceIndexPath.section == destinationIndexPath.section){
-            NSMutableArray* tempSourceCountryCodeArray = [NSMutableArray arrayWithArray:sourceIndexPath.section == 0?self.countryCodeArray:self.disabledCountryCodeArray];
-            NSDictionary* removingObj = [tempSourceCountryCodeArray objectAtIndex:sourceIndexPath.row];
-            [tempSourceCountryCodeArray removeObjectAtIndex:sourceIndexPath.row];
-            [tempSourceCountryCodeArray insertObject:removingObj atIndex:destinationIndexPath.row];
-            if(sourceIndexPath.section == 0)
-                self.countryCodeArray = tempSourceCountryCodeArray;
-            if(sourceIndexPath.section == 1)
-                self.disabledCountryCodeArray = tempSourceCountryCodeArray;
-            
+	NSInteger source = sourceIndexPath.section;
+	NSInteger des = destinationIndexPath.section;
+    if(source == 0 && des == 0){
+        NSMutableArray* tempiddArray = [NSMutableArray arrayWithArray:self.iddArray];
+        NSDictionary* removingObj = [tempiddArray objectAtIndex:sourceIndexPath.row];
+        [tempiddArray removeObjectAtIndex:sourceIndexPath.row];
+        [tempiddArray insertObject:removingObj atIndex:destinationIndexPath.row];
+        self.iddArray = tempiddArray;
+    }else if (source != 0 && des != 0){
+        if(source == des){
+            NSMutableArray* tempSourcecountryArray = [NSMutableArray arrayWithArray:source == 1?self.countryArray:self.disabledCountryArray];
+            NSDictionary* removingObj = [tempSourcecountryArray objectAtIndex:sourceIndexPath.row];
+            [tempSourcecountryArray removeObjectAtIndex:sourceIndexPath.row];
+            [tempSourcecountryArray insertObject:removingObj atIndex:destinationIndexPath.row];
+            if(source == 1)
+                self.countryArray = tempSourcecountryArray;
+            if(source == 2)
+                self.disabledCountryArray = tempSourcecountryArray;
         }else{
-        NSMutableArray* tempSourceCountryCodeArray;
-        NSMutableArray* tempDistinationCountryCodeArray;
-        tempSourceCountryCodeArray = [NSMutableArray arrayWithArray:sourceIndexPath.section == 0?self.countryCodeArray:self.disabledCountryCodeArray];
-        tempDistinationCountryCodeArray = [NSMutableArray arrayWithArray:destinationIndexPath.section==0?self.countryCodeArray:self.disabledCountryCodeArray];
-        NSDictionary* removingObj = [tempSourceCountryCodeArray objectAtIndex:sourceIndexPath.row];
-        
-        [tempDistinationCountryCodeArray insertObject:removingObj atIndex:destinationIndexPath.row];
-        
-        if(sourceIndexPath.section == 0)
-            self.countryCodeArray = tempSourceCountryCodeArray;
-        if(sourceIndexPath.section == 1)
-            self.disabledCountryCodeArray = tempSourceCountryCodeArray;
-        
-        [tempSourceCountryCodeArray removeObjectAtIndex:sourceIndexPath.row];
-        
-        if(destinationIndexPath.section == 0)
-            self.countryCodeArray = tempDistinationCountryCodeArray;
-        if(destinationIndexPath.section == 1)
-            self.disabledCountryCodeArray = tempDistinationCountryCodeArray;
+			NSMutableArray* tempSourcecountryArray;
+			NSMutableArray* tempDistinationcountryArray;
+			tempSourcecountryArray = [NSMutableArray arrayWithArray:source == 1?self.countryArray:self.disabledCountryArray];
+			tempDistinationcountryArray = [NSMutableArray arrayWithArray:des==1?self.countryArray:self.disabledCountryArray];
+			NSDictionary* removingObj = [tempSourcecountryArray objectAtIndex:sourceIndexPath.row];
+			
+			[tempDistinationcountryArray insertObject:removingObj atIndex:destinationIndexPath.row];
+			
+			if(source == 1)
+				self.countryArray = tempSourcecountryArray;
+			if(source == 2)
+				self.disabledCountryArray = tempSourcecountryArray;
+			
+			[tempSourcecountryArray removeObjectAtIndex:sourceIndexPath.row];
+			
+			if(des == 1)
+				self.countryArray = tempDistinationcountryArray;
+			if(des == 2)
+				self.disabledCountryArray = tempDistinationcountryArray;
         }
     }
-    [tableView reloadData];
+	[tableView reloadSections:[NSIndexSet indexSetWithIndexesInRange:NSMakeRange(1, 2)] withRowAnimation:UITableViewRowAnimationAutomatic];
+	[tableView reloadData];
 }
 
 -(UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath{
-    UITableViewCell *cell = [super tableView:tableView cellForRowAtIndexPath:indexPath];
+	static NSString *MyIdentifier;
+    MyIdentifier = indexPath.section==0?@"IDD":@"CC";
     
-    if(tableView == countryCodeTV && indexPath.section == 1){
-        [[cell textLabel] setText:[[self.disabledCountryCodeArray objectAtIndex:indexPath.row] objectForKey:COUNTRY_NAME]];
+    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:MyIdentifier];
+    
+    if (cell == nil) {
+        cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault  reuseIdentifier:MyIdentifier];
+        if(indexPath.section==0){
+            [[cell textLabel] setFont:[UIFont fontWithName:@"HelveticaNeue-UltraLight" size:30]];
+        }else{
+            [[cell textLabel] setFont:[UIFont fontWithName:@"HelveticaNeue-UltraLight" size:25]];
+        }
+        [[cell textLabel] setAdjustsFontSizeToFitWidth:YES];
+        [[cell textLabel] setTextColor:[UIColor redColor]];
     }
+    
+	if(indexPath.section==0){
+		[[cell textLabel] setText:[[self.iddArray objectAtIndex:indexPath.row] objectForKey:IDD]];
+	}else if(indexPath.section == 1){
+		[[cell textLabel] setText:[[self.countryArray objectAtIndex:indexPath.row] objectForKey:COUNTRY_NAME]];
+	}else if(indexPath.section == 2){
+		[[cell textLabel] setText:[[self.disabledCountryArray objectAtIndex:indexPath.row] objectForKey:COUNTRY_NAME]];
+	}
+    
     return cell;
 }
 @end

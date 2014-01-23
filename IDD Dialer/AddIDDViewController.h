@@ -13,7 +13,7 @@
     UISwitch * with00Siwtch;
 }
 
-@property (nonatomic, retain) IBOutlet UITextField* iddTF;
-@property (nonatomic, retain) IBOutlet UISwitch * with00Siwtch;
+@property (nonatomic, strong) IBOutlet UITextField* iddTF;
+@property (nonatomic, strong) IBOutlet UISwitch * with00Siwtch;
 
 @end

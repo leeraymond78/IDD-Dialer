@@ -9,27 +9,38 @@
 #import "MainViewController.h"
 
 #import "SettingViewController.h"
+#import "SelectorTableViewController.h"
 
+@interface MainViewController()
+@property (nonatomic, strong) SelectorTableViewController * iddSelectionViewController;
+@property (nonatomic, strong) SelectorTableViewController * countrySelectionViewController;
+@property (nonatomic, strong) WYPopoverController * iddPopoverController;
+@property (nonatomic, strong) WYPopoverController * countryPopOverController;
+@property (nonatomic, strong) NSArray * iddArray;
+@property (nonatomic, strong) NSArray * countryArray;
+@end
 
 @implementation MainViewController
-
-@synthesize prefixArray = _prefixArray;
-@synthesize countryCodeArray = _countryCodeArray;
 
 - (void)viewDidLoad
 {
     [super viewDidLoad];
 	// Do any additional setup after loading the view, typically from a nib.
+	
     settingVC = [[SettingViewController alloc]initWithNibName:@"SettingViewController" bundle:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(fillInputTF) name:UIApplicationDidBecomeActiveNotification object:nil];
     
+	self.iddSelectionViewController = [SelectorTableViewController new];
+	self.countrySelectionViewController = [SelectorTableViewController new];
+	[self checkButtonTitle];
     [self reloadInitialData];
+	
     [self fillInputTF];
     
     if([[[NSUserDefaults standardUserDefaults] objectForKey:@"isOnAppCall"] boolValue]){
         [self call];
     }
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(renewView) name:@"settingBackPressed" object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(reloadInitialData) name:@"settingBackPressed" object:nil];
 }
 
 - (void)didReceiveMemoryWarning
@@ -40,33 +51,55 @@
 
 #pragma mark - methods
 
--(void)renewView{
-    [self reloadInitialData];
-    [IDDTV reloadData];
-    [countryCodeTV reloadData];
-}
 -(void)reloadInitialData{
     NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
     NSString *documentsDirectory = [paths objectAtIndex:0];
-    NSString *path = [documentsDirectory stringByAppendingPathComponent:@"prefix_data.plist"];
-    self.prefixArray = [NSArray arrayWithContentsOfFile:path];
+    NSString *path = [documentsDirectory stringByAppendingPathComponent:@"idd_data.plist"];
+    self.iddArray = [NSArray arrayWithContentsOfFile:path];
     path = [documentsDirectory stringByAppendingPathComponent:@"countryCode_data.plist"];
-    self.countryCodeArray = [NSArray arrayWithContentsOfFile:path];
+    self.countryArray = [NSArray arrayWithContentsOfFile:path];
     
         //write default
-    if(!self.prefixArray || [self.prefixArray count] == 0){
+    if(!self.iddArray || [self.iddArray count] == 0){
         NSString *path = [[NSBundle mainBundle] pathForResource:
-                          @"prefix" ofType:@"plist"];
+                          @"idd" ofType:@"plist"];
         
-        self.prefixArray = [[NSMutableArray alloc] initWithContentsOfFile:path];
+        self.iddArray = [[NSMutableArray alloc] initWithContentsOfFile:path];
     }
-    if(!self.countryCodeArray || [self.countryCodeArray count] == 0){
+    if(!self.countryArray || [self.countryArray count] == 0){
         path = [[NSBundle mainBundle] pathForResource:
                 @"countryCode" ofType:@"plist"];
         
-        self.countryCodeArray = [[NSMutableArray alloc] initWithContentsOfFile:path];
+        self.countryArray = [[NSMutableArray alloc] initWithContentsOfFile:path];
     }
+	
+	NSMutableArray * iddValueArray = [NSMutableArray new];
+	for (NSDictionary * dict in self.iddArray) {
+		[iddValueArray addObject:dict[IDD]];
+	}
+	NSMutableArray * countryValueArray = [NSMutableArray new];
+	for (NSDictionary * dict in self.countryArray) {
+		[countryValueArray addObject:dict[COUNTRY_NAME]];
+	}
+	[self.iddSelectionViewController setDataSource:iddValueArray];
+	[self.countrySelectionViewController setDataSource:countryValueArray];
 }
+
+-(void)checkButtonTitle{
+	if(self.iddSelectionViewController.selectedIndex!=-1){
+		NSString * idd = self.iddArray[self.iddSelectionViewController.selectedIndex][IDD];
+		[iddBtn setTitle:idd forState:UIControlStateNormal];
+	}else{
+		[iddBtn setTitle:@"IDD" forState:UIControlStateNormal];
+	}
+	if(self.countrySelectionViewController.selectedIndex!=-1){
+		NSString * country = self.countryArray[self.countrySelectionViewController.selectedIndex][COUNTRY_NAME];
+		[countryBtn setTitle:country forState:UIControlStateNormal];
+	}else{
+		[countryBtn setTitle:@"Country" forState:UIControlStateNormal];
+	}
+}
+
 -(id)getObjectFromArrayWithValue:(NSString*)value Key:(NSString*)key wantedKey:(NSString*)wantedKey array:(NSArray*)array{
     id result = nil;
     for(NSDictionary* dict in array){
@@ -81,10 +114,10 @@
     return result;
 }
 -(void)setDefaultSelections:(NSString*)number{
-    NSInteger targetIndexIDD = 0;
-    NSInteger targetIndexCC = 0;
+    NSInteger targetIndexIDD = -1;
+    NSInteger targetIndexCC = -1;
     NSString* targetCountryCode;
-    NSString* targetPrefix;
+    NSString* targetIDD;
     if(number){
         NSRange range;// non-plain number
         if([number characterAtIndex:0] == '+'){
@@ -96,11 +129,11 @@
             for (int x = 3; x > 0; x--) {
                 range.length = x;
                 NSString* firstChars = [number substringWithRange:range];
-                for(NSDictionary* countryCodeDict in self.countryCodeArray){
+                for(NSDictionary* countryCodeDict in self.countryArray){
                     NSString* countryCode = [countryCodeDict objectForKey:COUNTRY_CODE];
                     if ([firstChars isEqualToString:countryCode]) {
                         targetCountryCode = countryCode;
-                        targetIndexCC = [self.countryCodeArray indexOfObject:countryCodeDict];
+                        targetIndexCC = [self.countryArray indexOfObject:countryCodeDict];
                         break;
                     }
                 }
@@ -109,29 +142,31 @@
         NSDictionary* infoDict = [self getInfoWithNumber:number];
         if(infoDict){//plain number
             targetCountryCode = [infoDict objectForKey:COUNTRY_CODE];
-            targetPrefix = [infoDict objectForKey:IDD];
+            targetIDD = [infoDict objectForKey:IDD];
             
-            for(NSDictionary* countryCodeDict in self.countryCodeArray){
+            for(NSDictionary* countryCodeDict in self.countryArray){
                 NSString* countryCode = [countryCodeDict objectForKey:COUNTRY_CODE];
                 if ([targetCountryCode isEqualToString:countryCode]) {
-                    targetIndexCC = [self.countryCodeArray indexOfObject:countryCodeDict];
+                    targetIndexCC = [self.countryArray indexOfObject:countryCodeDict];
                     break;
                 }
             }
-            for(NSDictionary* prefixDict in self.prefixArray){
-                NSString* prefix = [prefixDict objectForKey:IDD];
-                if ([targetPrefix isEqualToString:prefix]) {
-                    targetIndexIDD = [self.prefixArray indexOfObject:prefixDict];
+            for(NSDictionary* iddDict in self.iddArray){
+                NSString* idd = [iddDict objectForKey:IDD];
+                if ([targetIDD isEqualToString:idd]) {
+                    targetIndexIDD = [self.iddArray indexOfObject:iddDict];
                     break;
                 }
             }
         }
     }
-    NSLog(@"selected idd for row %d %@, cc for row %d %@", targetIndexIDD,targetPrefix, targetIndexCC,targetCountryCode);
-    [IDDTV selectRowAtIndexPath:[NSIndexPath indexPathForRow:targetIndexIDD inSection:0] animated:YES scrollPosition:UITableViewScrollPositionNone];
-    [countryCodeTV selectRowAtIndexPath:[NSIndexPath indexPathForRow:targetIndexCC inSection:0] animated:YES scrollPosition:UITableViewScrollPositionNone];
-    
-
+    NSLog(@"selected idd for row %d %@, cc for row %d %@", targetIndexIDD,targetIDD, targetIndexCC,targetCountryCode);
+	if(targetIndexIDD != -1){
+		[self.iddSelectionViewController setSelectedIndex:targetIndexIDD];
+	}
+	if(targetIndexCC != -1){
+		[self.countrySelectionViewController setSelectedIndex:targetIndexCC];
+	}
 }
 
 -(NSDictionary*)getInfoWithNumber:(NSString*)number{
@@ -170,14 +205,22 @@
     [[UIApplication sharedApplication] openURL:[NSURL URLWithString:[NSString stringWithFormat:@"tel:%@",resultLabel.text]]];
 }
 
--(NSString *)processNumberWithPrefix:(NSString *)prefix countryCode:(NSString *)countryCode number:(NSString *)number{
+-(NSString *)processNumberWithIDD:(NSString *)idd countryCode:(NSString *)countryCode number:(NSString *)number{
     NSString* result = @"";
-    BOOL withDoubleZero = [[self getObjectFromArrayWithValue:prefix Key:IDD wantedKey:IDD_WITH00 array:self.prefixArray] boolValue];
-    NSString* doubleZero = withDoubleZero?@"00":@"";
-    
+	NSString* doubleZero = @"";
+	if(![@"" isEqualToString:idd]){
+		BOOL withDoubleZero = [[self getObjectFromArrayWithValue:idd Key:IDD wantedKey:IDD_WITH00 array:self.iddArray] boolValue];
+		doubleZero = withDoubleZero?@"00":@"";
+		idd = [idd stringByAppendingString:@"-"];
+    }
+	if(![@"" isEqualToString:countryCode]){
+		countryCode = [countryCode stringByAppendingString:@"-"];
+	}else{
+		doubleZero = @"";
+	}
     NSString* finalNumber = [self changeNumberToPlainNumber:number];
-    if(prefix && countryCode && ![finalNumber isEqualToString:@""]){
-        result = [NSString stringWithFormat:@"%@-%@%@-%@",prefix,doubleZero,countryCode,finalNumber];
+    if(idd && countryCode && ![finalNumber isEqualToString:@""]){
+        result = [NSString stringWithFormat:@"%@%@%@%@",idd,doubleZero,countryCode,finalNumber];
     }
     return result;
 }
@@ -196,7 +239,7 @@
             for (int x = 3; x > 0; x--) {
                 range.length = x;
                 NSString* firstChars = [number substringWithRange:range];
-                for(NSDictionary* countryCodeDict in self.countryCodeArray){
+                for(NSDictionary* countryCodeDict in self.countryArray){
                     NSString* countryCode = [countryCodeDict objectForKey:COUNTRY_CODE];
                     if ([firstChars isEqualToString:countryCode]) {
                         number = [number substringFromIndex:range.location + x];
@@ -256,26 +299,33 @@
 -(void)process{
     [inputTF resignFirstResponder];
     if ([inputTF.text isEqualToString:@""]){
-        [self showAlertViewWithTitle:@"Uh oh!" msg:@"Enter something plz >_<"];
-        [resultLabel setText:@"Enter again plz~"];
+        [self showAlertViewWithTitle:@"Warning" msg:@"Please enter the number you want to dial"];
+        [resultLabel setText:@"Please enter again"];
     }else{
         [self processWithoutChecking:NO];
     }
 }
 
 -(void)processWithoutChecking:(BOOL)isFromCell{
-    NSString* prefix;
-    NSString* countryCode;
     NSString* normalNumber = [self getNormalNumber:inputTF.text];
     if(!isFromCell){
     [self setDefaultSelections:normalNumber];
     }
     [inputTF setText:normalNumber];
-    prefix = [[[IDDTV cellForRowAtIndexPath:[IDDTV indexPathForSelectedRow]]textLabel]text];
-    
-    countryCode = [[self.countryCodeArray objectAtIndex:[countryCodeTV indexPathForSelectedRow].row] objectForKey:COUNTRY_CODE];
-    
-    [resultLabel setText:[self processNumberWithPrefix:prefix countryCode:countryCode number:normalNumber]];
+	
+    NSString * idd = @"";
+	NSString * country = @"";
+	
+	if(self.iddSelectionViewController.selectedIndex != -1){
+		idd = self.iddArray[self.iddSelectionViewController.selectedIndex][IDD];
+	}
+	if(self.countrySelectionViewController.selectedIndex != -1){
+		country = self.countryArray[self.countrySelectionViewController.selectedIndex][COUNTRY_CODE];
+	}
+	
+    [resultLabel setText:[self processNumberWithIDD:idd
+										   countryCode:country
+												number:normalNumber]];
 }
 
 -(IBAction)hideAndProcess:(id)sender{
@@ -315,56 +365,45 @@
     return YES;
 }
 
-#pragma mark - table view delegates
-
-
--(NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section{
-    if(tableView == IDDTV){
-        return [self.prefixArray count];
-    }else if(tableView == countryCodeTV){
-        return [self.countryCodeArray count];
-    }
-    return 0;
+- (IBAction)popSelection:(id)sender{
+	WYPopoverController * popoverController;
+	if(sender == iddBtn){
+		if(!self.iddPopoverController){
+			self.iddPopoverController = [[WYPopoverController alloc] initWithContentViewController:self.iddSelectionViewController];
+		}
+		popoverController = self.iddPopoverController;
+       
+	}else if (sender == countryBtn){
+		if(!self.countryPopOverController){
+			self.countryPopOverController = [[WYPopoverController alloc] initWithContentViewController:self.countrySelectionViewController];
+		}
+		popoverController = self.countryPopOverController;
+	}
+	popoverController.delegate = self;
+	popoverController.passthroughViews = @[sender];
+	popoverController.popoverLayoutMargins = UIEdgeInsetsMake(10, 10, 10, 10);
+	popoverController.wantsDefaultContentAppearance = NO;
+	[sender setEnabled:NO];
+	[popoverController presentPopoverFromRect:((UIButton*)sender).bounds
+									   inView:sender
+					 permittedArrowDirections:WYPopoverArrowDirectionAny
+									 animated:YES
+									  options:WYPopoverAnimationOptionFadeWithScale];
 }
 
--(NSInteger)numberOfSectionsInTableView:(UITableView *)tableView{
-    if(tableView == IDDTV){
-        return 1;
-    }else if(tableView == countryCodeTV){
-        return 1;
-    }
-    return 0;
+#pragma mark - WYPopoverControllerDelegate
+
+
+- (BOOL)popoverControllerShouldDismissPopover:(WYPopoverController *)controller
+{
+    return YES;
 }
 
--(UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath{
-    
-    static NSString *MyIdentifier;
-    MyIdentifier = tableView==IDDTV?@"IDD":@"CC";
-    
-    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:MyIdentifier];
-    
-    if (cell == nil) {
-        cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault  reuseIdentifier:MyIdentifier];
-        if(tableView == IDDTV){
-            [[cell textLabel] setFont:[UIFont fontWithName:@"HelveticaNeue-UltraLight" size:30]];
-        }else{            
-            [[cell textLabel] setFont:[UIFont fontWithName:@"HelveticaNeue-UltraLight" size:25]];
-        }
-        [[cell textLabel] setAdjustsFontSizeToFitWidth:YES];
-        [[cell textLabel] setTextColor:[UIColor redColor]];
-    }
-    
-    if(indexPath.section == 0){
-        if(tableView == IDDTV){
-            [[cell textLabel] setText:[[self.prefixArray objectAtIndex:indexPath.row] objectForKey:IDD]];
-        }else if(tableView == countryCodeTV){
-            [[cell textLabel] setText:[[self.countryCodeArray objectAtIndex:indexPath.row] objectForKey:COUNTRY_NAME]];
-        }
-    }
-    return cell;
+- (void)popoverControllerDidDismissPopover:(WYPopoverController *)controller
+{
+	[controller.passthroughViews[0] setEnabled:YES];
+	[self checkButtonTitle];
+	[self processForSelectingCell];
 }
 
--(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
-    [self processForSelectingCell];
-}
 @end

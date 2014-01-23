@@ -7,6 +7,7 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "WYPopoverController.h"
 
 @class SettingViewController;
 
@@ -15,32 +16,24 @@
 #define COUNTRY_CODE @"CC"
 #define COUNTRY_NAME @"CN"
 
-@interface MainViewController : UIViewController<UITextFieldDelegate,UITableViewDataSource,UITableViewDelegate>{
-
-    
-    IBOutlet    UITableView*    IDDTV;
-    IBOutlet    UITableView*    countryCodeTV;
-    
+@interface MainViewController : UIViewController<UITextFieldDelegate, WYPopoverControllerDelegate>{
+   
 @private
-    NSArray*  _prefixArray;
-    NSArray*  _countryCodeArray;
     
     IBOutlet    UITextField*    inputTF;
     IBOutlet    UILabel*        resultLabel;
     IBOutlet    UIButton*       processBtn;
+	IBOutlet	UIButton*		iddBtn;
+	IBOutlet	UIButton*		countryBtn;
     
     SettingViewController* settingVC;
 }
-
-@property (nonatomic, retain) NSArray* prefixArray;
-
-@property (nonatomic, retain) NSArray* countryCodeArray;
 
 -(void)reloadInitialData;
 
 -(NSString*)getClipboardText;
 
--(NSString*)processNumberWithPrefix:(NSString*)prefix countryCode:(NSString*)countryCode number:(NSString*)number;
+-(NSString*)processNumberWithIDD:(NSString*)idd countryCode:(NSString*)countryCode number:(NSString*)number;
 
 -(IBAction)processAction:(id)sender;
 

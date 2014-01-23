@@ -7,31 +7,15 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "MainViewController.h"
 #import "AddIDDViewController.h"
 
-@interface SectionView : UIView{
-    IBOutlet UILabel* titleLabel;
-}
-
-@end
-
-@interface SettingViewController : MainViewController{
+@interface SettingViewController : UIViewController<UITableViewDataSource, UITableViewDelegate>{
     IBOutlet UISwitch * onAppCallSiwtch;
     BOOL isEditing;
     
     IBOutlet UIButton * backbtn;
     
-    NSArray* _disabledCountryCodeArray;
-    
     AddIDDViewController * addIDDVC;
-    
-    IBOutlet SectionView* sectionViewIDD;
-    IBOutlet SectionView* sectionViewCCE;
-    IBOutlet SectionView* sectionViewCCD;
-    
 }
-
-@property (nonatomic, retain) NSArray* disabledCountryCodeArray;
 
 @end
