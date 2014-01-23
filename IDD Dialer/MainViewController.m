@@ -11,6 +11,7 @@
 #import "SettingViewController.h"
 #import "SelectorTableViewController.h"
 
+#define BACKGROUND_CHANGE_INTERVAL 3
 @interface MainViewController()
 @property (nonatomic, strong) SelectorTableViewController * iddSelectionViewController;
 @property (nonatomic, strong) SelectorTableViewController * countrySelectionViewController;
@@ -41,6 +42,8 @@
         [self call];
     }
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(reloadInitialData) name:@"settingBackPressed" object:nil];
+	
+	[NSTimer scheduledTimerWithTimeInterval:BACKGROUND_CHANGE_INTERVAL target:self selector:@selector(changeBackgroundColor) userInfo:nil repeats:YES];
 }
 
 - (void)didReceiveMemoryWarning
@@ -357,6 +360,14 @@
     [UIView commitAnimations];
 }
 
+-(void)changeBackgroundColor{
+	[UIView animateWithDuration:BACKGROUND_CHANGE_INTERVAL-.03 animations:^(void){
+		[self.view setBackgroundColor:[UIColor colorWithRed:0.86+((CGFloat)rand()/RAND_MAX)*0.1
+													  green:0.86+((CGFloat)rand()/RAND_MAX)*0.1
+													   blue:0.86+((CGFloat)rand()/RAND_MAX)*0.1 alpha:1]];
+	}];
+	
+}
 #pragma mark - textfield delegates
 
 -(BOOL)textFieldShouldReturn:(UITextField *)textField{
