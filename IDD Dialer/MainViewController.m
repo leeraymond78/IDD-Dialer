@@ -28,6 +28,10 @@
     [super viewDidLoad];
 	// Do any additional setup after loading the view, typically from a nib.
 	
+    [[callBtn layer] setCornerRadius:40];
+    [[iddBtn layer] setCornerRadius:6];
+    [[countryBtn layer] setCornerRadius:6];
+    
     settingVC = [[SettingViewController alloc]initWithNibName:@"SettingViewController" bundle:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(fillInputTF) name:UIApplicationDidBecomeActiveNotification object:nil];
     
@@ -35,8 +39,6 @@
 	self.countrySelectionViewController = [SelectorTableViewController new];
 	[self checkButtonTitle];
     [self reloadInitialData];
-	
-    [self fillInputTF];
     
     if([[[NSUserDefaults standardUserDefaults] objectForKey:@"isOnAppCall"] boolValue]){
         [self call];
@@ -125,7 +127,7 @@
         NSRange range;// non-plain number
         if([number characterAtIndex:0] == '+'){
             range.location = 1;
-        }else if([[number substringToIndex:2] isEqualToString:@"00"]){
+        }else if(number.length >2 && [[number substringToIndex:2] isEqualToString:@"00"]){
             range.location = 2;
         }
         if(range.location == 1 || range.location == 2){
@@ -170,6 +172,7 @@
 	if(targetIndexCC != -1){
 		[self.countrySelectionViewController setSelectedIndex:targetIndexCC];
 	}
+    [self checkButtonTitle];
 }
 
 -(NSDictionary*)getInfoWithNumber:(NSString*)number{
@@ -294,7 +297,7 @@
 -(void)fillInputTF{
     NSString* number = [self getClipboardText];
     if(number){
-        [inputTF setText:[self getClipboardText]];
+        [inputTF setText:number];
         [self processWithoutChecking:NO];
     }
 }
@@ -361,11 +364,10 @@
 }
 
 -(void)changeBackgroundColor{
-	[UIView animateWithDuration:BACKGROUND_CHANGE_INTERVAL-.03 animations:^(void){
+    [UIView animateWithDuration:BACKGROUND_CHANGE_INTERVAL-.05 delay:0 options:UIViewAnimationOptionAllowUserInteraction animations:^(void){
 		[self.view setBackgroundColor:[UIColor colorWithRed:0.86+((CGFloat)rand()/RAND_MAX)*0.1
 													  green:0.86+((CGFloat)rand()/RAND_MAX)*0.1
-													   blue:0.86+((CGFloat)rand()/RAND_MAX)*0.1 alpha:1]];
-	}];
+													   blue:0.86+((CGFloat)rand()/RAND_MAX)*0.1 alpha:1]];} completion:nil];
 	
 }
 #pragma mark - textfield delegates

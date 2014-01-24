@@ -22,7 +22,7 @@
     
     IBOutlet    UITextField*    inputTF;
     IBOutlet    UILabel*        resultLabel;
-    IBOutlet    UIButton*       processBtn;
+    IBOutlet    UIButton*       callBtn;
 	IBOutlet	UIButton*		iddBtn;
 	IBOutlet	UIButton*		countryBtn;
     

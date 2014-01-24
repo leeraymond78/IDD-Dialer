@@ -253,12 +253,19 @@
     if (cell == nil) {
         cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault  reuseIdentifier:MyIdentifier];
         if(indexPath.section==0){
-            [[cell textLabel] setFont:[UIFont fontWithName:@"HelveticaNeue-UltraLight" size:30]];
+            [[cell textLabel] setTextColor:[UIColor colorWithRed:.5 green:.7 blue:.9 alpha:1.]];
+            [[cell textLabel] setFont:[UIFont fontWithName:@"HelveticaNeue-Thin" size:25]];
         }else{
-            [[cell textLabel] setFont:[UIFont fontWithName:@"HelveticaNeue-UltraLight" size:25]];
+            if(indexPath.section == 1){
+                [[cell textLabel] setTextColor:[UIColor colorWithRed:.1 green:0.9 blue:0.2 alpha:1.]];
+            }else if (indexPath.section == 2){
+                [[cell textLabel] setTextColor:[UIColor colorWithRed:1 green:.4 blue:.5 alpha:1.]];
+            }
+            [[cell textLabel] setFont:[UIFont fontWithName:@"HelveticaNeue-Thin" size:25]];
         }
         [[cell textLabel] setAdjustsFontSizeToFitWidth:YES];
-        [[cell textLabel] setTextColor:[UIColor redColor]];
+        
+        [cell setBackgroundColor:[UIColor darkGrayColor]];
     }
     
 	if(indexPath.section==0){
