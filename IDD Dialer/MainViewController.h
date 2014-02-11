@@ -31,9 +31,7 @@
 
 -(void)reloadInitialData;
 
--(NSString*)getClipboardText;
-
--(NSString*)processNumberWithIDD:(NSString*)idd countryCode:(NSString*)countryCode number:(NSString*)number;
+-(NSString*)clipboardText;
 
 -(IBAction)processAction:(id)sender;
 

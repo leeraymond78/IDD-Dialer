@@ -210,34 +210,34 @@
         self.iddArray = tempiddArray;
     }else if (source != 0 && des != 0){
         if(source == des){
-            NSMutableArray* tempSourcecountryArray = [NSMutableArray arrayWithArray:source == 1?self.countryArray:self.disabledCountryArray];
-            NSDictionary* removingObj = [tempSourcecountryArray objectAtIndex:sourceIndexPath.row];
-            [tempSourcecountryArray removeObjectAtIndex:sourceIndexPath.row];
-            [tempSourcecountryArray insertObject:removingObj atIndex:destinationIndexPath.row];
+            NSMutableArray* tempSourceCountryArray = [NSMutableArray arrayWithArray:source == 1?self.countryArray:self.disabledCountryArray];
+            NSDictionary* removingObj = [tempSourceCountryArray objectAtIndex:sourceIndexPath.row];
+            [tempSourceCountryArray removeObjectAtIndex:sourceIndexPath.row];
+            [tempSourceCountryArray insertObject:removingObj atIndex:destinationIndexPath.row];
             if(source == 1)
-                self.countryArray = tempSourcecountryArray;
+                self.countryArray = tempSourceCountryArray;
             if(source == 2)
-                self.disabledCountryArray = tempSourcecountryArray;
+                self.disabledCountryArray = tempSourceCountryArray;
         }else{
-			NSMutableArray* tempSourcecountryArray;
-			NSMutableArray* tempDistinationcountryArray;
-			tempSourcecountryArray = [NSMutableArray arrayWithArray:source == 1?self.countryArray:self.disabledCountryArray];
-			tempDistinationcountryArray = [NSMutableArray arrayWithArray:des==1?self.countryArray:self.disabledCountryArray];
-			NSDictionary* removingObj = [tempSourcecountryArray objectAtIndex:sourceIndexPath.row];
+			NSMutableArray* tempSourceCountryArray;
+			NSMutableArray* tempDestinationCountryArray;
+			tempSourceCountryArray = [NSMutableArray arrayWithArray:source == 1?self.countryArray:self.disabledCountryArray];
+			tempDestinationCountryArray = [NSMutableArray arrayWithArray:des==1?self.countryArray:self.disabledCountryArray];
+			NSDictionary* removingObj = [tempSourceCountryArray objectAtIndex:sourceIndexPath.row];
 			
-			[tempDistinationcountryArray insertObject:removingObj atIndex:destinationIndexPath.row];
+			[tempDestinationCountryArray insertObject:removingObj atIndex:destinationIndexPath.row];
 			
 			if(source == 1)
-				self.countryArray = tempSourcecountryArray;
+				self.countryArray = tempSourceCountryArray;
 			if(source == 2)
-				self.disabledCountryArray = tempSourcecountryArray;
+				self.disabledCountryArray = tempSourceCountryArray;
 			
-			[tempSourcecountryArray removeObjectAtIndex:sourceIndexPath.row];
+			[tempSourceCountryArray removeObjectAtIndex:sourceIndexPath.row];
 			
 			if(des == 1)
-				self.countryArray = tempDistinationcountryArray;
+				self.countryArray = tempDestinationCountryArray;
 			if(des == 2)
-				self.disabledCountryArray = tempDistinationcountryArray;
+				self.disabledCountryArray = tempDestinationCountryArray;
         }
     }
 	[tableView reloadSections:[NSIndexSet indexSetWithIndexesInRange:NSMakeRange(1, 2)] withRowAnimation:UITableViewRowAnimationAutomatic];
@@ -256,23 +256,19 @@
             [[cell textLabel] setTextColor:[UIColor colorWithRed:.5 green:.7 blue:.9 alpha:1.]];
             [[cell textLabel] setFont:[UIFont fontWithName:@"HelveticaNeue-Thin" size:25]];
         }else{
-            if(indexPath.section == 1){
-                [[cell textLabel] setTextColor:[UIColor colorWithRed:.1 green:0.9 blue:0.2 alpha:1.]];
-            }else if (indexPath.section == 2){
-                [[cell textLabel] setTextColor:[UIColor colorWithRed:1 green:.4 blue:.5 alpha:1.]];
-            }
             [[cell textLabel] setFont:[UIFont fontWithName:@"HelveticaNeue-Thin" size:25]];
         }
         [[cell textLabel] setAdjustsFontSizeToFitWidth:YES];
         
         [cell setBackgroundColor:[UIColor darkGrayColor]];
     }
-    
 	if(indexPath.section==0){
 		[[cell textLabel] setText:[[self.iddArray objectAtIndex:indexPath.row] objectForKey:IDD]];
 	}else if(indexPath.section == 1){
+		[[cell textLabel] setTextColor:[UIColor colorWithRed:.1 green:0.9 blue:0.2 alpha:1.]];
 		[[cell textLabel] setText:[[self.countryArray objectAtIndex:indexPath.row] objectForKey:COUNTRY_NAME]];
 	}else if(indexPath.section == 2){
+		[[cell textLabel] setTextColor:[UIColor colorWithRed:1 green:.4 blue:.5 alpha:1.]];
 		[[cell textLabel] setText:[[self.disabledCountryArray objectAtIndex:indexPath.row] objectForKey:COUNTRY_NAME]];
 	}
     
