@@ -7,9 +7,7 @@
 //
 
 #import "MainViewController.h"
-
 #import "SettingViewController.h"
-#import "SelectorTableViewController.h"
 
 #define BACKGROUND_CHANGE_INTERVAL 3
 
@@ -17,8 +15,6 @@
 #define isEmptyString(str) ((str == nil)|| [@"" isEqual:str])
 
 @interface MainViewController()
-@property (nonatomic, strong) SelectorTableViewController * iddSelectionViewController;
-@property (nonatomic, strong) SelectorTableViewController * countrySelectionViewController;
 @property (nonatomic, strong) WYPopoverController * iddPopoverController;
 @property (nonatomic, strong) WYPopoverController * countryPopOverController;
 @property (nonatomic, strong) NSArray * iddArray;
@@ -32,15 +28,16 @@
 	
     [super viewDidLoad];
 	// Do any additional setup after loading the view, typically from a nib.
-    [[callBtn layer] setCornerRadius:40];
-    [[iddBtn layer] setCornerRadius:6];
-    [[countryBtn layer] setCornerRadius:6];
-    
+    [[self.callBtn layer] setCornerRadius:40];
+    [[self.iddBtn layer] setCornerRadius:6];
+    [[self.countryBtn layer] setCornerRadius:6];
     settingVC = [[SettingViewController alloc]initWithNibName:@"SettingViewController" bundle:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(fillInputWithClipboard) name:UIApplicationDidBecomeActiveNotification object:nil];
     
 	self.iddSelectionViewController = [SelectorTableViewController new];
 	self.countrySelectionViewController = [SelectorTableViewController new];
+	[self.iddSelectionViewController setDelegate:self];
+	[self.countrySelectionViewController setDelegate:self];
 	[self checkButtonTitle];
     [self reloadInitialData];
     
@@ -97,15 +94,15 @@
 -(void)checkButtonTitle{
 	if(self.iddSelectionViewController.selectedIndex!=-1){
 		NSString * idd = self.iddArray[self.iddSelectionViewController.selectedIndex][IDD];
-		[iddBtn setTitle:idd forState:UIControlStateNormal];
+		[self.iddBtn setTitle:idd forState:UIControlStateNormal];
 	}else{
-		[iddBtn setTitle:@"IDD" forState:UIControlStateNormal];
+		[self.iddBtn setTitle:@"IDD" forState:UIControlStateNormal];
 	}
 	if(self.countrySelectionViewController.selectedIndex!=-1){
 		NSString * country = self.countryArray[self.countrySelectionViewController.selectedIndex][COUNTRY_NAME];
-		[countryBtn setTitle:country forState:UIControlStateNormal];
+		[self.countryBtn setTitle:country forState:UIControlStateNormal];
 	}else{
-		[countryBtn setTitle:@"Country" forState:UIControlStateNormal];
+		[self.countryBtn setTitle:@"Country" forState:UIControlStateNormal];
 	}
 }
 
@@ -155,8 +152,8 @@
 }
 
 -(void)call{
-    NSLog(@"%@ calling %@",PRETTY_FUNCTION ,resultLabel.text);
-    [[UIApplication sharedApplication] openURL:[NSURL URLWithString:[NSString stringWithFormat:@"tel:%@",resultLabel.text]]];
+    NSLog(@"%@ calling %@",PRETTY_FUNCTION ,self.resultLabel.text);
+    [[UIApplication sharedApplication] openURL:[NSURL URLWithString:[NSString stringWithFormat:@"tel:%@",self.resultLabel.text]]];
 }
 
 -(NSString*)plainNumberByPhone:(NSString*)phone{
@@ -176,6 +173,25 @@
 	return number;
 }
 
+-(NSString*)noZeroNumberByPhone:(NSString*)phone{
+    // remove first 0s
+    NSString * result = phone;
+    if(!isEmptyString(result)){
+        BOOL haveZeroOnFirstCharater = YES;
+        while (haveZeroOnFirstCharater) {
+            unichar temp_firstChar = [result characterAtIndex:0];
+            if(temp_firstChar != '0'){
+                haveZeroOnFirstCharater = NO;
+            }else{
+                result = [result substringFromIndex:1];
+            }
+        }
+        return result;
+    }else{
+        return @"";
+    }
+}
+
 -(NSString *)clipboardText{
     NSString* clipboardText = [[UIPasteboard generalPasteboard] valueForPasteboardType:@"public.utf8-plain-text"];
     NSLog(@"clipboard = %@",clipboardText);
@@ -184,14 +200,14 @@
 
 -(void)fillInputWithClipboard{
     NSString* number = [self clipboardText];
-    if(number){
-        [inputTF setText:number];
+    if(!isEmptyString(number)){
+        [self.inputTF setText:number];
         [self process];
     }
 }
 
 -(void)process{
-    [inputTF resignFirstResponder];
+    [self.inputTF resignFirstResponder];
 	[self reloadOutputForScreenReloadSection:YES];
 }
 
@@ -227,23 +243,35 @@
 }
 #pragma mark - textfield delegates
 
+-(void)textFieldDidBeginEditing:(UITextField *)textField{
+	[tapGesture setEnabled:YES];
+}
+
 -(BOOL)textFieldShouldReturn:(UITextField *)textField{
     [textField resignFirstResponder];
     [self process];
     return YES;
 }
 
+-(void)textFieldDidEndEditing:(UITextField *)textField{
+	[tapGesture setEnabled:NO];
+}
+
 - (IBAction)popSelection:(id)sender{
 	WYPopoverController * popoverController;
-	if(sender == iddBtn){
+	if(sender == self.iddBtn){
 		if(!self.iddPopoverController){
 			self.iddPopoverController = [[WYPopoverController alloc] initWithContentViewController:self.iddSelectionViewController];
+		}else if([self.iddPopoverController isPopoverVisible]){
+			return;
 		}
 		popoverController = self.iddPopoverController;
        
-	}else if (sender == countryBtn){
+	}else if (sender == self.countryBtn){
 		if(!self.countryPopOverController){
 			self.countryPopOverController = [[WYPopoverController alloc] initWithContentViewController:self.countrySelectionViewController];
+		}else if([self.countryPopOverController isPopoverVisible]){
+			return;
 		}
 		popoverController = self.countryPopOverController;
 	}
@@ -251,7 +279,6 @@
 	popoverController.passthroughViews = @[sender];
 	popoverController.popoverLayoutMargins = UIEdgeInsetsMake(10, 10, 10, 10);
 	popoverController.wantsDefaultContentAppearance = NO;
-	[sender setEnabled:NO];
 	[popoverController presentPopoverFromRect:((UIButton*)sender).bounds
 									   inView:sender
 					 permittedArrowDirections:WYPopoverArrowDirectionAny
@@ -269,11 +296,19 @@
 
 - (void)popoverControllerDidDismissPopover:(WYPopoverController *)controller
 {
-	[controller.passthroughViews[0] setEnabled:YES];
 	[self checkButtonTitle];
 	[self processForSelectingCell];
 }
 
+-(void)selectorViewDidSelected:(SelectorTableViewController *)selectorView{
+	if(selectorView == self.iddSelectionViewController){
+		[self.iddPopoverController dismissPopoverAnimated:YES];
+		[self popoverControllerDidDismissPopover:self.iddPopoverController];
+	}else if (selectorView == self.countrySelectionViewController){
+		[self.countryPopOverController dismissPopoverAnimated:YES];
+		[self popoverControllerDidDismissPopover:self.countryPopOverController];
+	}
+}
 
 #pragma mark - processing
 
@@ -285,6 +320,7 @@
 			NSString * idd = iddObj[IDD];
 			if([[plain substringToIndex:5] rangeOfString:idd].location != NSNotFound){
 				index = [self.iddArray indexOfObject:iddObj];
+                break;
 			}
 		}
 	}
@@ -295,14 +331,19 @@
 - (NSInteger)countryIndexByPhone:(NSString*)phone{
 	NSInteger index = -1;
 	if(!isEmptyString(phone) && phone.length > 5){
-		BOOL hasIdd = ([self iddIndexByPhone:phone] != -1);
-		
-		NSString * plain = [self plainNumberByPhone:phone];
+		NSInteger iddIndex = [self iddIndexByPhone:phone];
+		BOOL hasIdd = (iddIndex != -1);
+		BOOL is00 = NO;
+		if(hasIdd){
+			is00 = [self.iddArray[iddIndex][IDD_WITH00] boolValue];
+		}
+		NSString * plain = [self noZeroNumberByPhone:[self plainNumberByPhone:phone]];
 		for(NSDictionary* countryObj in self.countryArray){
 			NSString * country = countryObj[COUNTRY_CODE];
-			NSRange range = hasIdd?NSMakeRange(3, 5):NSMakeRange(0, 3);
+			NSRange range = hasIdd?is00?NSMakeRange(5, 7):NSMakeRange(3, 5):NSMakeRange(0, 3);
 			if([[plain substringWithRange:range] rangeOfString:country].location != NSNotFound){
 				index = [self.countryArray indexOfObject:countryObj];
+                break;
 			}
 		}
 	}
@@ -319,16 +360,6 @@
 		return result;
 	}
 	
-	// remove first 0s
-	BOOL haveZeroOnFirstCharater = YES;
-	while (haveZeroOnFirstCharater) {
-		unichar temp_firstChar = [result characterAtIndex:0];
-		if(temp_firstChar != '0'){
-			haveZeroOnFirstCharater = NO;
-		}else{
-			result = [result substringFromIndex:1];
-		}
-	}
 	
 	// remove idd
 	if(iddIndex != -1){
@@ -337,12 +368,17 @@
 		result = [result stringByReplacingOccurrencesOfString:idd withString:@""];
 	}
 	
+	result = [self noZeroNumberByPhone:result];
+    
 	// remove country code
 	if(countryIndex != -1){
 		NSString * country = self.countryArray[countryIndex][COUNTRY_CODE];
 		NSLog(@"%@ country found = %@", PRETTY_FUNCTION, country);
 		result = [result stringByReplacingOccurrencesOfString:country withString:@""];
 	}
+    
+	result = [self noZeroNumberByPhone:result];
+    
 	NSLog(@"%@ result = %@", PRETTY_FUNCTION, result);
 	return result;
 }
@@ -383,8 +419,8 @@
 	NSInteger indexIDD;
 	NSInteger indexCC;
 	if(isReload){
-		indexIDD = [self iddIndexByPhone:inputTF.text];
-		indexCC = [self countryIndexByPhone:inputTF.text];
+		indexIDD = [self iddIndexByPhone:self.inputTF.text];
+		indexCC = [self countryIndexByPhone:self.inputTF.text];
 		
 		if(indexIDD != -1){
 			[self.iddSelectionViewController setSelectedIndex:indexIDD];
@@ -394,7 +430,7 @@
 		}
 		[self checkButtonTitle];
 	}
-    NSString* number = [self numberByPhone:inputTF.text];
+    NSString* number = [self numberByPhone:self.inputTF.text];
 	
     NSString * idd = @"";
 	NSString * country = @"";
@@ -406,7 +442,7 @@
 	if(self.countrySelectionViewController.selectedIndex != -1){
 		country = self.countryArray[self.countrySelectionViewController.selectedIndex][COUNTRY_CODE];
 	}
-	[resultLabel setText:[self formattedPhoneByIdd:idd country:country number:number]];
+	[self.resultLabel setText:[self formattedPhoneByIdd:idd country:country number:number]];
 }
 
 @end

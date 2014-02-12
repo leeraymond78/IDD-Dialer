@@ -108,6 +108,9 @@
 	[tableView deselectRowAtIndexPath:indexPath animated:YES];
 	self.selectedIndex = indexPath.row;
 	[tableView reloadSections:[NSIndexSet indexSetWithIndex:0] withRowAnimation:UITableViewRowAnimationAutomatic];
+	if([[self delegate] respondsToSelector:@selector(selectorViewDidSelected:)]){
+		[[self delegate] selectorViewDidSelected:self];
+	}
 }
 
 /*

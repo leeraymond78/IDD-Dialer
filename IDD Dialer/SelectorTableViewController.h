@@ -8,7 +8,13 @@
 
 #import <UIKit/UIKit.h>
 
-@interface SelectorTableViewController : UITableViewController
+
+@protocol SelectorTableViewControllerDelegate;
+
+@interface SelectorTableViewController : UITableViewController {
+}
+
+@property (nonatomic, retain) id<SelectorTableViewControllerDelegate> delegate;
 
 @property (nonatomic) NSInteger selectedIndex;
 
@@ -16,4 +22,9 @@
 
 -(id)initWithDataSource:(NSArray*)dataSource defaultValue:(NSString*)value;
 
+@end
+
+@protocol SelectorTableViewControllerDelegate<NSObject>
+@optional
+- (void)selectorViewDidSelected:(SelectorTableViewController *)selectorView;
 @end

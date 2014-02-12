@@ -152,6 +152,7 @@
 				3D592E4C177DFD9800C82F74 /* Products */,
 			);
 			sourceTree = "<group>";
+			usesTabs = 0;
 		};
 		3D592E4C177DFD9800C82F74 /* Products */ = {
 			isa = PBXGroup;
@@ -552,6 +553,7 @@
 				1D6B4B9E18A9DACE0098ADDB /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		3D592E46177DFD9800C82F74 /* Build configuration list for PBXProject "IDD Dialer" */ = {
 			isa = XCConfigurationList;

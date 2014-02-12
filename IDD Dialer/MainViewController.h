@@ -8,6 +8,7 @@
 
 #import <UIKit/UIKit.h>
 #import "WYPopoverController.h"
+#import "SelectorTableViewController.h"
 
 @class SettingViewController;
 
@@ -16,18 +17,20 @@
 #define COUNTRY_CODE @"CC"
 #define COUNTRY_NAME @"CN"
 
-@interface MainViewController : UIViewController<UITextFieldDelegate, WYPopoverControllerDelegate>{
+@interface MainViewController : UIViewController<UITextFieldDelegate, WYPopoverControllerDelegate, SelectorTableViewControllerDelegate>{
    
 @private
-    
-    IBOutlet    UITextField*    inputTF;
-    IBOutlet    UILabel*        resultLabel;
-    IBOutlet    UIButton*       callBtn;
-	IBOutlet	UIButton*		iddBtn;
-	IBOutlet	UIButton*		countryBtn;
-    
+    IBOutlet	UITapGestureRecognizer * tapGesture;
     SettingViewController* settingVC;
 }
+
+@property (nonatomic, retain) IBOutlet        UIButton    *       callBtn;
+@property (nonatomic, retain) IBOutlet		  UIButton    *		iddBtn;
+@property (nonatomic, retain) IBOutlet        UIButton    *		countryBtn;
+@property (nonatomic, retain) IBOutlet        UITextField *    inputTF;
+@property (nonatomic, retain) IBOutlet        UILabel     *    resultLabel;
+@property (nonatomic, strong) SelectorTableViewController * iddSelectionViewController;
+@property (nonatomic, strong) SelectorTableViewController * countrySelectionViewController;
 
 -(void)reloadInitialData;
 
@@ -37,3 +40,4 @@
 
 -(IBAction)hideAndProcess:(id)sender;
 @end
+
