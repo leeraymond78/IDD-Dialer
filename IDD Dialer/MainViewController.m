@@ -147,49 +147,13 @@
     return nil;
 }
 
--(IBAction)processAction:(id)sender{
+-(IBAction)callAction:(id)sender{
     [self call];
 }
 
 -(void)call{
     NSLog(@"%@ calling %@",PRETTY_FUNCTION ,self.resultLabel.text);
     [[UIApplication sharedApplication] openURL:[NSURL URLWithString:[NSString stringWithFormat:@"tel:%@",self.resultLabel.text]]];
-}
-
--(NSString*)plainNumberByPhone:(NSString*)phone{
-	NSString * number = @"";
-	if(!isEmptyString(phone)){
-		char * numberStr = malloc([phone length]);
-		numberStr[0] = '\0';
-		for (int x = 0; x < [phone length]; x++) {
-			unichar aChar = [phone characterAtIndex:x];
-			if ((aChar >= '0' && aChar <= '9')) {
-				numberStr[strlen(numberStr)] = aChar;
-				numberStr[strlen(numberStr)+1] = '\0';
-			}
-		}
-		number = [NSString stringWithCString:numberStr encoding:[NSString defaultCStringEncoding]];
-	}
-	return number;
-}
-
--(NSString*)noZeroNumberByPhone:(NSString*)phone{
-    // remove first 0s
-    NSString * result = phone;
-    if(!isEmptyString(result)){
-        BOOL haveZeroOnFirstCharater = YES;
-        while (haveZeroOnFirstCharater) {
-            unichar temp_firstChar = [result characterAtIndex:0];
-            if(temp_firstChar != '0'){
-                haveZeroOnFirstCharater = NO;
-            }else{
-                result = [result substringFromIndex:1];
-            }
-        }
-        return result;
-    }else{
-        return @"";
-    }
 }
 
 -(NSString *)clipboardText{
@@ -240,74 +204,6 @@
 													  green:0.86+((CGFloat)rand()/RAND_MAX)*0.1
 													   blue:0.86+((CGFloat)rand()/RAND_MAX)*0.1 alpha:1]];} completion:nil];
 	
-}
-#pragma mark - textfield delegates
-
--(void)textFieldDidBeginEditing:(UITextField *)textField{
-	[tapGesture setEnabled:YES];
-}
-
--(BOOL)textFieldShouldReturn:(UITextField *)textField{
-    [textField resignFirstResponder];
-    [self process];
-    return YES;
-}
-
--(void)textFieldDidEndEditing:(UITextField *)textField{
-	[tapGesture setEnabled:NO];
-}
-
-- (IBAction)popSelection:(id)sender{
-	WYPopoverController * popoverController;
-	if(sender == self.iddBtn){
-		if(!self.iddPopoverController){
-			self.iddPopoverController = [[WYPopoverController alloc] initWithContentViewController:self.iddSelectionViewController];
-		}else if([self.iddPopoverController isPopoverVisible]){
-			return;
-		}
-		popoverController = self.iddPopoverController;
-       
-	}else if (sender == self.countryBtn){
-		if(!self.countryPopOverController){
-			self.countryPopOverController = [[WYPopoverController alloc] initWithContentViewController:self.countrySelectionViewController];
-		}else if([self.countryPopOverController isPopoverVisible]){
-			return;
-		}
-		popoverController = self.countryPopOverController;
-	}
-	popoverController.delegate = self;
-	popoverController.passthroughViews = @[sender];
-	popoverController.popoverLayoutMargins = UIEdgeInsetsMake(10, 10, 10, 10);
-	popoverController.wantsDefaultContentAppearance = NO;
-	[popoverController presentPopoverFromRect:((UIButton*)sender).bounds
-									   inView:sender
-					 permittedArrowDirections:WYPopoverArrowDirectionAny
-									 animated:YES
-									  options:WYPopoverAnimationOptionFadeWithScale];
-}
-
-#pragma mark - WYPopoverControllerDelegate
-
-
-- (BOOL)popoverControllerShouldDismissPopover:(WYPopoverController *)controller
-{
-    return YES;
-}
-
-- (void)popoverControllerDidDismissPopover:(WYPopoverController *)controller
-{
-	[self checkButtonTitle];
-	[self processForSelectingCell];
-}
-
--(void)selectorViewDidSelected:(SelectorTableViewController *)selectorView{
-	if(selectorView == self.iddSelectionViewController){
-		[self.iddPopoverController dismissPopoverAnimated:YES];
-		[self popoverControllerDidDismissPopover:self.iddPopoverController];
-	}else if (selectorView == self.countrySelectionViewController){
-		[self.countryPopOverController dismissPopoverAnimated:YES];
-		[self popoverControllerDidDismissPopover:self.countryPopOverController];
-	}
 }
 
 #pragma mark - processing
@@ -408,7 +304,10 @@
 		}else{
 			doubleZero = @"";
 		}
-		result = [NSString stringWithFormat:@"%@%@%@%@",idd,doubleZero,country,number];
+        if(!isEmptyString(doubleZero)){
+            doubleZero = [doubleZero stringByAppendingString:divider];
+        }
+		result = [NSString stringWithFormat:@"%@%@%@%@",outIdd,doubleZero,outCountry,number];
 		
 	}
 	NSLog(@"%@ result = %@", PRETTY_FUNCTION, result);
@@ -443,6 +342,112 @@
 		country = self.countryArray[self.countrySelectionViewController.selectedIndex][COUNTRY_CODE];
 	}
 	[self.resultLabel setText:[self formattedPhoneByIdd:idd country:country number:number]];
+}
+
+
+-(NSString*)plainNumberByPhone:(NSString*)phone{
+	NSString * number = @"";
+	if(!isEmptyString(phone)){
+		char * numberStr = malloc([phone length]);
+		numberStr[0] = '\0';
+		for (int x = 0; x < [phone length]; x++) {
+			unichar aChar = [phone characterAtIndex:x];
+			if ((aChar >= '0' && aChar <= '9')) {
+				numberStr[strlen(numberStr)] = aChar;
+				numberStr[strlen(numberStr)+1] = '\0';
+			}
+		}
+		number = [NSString stringWithCString:numberStr encoding:[NSString defaultCStringEncoding]];
+	}
+	return number;
+}
+
+-(NSString*)noZeroNumberByPhone:(NSString*)phone{
+    // remove first 0s
+    NSString * result = phone;
+    if(!isEmptyString(result)){
+        BOOL haveZeroOnFirstCharater = YES;
+        while (haveZeroOnFirstCharater) {
+            unichar temp_firstChar = [result characterAtIndex:0];
+            if(temp_firstChar != '0'){
+                haveZeroOnFirstCharater = NO;
+            }else{
+                result = [result substringFromIndex:1];
+            }
+        }
+        return result;
+    }else{
+        return @"";
+    }
+}
+
+#pragma mark - textfield delegates
+
+-(void)textFieldDidBeginEditing:(UITextField *)textField{
+	[tapGesture setEnabled:YES];
+}
+
+-(BOOL)textFieldShouldReturn:(UITextField *)textField{
+    [textField resignFirstResponder];
+    [self process];
+    return YES;
+}
+
+-(void)textFieldDidEndEditing:(UITextField *)textField{
+	[tapGesture setEnabled:NO];
+}
+
+- (IBAction)popSelection:(id)sender{
+	WYPopoverController * popoverController;
+	if(sender == self.iddBtn){
+		if(!self.iddPopoverController){
+			self.iddPopoverController = [[WYPopoverController alloc] initWithContentViewController:self.iddSelectionViewController];
+		}else if([self.iddPopoverController isPopoverVisible]){
+			return;
+		}
+		popoverController = self.iddPopoverController;
+       
+	}else if (sender == self.countryBtn){
+		if(!self.countryPopOverController){
+			self.countryPopOverController = [[WYPopoverController alloc] initWithContentViewController:self.countrySelectionViewController];
+		}else if([self.countryPopOverController isPopoverVisible]){
+			return;
+		}
+		popoverController = self.countryPopOverController;
+	}
+	popoverController.delegate = self;
+	popoverController.passthroughViews = @[sender];
+	popoverController.popoverLayoutMargins = UIEdgeInsetsMake(10, 10, 10, 10);
+	popoverController.wantsDefaultContentAppearance = NO;
+	[popoverController presentPopoverFromRect:((UIButton*)sender).bounds
+									   inView:sender
+					 permittedArrowDirections:WYPopoverArrowDirectionAny
+									 animated:YES
+									  options:WYPopoverAnimationOptionFadeWithScale];
+}
+
+#pragma mark - WYPopoverControllerDelegate
+
+
+- (BOOL)popoverControllerShouldDismissPopover:(WYPopoverController *)controller
+{
+    return YES;
+}
+
+- (void)popoverControllerDidDismissPopover:(WYPopoverController *)controller
+{
+	[self checkButtonTitle];
+	[self processForSelectingCell];
+}
+
+-(void)selectorViewDidSelected:(SelectorTableViewController *)selectorView{
+	if(selectorView == self.iddSelectionViewController){
+		[self.iddPopoverController dismissPopoverAnimated:YES];
+		[self popoverControllerDidDismissPopover:self.iddPopoverController];
+	}else if (selectorView == self.countrySelectionViewController){
+		[self.countryPopOverController dismissPopoverAnimated:YES];
+		[self popoverControllerDidDismissPopover:self.countryPopOverController];
+	}
 }
 
 @end

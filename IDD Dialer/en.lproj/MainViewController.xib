@@ -81,7 +81,7 @@
                         <color key="titleColor" red="0.66666668650000005" green="0.66666668650000005" blue="0.66666668650000005" alpha="1" colorSpace="deviceRGB"/>
                     </state>
                     <connections>
-                        <action selector="processAction:" destination="-1" eventType="touchUpInside" id="19"/>
+                        <action selector="callAction:" destination="-1" eventType="touchUpInside" id="L4i-J3-ABc"/>
                     </connections>
                 </button>
                 <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="line" placeholder="Phone Number Here" textAlignment="center" minimumFontSize="10" clearButtonMode="whileEditing" id="8">

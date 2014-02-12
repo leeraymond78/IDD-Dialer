@@ -36,7 +36,7 @@
 
 -(NSString*)clipboardText;
 
--(IBAction)processAction:(id)sender;
+-(IBAction)callAction:(id)sender;
 
 -(IBAction)hideAndProcess:(id)sender;
 @end
