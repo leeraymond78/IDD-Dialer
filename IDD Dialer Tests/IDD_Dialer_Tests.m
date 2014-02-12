@@ -29,26 +29,29 @@ MainViewController * main;
     [super tearDown];
 }
 
-- (void)test1{
-    [self testNumbersWithInput:@"+85264882201" iddIndex:0 countryIndex:0 output:@"167885264882201"];
-}
-- (void)test2{
-    [self testNumbersWithInput:@"0085264882201" iddIndex:1 countryIndex:1 output:@"12593008664882201"];
-}
-- (void)test3{
-    [self testNumbersWithInput:@"85264882201" iddIndex:-1 countryIndex:-1 output:@"64882201"];
+//- (void)test1{
+//    [self testNumbersWithInput:@"+85264882201" iddIndex:0 countryIndex:0 output:@"1678-852-64882201"];
+//}
+//- (void)test2{
+//    [self testNumbersWithInput:@"0085264882201" iddIndex:1 countryIndex:1 output:@"12593-00-86-64882201"];
+//}
+//- (void)test3{
+//    [self testNumbersWithInput:@"85264882201" iddIndex:-1 countryIndex:-1 output:@"64882201"];
+//}
+- (void)test3_5{
+    [self testNumbersWithInput:@"008613537882288" iddIndex:0 countryIndex:0 output:@"1678-852-13537882288"];
 }
 - (void)test4{
-    [self testNumbersWithInput:@"1259300447932958585" iddIndex:0 countryIndex:0 output:@"16788527932958585"];
+    [self testNumbersWithInput:@"1259300447932958585" iddIndex:0 countryIndex:0 output:@"1678-852-7932958585"];
 }
 - (void)test5{
-    [self testNumbersWithInput:@"1259300447932958585" iddIndex:1 countryIndex:5 output:@"1259300447932958585"];
+    [self testNumbersWithInput:@"1259300447932958585" iddIndex:1 countryIndex:5 output:@"12593-00-44-7932958585"];
 }
 - (void)test6{
-    [self testNumbersWithInput:@"+8613537882288" iddIndex:1 countryIndex:5 output:@"12593004413537882288"];
+    [self testNumbersWithInput:@"+8613537882288" iddIndex:1 countryIndex:5 output:@"12593-00-44-13537882288"];
 }
 - (void)test7{
-    [self testNumbersWithInput:@"+8613537882288" iddIndex:0 countryIndex:1 output:@"16788613537882288"];
+    [self testNumbersWithInput:@"+8613537882288" iddIndex:0 countryIndex:1 output:@"1678-86-13537882288"];
 }
 
 - (void)testNumbersWithInput:(NSString*)input iddIndex:(NSInteger)iddIndex countryIndex:(NSInteger)countryIndex output:(NSString*)output

@@ -68,13 +68,13 @@
         //write default
     if(!self.iddArray || [self.iddArray count] == 0){
         NSString *path = [[NSBundle mainBundle] pathForResource:
-                          @"idd" ofType:@"plist"];
+                          @"idd_data" ofType:@"plist"];
         
         self.iddArray = [[NSMutableArray alloc] initWithContentsOfFile:path];
     }
     if(!self.countryArray || [self.countryArray count] == 0){
         path = [[NSBundle mainBundle] pathForResource:
-                @"countryCode" ofType:@"plist"];
+                @"countryCode_data" ofType:@"plist"];
         
         self.countryArray = [[NSMutableArray alloc] initWithContentsOfFile:path];
     }
@@ -341,23 +341,21 @@
 	if(self.countrySelectionViewController.selectedIndex != -1){
 		country = self.countryArray[self.countrySelectionViewController.selectedIndex][COUNTRY_CODE];
 	}
-	[self.resultLabel setText:[self formattedPhoneByIdd:idd country:country number:number]];
+    NSString * result = [self formattedPhoneByIdd:idd country:country number:number];
+    NSLog(@"%@ Final Output = %@", PRETTY_FUNCTION,result);
+	[self.resultLabel setText:result];
 }
 
 
 -(NSString*)plainNumberByPhone:(NSString*)phone{
-	NSString * number = @"";
+	NSMutableString * number = [NSMutableString stringWithString:@""];
 	if(!isEmptyString(phone)){
-		char * numberStr = malloc([phone length]);
-		numberStr[0] = '\0';
 		for (int x = 0; x < [phone length]; x++) {
 			unichar aChar = [phone characterAtIndex:x];
 			if ((aChar >= '0' && aChar <= '9')) {
-				numberStr[strlen(numberStr)] = aChar;
-				numberStr[strlen(numberStr)+1] = '\0';
+                [number appendString:[NSString stringWithCharacters:&aChar length:1]];
 			}
 		}
-		number = [NSString stringWithCString:numberStr encoding:[NSString defaultCStringEncoding]];
 	}
 	return number;
 }
