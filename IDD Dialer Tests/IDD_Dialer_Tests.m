@@ -29,15 +29,15 @@ MainViewController * main;
     [super tearDown];
 }
 
-//- (void)test1{
-//    [self testNumbersWithInput:@"+85264882201" iddIndex:0 countryIndex:0 output:@"1678-852-64882201"];
-//}
-//- (void)test2{
-//    [self testNumbersWithInput:@"0085264882201" iddIndex:1 countryIndex:1 output:@"12593-00-86-64882201"];
-//}
-//- (void)test3{
-//    [self testNumbersWithInput:@"85264882201" iddIndex:-1 countryIndex:-1 output:@"64882201"];
-//}
+- (void)test1{
+    [self testNumbersWithInput:@"+85264882201" iddIndex:0 countryIndex:0 output:@"1678-852-64882201"];
+}
+- (void)test2{
+    [self testNumbersWithInput:@"0085264882201" iddIndex:1 countryIndex:1 output:@"12593-00-86-64882201"];
+}
+- (void)test3{
+    [self testNumbersWithInput:@"+85264882201" iddIndex:-1 countryIndex:-1 output:@"64882201"];
+}
 - (void)test3_5{
     [self testNumbersWithInput:@"008613537882288" iddIndex:0 countryIndex:0 output:@"1678-852-13537882288"];
 }
@@ -53,6 +53,9 @@ MainViewController * main;
 - (void)test7{
     [self testNumbersWithInput:@"+8613537882288" iddIndex:0 countryIndex:1 output:@"1678-86-13537882288"];
 }
+- (void)test8{
+    [self testNumbersWithInput:@"+86 158-0848-8837" iddIndex:0 countryIndex:1 output:@"1678-86-15808488837"];
+}
 
 - (void)testNumbersWithInput:(NSString*)input iddIndex:(NSInteger)iddIndex countryIndex:(NSInteger)countryIndex output:(NSString*)output
 {
@@ -62,7 +65,6 @@ MainViewController * main;
 	[main.iddSelectionViewController tableView:main.iddSelectionViewController.tableView didSelectRowAtIndexPath:[NSIndexPath indexPathForRow:iddIndex inSection:0]];
     [main.countryBtn sendActionsForControlEvents:UIControlEventTouchUpInside];
 	[main.countrySelectionViewController tableView:main.countrySelectionViewController.tableView didSelectRowAtIndexPath:[NSIndexPath indexPathForRow:countryIndex inSection:0]];
-    
 	XCTAssertTrue([output isEqualToString:main.resultLabel.text], @"Assert Failed with input %@ output %@ actual %@", input, output, main.resultLabel.text);
 }
 

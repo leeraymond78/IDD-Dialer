@@ -10,6 +10,7 @@
                 <outlet property="callBtn" destination="17" id="GcK-7W-IFo"/>
                 <outlet property="countryBtn" destination="9Lu-8O-Nwb" id="1nx-jw-fjc"/>
                 <outlet property="iddBtn" destination="ok6-XC-fbq" id="L48-cT-zW2"/>
+                <outlet property="importBtn" destination="z3f-86-0nx" id="8E6-6P-O5y"/>
                 <outlet property="inputTF" destination="8" id="16"/>
                 <outlet property="resultLabel" destination="14" id="15"/>
                 <outlet property="tapGesture" destination="30" id="ltG-TE-EQf"/>
@@ -93,6 +94,17 @@
                         <outlet property="delegate" destination="-1" id="20"/>
                     </connections>
                 </textField>
+                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="bottom" buttonType="roundedRect" lineBreakMode="middleTruncation" id="z3f-86-0nx">
+                    <rect key="frame" x="273" y="262" width="40" height="40"/>
+                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                    <fontDescription key="fontDescription" name="HelveticaNeue-Thin" family="Helvetica Neue" pointSize="40"/>
+                    <state key="normal" title="+">
+                        <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                    </state>
+                    <connections>
+                        <action selector="importAction:" destination="-1" eventType="touchUpInside" id="wF8-NG-znU"/>
+                    </connections>
+                </button>
             </subviews>
             <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
             <gestureRecognizers/>

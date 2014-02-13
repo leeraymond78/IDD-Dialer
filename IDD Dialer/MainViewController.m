@@ -183,7 +183,6 @@
 	[self reloadOutputForScreenReloadSection:NO];
 }
 
-
 -(void)showAlertViewWithTitle:(NSString*)title msg:(NSString*)msg{
     UIAlertView* alertView = [[UIAlertView alloc] initWithTitle:title message:msg delegate:self cancelButtonTitle:@"I got it" otherButtonTitles:nil];
     [alertView show];
@@ -208,6 +207,16 @@
 
 #pragma mark - processing
 
+- (BOOL)isInternationByPhone:(NSString*)phone{
+    NSRange plusRange = [phone rangeOfString:@"+"];
+    NSString * noIddPhone = [self removeIddByPhone:phone];
+    NSRange zeroRange = [noIddPhone rangeOfString:@"00"];
+    if(plusRange.location == 0 || zeroRange.location == 0){
+        return YES;
+    }
+    return NO;
+}
+
 - (NSInteger)iddIndexByPhone:(NSString*)phone{
 	NSInteger index = -1;
 	if(!isEmptyString(phone) && phone.length > 5){
@@ -227,42 +236,49 @@
 - (NSInteger)countryIndexByPhone:(NSString*)phone{
 	NSInteger index = -1;
 	if(!isEmptyString(phone) && phone.length > 5){
-		NSInteger iddIndex = [self iddIndexByPhone:phone];
-		BOOL hasIdd = (iddIndex != -1);
-		BOOL is00 = NO;
-		if(hasIdd){
-			is00 = [self.iddArray[iddIndex][IDD_WITH00] boolValue];
-		}
-		NSString * plain = [self noZeroNumberByPhone:[self plainNumberByPhone:phone]];
+       NSString * noIddPhone = [self removeIddByPhone:phone];
+        BOOL isInternation = [self isInternationByPhone:phone];
+		
+		NSString * plain = [self noZeroNumberByPhone:[self plainNumberByPhone:noIddPhone]];
 		for(NSDictionary* countryObj in self.countryArray){
 			NSString * country = countryObj[COUNTRY_CODE];
-			NSRange range = hasIdd?is00?NSMakeRange(5, 7):NSMakeRange(3, 5):NSMakeRange(0, 3);
-			if([[plain substringWithRange:range] rangeOfString:country].location != NSNotFound){
-				index = [self.countryArray indexOfObject:countryObj];
-                break;
-			}
+            if(isInternation){
+                NSRange range = NSMakeRange(0, 3);
+                if([[plain substringWithRange:range] rangeOfString:country].location == 0){
+                    index = [self.countryArray indexOfObject:countryObj];
+                    break;
+                }
+            }
 		}
 	}
 	NSLog(@"%@ index = %ld", PRETTY_FUNCTION, (long)index);
 	return index;
 }
 
-- (NSString*)numberByPhone:(NSString*)phone{
+- (NSString*)removeIddByPhone:(NSString*)phone{
+    NSString * result = @"";
 	NSInteger iddIndex = [self iddIndexByPhone:phone];
+    if(iddIndex != -1){
+		NSString * idd = self.iddArray[iddIndex][IDD];
+		NSLog(@"%@ idd found = %@", PRETTY_FUNCTION, idd);
+		result = [phone stringByReplacingOccurrencesOfString:idd withString:@""];
+	}else{
+		NSLog(@"%@ idd not found", PRETTY_FUNCTION);
+        result = phone;
+    }
+    return result;
+}
+
+- (NSString*)numberByPhone:(NSString*)phone{
 	NSInteger countryIndex = [self countryIndexByPhone:phone];
 	NSString * result = [self plainNumberByPhone:phone];
 	
     if(isEmptyString(result) || [result length] < 7){
 		return result;
 	}
-	
-	
+    
 	// remove idd
-	if(iddIndex != -1){
-		NSString * idd = self.iddArray[iddIndex][IDD];
-		NSLog(@"%@ idd found = %@", PRETTY_FUNCTION, idd);
-		result = [result stringByReplacingOccurrencesOfString:idd withString:@""];
-	}
+	result = [self removeIddByPhone:result];
 	
 	result = [self noZeroNumberByPhone:result];
     
@@ -448,4 +464,55 @@
 	}
 }
 
+#pragma mark - address book
+
+
+-(IBAction)importAction:(id)sender{
+    ABPeoplePickerNavigationController *picker =
+    [[ABPeoplePickerNavigationController alloc] init];
+    picker.peoplePickerDelegate = self;
+    
+    [self presentViewController:picker animated:YES completion:nil];
+}
+
+- (void)peoplePickerNavigationControllerDidCancel:
+(ABPeoplePickerNavigationController *)peoplePicker
+{
+    [self dismissViewControllerAnimated:YES completion:nil];
+}
+
+- (BOOL)peoplePickerNavigationController:
+(ABPeoplePickerNavigationController *)peoplePicker
+      shouldContinueAfterSelectingPerson:(ABRecordRef)person {
+    
+//    ABPersonViewController * personView = [[ABPersonViewController alloc] init];
+//    [personView setAllowsEditing:NO];
+//    [personView setAllowsActions:NO];
+//    [personView setPersonViewDelegate:self];
+//    [personView setDisplayedPerson:person];
+//    [personView setDisplayedProperties:@[@(kABPersonPhoneProperty)]];
+//    [peoplePicker pushViewController:personView animated:YES];
+    
+    return YES;
+}
+
+- (BOOL)peoplePickerNavigationController:
+(ABPeoplePickerNavigationController *)peoplePicker
+      shouldContinueAfterSelectingPerson:(ABRecordRef)person
+                                property:(ABPropertyID)property
+                              identifier:(ABMultiValueIdentifier)identifier
+{
+    if (property == kABPersonPhoneProperty)
+    {
+        ABMultiValueRef numbers = ABRecordCopyValue(person, property);
+        NSString* targetNumber = (__bridge NSString *) ABMultiValueCopyValueAtIndex(numbers, ABMultiValueGetIndexForIdentifier(numbers, identifier));
+        NSString *firstname = (__bridge NSString *)ABRecordCopyValue(person
+                                                       , kABPersonFirstNameProperty);
+        [self.inputTF setText:targetNumber];
+        [self process];
+        NSLog(@"%@ get imported number from %@ with %@", PRETTY_FUNCTION, firstname, targetNumber);
+    }
+    [self dismissViewControllerAnimated:YES completion:nil];
+    return NO;
+}
 @end

@@ -10,6 +10,8 @@
 		1D0C47F21890F52C006F35C0 /* WYPopoverController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1D0C47EF1890F52C006F35C0 /* WYPopoverController.m */; };
 		1D0C47F31890F52C006F35C0 /* WYStoryboardPopoverSegue.m in Sources */ = {isa = PBXBuildFile; fileRef = 1D0C47F11890F52C006F35C0 /* WYStoryboardPopoverSegue.m */; };
 		1D0C47FC1890F6EE006F35C0 /* SelectorTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1D0C47FB1890F6EE006F35C0 /* SelectorTableViewController.m */; };
+		1D42BCB818AC595C000E2FA1 /* AddressBook.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1D42BCB718AC595C000E2FA1 /* AddressBook.framework */; };
+		1D42BCBA18AC5961000E2FA1 /* AddressBookUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1D42BCB918AC5960000E2FA1 /* AddressBookUI.framework */; };
 		1D6B4B8E18A9DACE0098ADDB /* XCTest.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1D6B4B8718A9DA940098ADDB /* XCTest.framework */; };
 		1D6B4B8F18A9DACE0098ADDB /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3D592E50177DFD9800C82F74 /* Foundation.framework */; };
 		1D6B4B9018A9DACE0098ADDB /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3D592E4E177DFD9800C82F74 /* UIKit.framework */; };
@@ -53,6 +55,8 @@
 		1D0C47F11890F52C006F35C0 /* WYStoryboardPopoverSegue.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WYStoryboardPopoverSegue.m; sourceTree = "<group>"; };
 		1D0C47FA1890F6EE006F35C0 /* SelectorTableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SelectorTableViewController.h; sourceTree = "<group>"; };
 		1D0C47FB1890F6EE006F35C0 /* SelectorTableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SelectorTableViewController.m; sourceTree = "<group>"; };
+		1D42BCB718AC595C000E2FA1 /* AddressBook.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AddressBook.framework; path = System/Library/Frameworks/AddressBook.framework; sourceTree = SDKROOT; };
+		1D42BCB918AC5960000E2FA1 /* AddressBookUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AddressBookUI.framework; path = System/Library/Frameworks/AddressBookUI.framework; sourceTree = SDKROOT; };
 		1D6B4B8718A9DA940098ADDB /* XCTest.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = XCTest.framework; path = Library/Frameworks/XCTest.framework; sourceTree = DEVELOPER_DIR; };
 		1D6B4B8D18A9DACE0098ADDB /* IDD Dialer Tests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "IDD Dialer Tests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 		1D6B4B9318A9DACE0098ADDB /* IDD Dialer Tests-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "IDD Dialer Tests-Info.plist"; sourceTree = "<group>"; };
@@ -102,6 +106,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				1D42BCBA18AC5961000E2FA1 /* AddressBookUI.framework in Frameworks */,
+				1D42BCB818AC595C000E2FA1 /* AddressBook.framework in Frameworks */,
 				3D592E4F177DFD9800C82F74 /* UIKit.framework in Frameworks */,
 				3D592E51177DFD9800C82F74 /* Foundation.framework in Frameworks */,
 				3D592E53177DFD9800C82F74 /* CoreGraphics.framework in Frameworks */,
@@ -166,6 +172,8 @@
 		3D592E4D177DFD9800C82F74 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				1D42BCB918AC5960000E2FA1 /* AddressBookUI.framework */,
+				1D42BCB718AC595C000E2FA1 /* AddressBook.framework */,
 				1D6B4B8718A9DA940098ADDB /* XCTest.framework */,
 				3D592E4E177DFD9800C82F74 /* UIKit.framework */,
 				3D592E50177DFD9800C82F74 /* Foundation.framework */,
