@@ -11,6 +11,7 @@
 #import <AddressBook/AddressBook.h>
 #import "WYPopoverController.h"
 #import "SelectorTableViewController.h"
+#import "ASCScreenBrightnessDetector.h"
 
 @class SettingViewController;
 
@@ -19,7 +20,7 @@
 #define COUNTRY_CODE @"CC"
 #define COUNTRY_NAME @"CN"
 
-@interface MainViewController : UIViewController<UITextFieldDelegate, WYPopoverControllerDelegate, SelectorTableViewControllerDelegate, ABPeoplePickerNavigationControllerDelegate, ABPersonViewControllerDelegate, ABUnknownPersonViewControllerDelegate>{
+@interface MainViewController : UIViewController<UITextFieldDelegate, WYPopoverControllerDelegate, SelectorTableViewControllerDelegate, ABPeoplePickerNavigationControllerDelegate, ABPersonViewControllerDelegate, ABUnknownPersonViewControllerDelegate,ASCScreenBrightnessDetectorDelegate>{
    
 @private
     IBOutlet	UITapGestureRecognizer * tapGesture;
@@ -32,6 +33,7 @@
 @property (nonatomic, retain) IBOutlet        UITextField *    inputTF;
 @property (nonatomic, retain) IBOutlet        UILabel     *    resultLabel;
 @property (nonatomic, retain) IBOutlet        UIButton    *    importBtn;
+@property (nonatomic, strong) IBOutlet        UIButton    *    settingBtn;
 @property (nonatomic, strong) SelectorTableViewController * iddSelectionViewController;
 @property (nonatomic, strong) SelectorTableViewController * countrySelectionViewController;
 

@@ -19,15 +19,18 @@
 @property (nonatomic, strong) WYPopoverController * countryPopOverController;
 @property (nonatomic, strong) NSArray * iddArray;
 @property (nonatomic, strong) NSArray * countryArray;
+@property (nonatomic, strong) ASCScreenBrightnessDetector * brightnessDetector;
 @end
 
 @implementation MainViewController
 
+
 - (void)viewDidLoad
 {
-	
     [super viewDidLoad];
 	// Do any additional setup after loading the view, typically from a nib.
+    self.brightnessDetector = [[ASCScreenBrightnessDetector alloc] init];
+    [self.brightnessDetector setDelegate:self];
     [[self.callBtn layer] setCornerRadius:40];
     [[self.iddBtn layer] setCornerRadius:6];
     [[self.countryBtn layer] setCornerRadius:6];
@@ -50,6 +53,8 @@
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(reloadInitialData) name:@"settingBackPressed" object:nil];
 	
 	[NSTimer scheduledTimerWithTimeInterval:BACKGROUND_CHANGE_INTERVAL target:self selector:@selector(changeBackgroundColor) userInfo:nil repeats:YES];
+    
+    [self setStyle:ASCScreenBrightnessStyleLight];
 }
 
 - (void)didReceiveMemoryWarning
@@ -246,12 +251,42 @@
     [UIView commitAnimations];
 }
 
+-(void)setStyle:(ASCScreenBrightnessStyle)style{
+    [self.inputTF.layer setBorderWidth:1];
+    switch (style) {
+        case ASCScreenBrightnessStyleDark:
+            [self.inputTF setTextColor:[UIColor whiteColor]];
+            [self.inputTF.layer setBorderColor:[[UIColor whiteColor] CGColor]];
+            [self.resultLabel setTextColor:[UIColor whiteColor]];
+            [self.settingBtn setTitleColor:[UIColor colorWithRed:50.f/150.f green:79.f/150.f blue:133.f/150.f alpha:1] forState:UIControlStateNormal];
+            break;
+        case ASCScreenBrightnessStyleLight:
+            [self.inputTF setTextColor:[UIColor blackColor]];
+            [self.inputTF.layer setBorderColor:[[UIColor blackColor] CGColor]];
+            [self.resultLabel setTextColor:[UIColor blackColor]];
+            [self.settingBtn setTitleColor:[UIColor colorWithRed:50.f/255.f green:79.f/255.f blue:133.f/255.f alpha:1] forState:UIControlStateNormal];
+            break;
+        default:
+            break;
+    }
+    [self setNeedsStatusBarAppearanceUpdate];
+    [self changeBackgroundColor];
+}
 -(void)changeBackgroundColor{
+    CGFloat offset;
+    switch (self.brightnessDetector.screenBrightnessStyle) {
+        case ASCScreenBrightnessStyleDark:
+            offset = 0.25;
+            break;
+        case ASCScreenBrightnessStyleLight:
+            offset = 0.86;
+        default:
+            break;
+    }
     [UIView animateWithDuration:BACKGROUND_CHANGE_INTERVAL-.05 delay:0 options:UIViewAnimationOptionAllowUserInteraction animations:^(void){
-		[self.view setBackgroundColor:[UIColor colorWithRed:0.86+((CGFloat)rand()/RAND_MAX)*0.1
-													  green:0.86+((CGFloat)rand()/RAND_MAX)*0.1
-													   blue:0.86+((CGFloat)rand()/RAND_MAX)*0.1 alpha:1]];} completion:nil];
-	
+		[self.view setBackgroundColor:[UIColor colorWithRed:offset+((CGFloat)rand()/RAND_MAX)*0.1
+													  green:offset+((CGFloat)rand()/RAND_MAX)*0.1
+													   blue:offset+((CGFloat)rand()/RAND_MAX)*0.1 alpha:1]];} completion:nil];
 }
 
 #pragma mark - processing
@@ -565,6 +600,9 @@
     return NO;
 }
 
+-(BOOL)personViewController:(ABPersonViewController *)personViewController shouldPerformDefaultActionForPerson:(ABRecordRef)person property:(ABPropertyID)property identifier:(ABMultiValueIdentifier)identifier{
+    return YES;
+}
 
 #pragma mark ABUnknownPersonViewControllerDelegate methods
 // Dismisses the picker when users are done creating a contact or adding the displayed person properties to an existing contact.
@@ -577,6 +615,24 @@
 - (BOOL)unknownPersonViewController:(ABUnknownPersonViewController *)personViewController shouldPerformDefaultActionForPerson:(ABRecordRef)person property:(ABPropertyID)property identifier:(ABMultiValueIdentifier)identifier
 {
 	return YES;
+}
+
+#pragma mark - brightness
+
+-(void)screenBrightnessStyleDidChange:(ASCScreenBrightnessStyle)style{
+    NSLog(@"brightness has changed");
+    [self setStyle:style];
+}
+-(UIStatusBarStyle)preferredStatusBarStyle{
+    switch (self.brightnessDetector.screenBrightnessStyle) {
+        case ASCScreenBrightnessStyleDark:
+            return UIStatusBarStyleLightContent;
+            break;
+        case ASCScreenBrightnessStyleLight:
+            return UIStatusBarStyleDefault;
+        default:
+            break;
+    }
 }
 
 @end

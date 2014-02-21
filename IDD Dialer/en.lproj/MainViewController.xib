@@ -13,6 +13,7 @@
                 <outlet property="importBtn" destination="z3f-86-0nx" id="8E6-6P-O5y"/>
                 <outlet property="inputTF" destination="8" id="16"/>
                 <outlet property="resultLabel" destination="14" id="15"/>
+                <outlet property="settingBtn" destination="34" id="ViM-ed-zCu"/>
                 <outlet property="tapGesture" destination="30" id="ltG-TE-EQf"/>
                 <outlet property="view" destination="6" id="7"/>
             </connections>
@@ -85,7 +86,7 @@
                         <action selector="callAction:" destination="-1" eventType="touchUpInside" id="L4i-J3-ABc"/>
                     </connections>
                 </button>
-                <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="line" placeholder="Phone Number Here" textAlignment="center" minimumFontSize="10" clearButtonMode="whileEditing" id="8">
+                <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" placeholder="Phone Number Here" textAlignment="center" minimumFontSize="10" clearButtonMode="whileEditing" id="8">
                     <rect key="frame" x="20" y="196" width="280" height="58"/>
                     <autoresizingMask key="autoresizingMask" flexibleMinX="YES" widthSizable="YES" flexibleMaxX="YES" flexibleMinY="YES" flexibleMaxY="YES"/>
                     <fontDescription key="fontDescription" name="HelveticaNeue-UltraLight" family="Helvetica Neue" pointSize="45"/>
