@@ -41,6 +41,9 @@
 	[self checkButtonTitle];
     [self reloadInitialData];
     
+    UILongPressGestureRecognizer *longPress = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(longPressAction:)];
+    [self.callBtn addGestureRecognizer:longPress];
+    
     if([[[NSUserDefaults standardUserDefaults] objectForKey:@"isOnAppCall"] boolValue]){
         [self call];
     }
@@ -156,6 +159,52 @@
     [[UIApplication sharedApplication] openURL:[NSURL URLWithString:[NSString stringWithFormat:@"tel:%@",self.resultLabel.text]]];
 }
 
+-(IBAction)longPressAction:(id)sender{
+    if([(UILongPressGestureRecognizer*)sender state] == UIGestureRecognizerStateBegan){
+        NSLog(@"long press");
+        ABRecordRef aContact = ABPersonCreate();
+        CFErrorRef anError = NULL;
+        const CFStringRef customLabel = CFSTR( "IDD" );
+        ABMultiValueRef phone = ABMultiValueCreateMutable(kABMultiStringPropertyType);
+        bool didAdd = ABMultiValueAddValueAndLabel(phone, (__bridge CFTypeRef)([self.inputTF.text copy]), customLabel, NULL);
+        
+        if (didAdd == YES)
+        {
+            ABRecordSetValue(aContact, kABPersonPhoneProperty, phone, &anError);
+            if (anError == NULL)
+            {
+                ABUnknownPersonViewController *picker = [[ABUnknownPersonViewController alloc] init];
+                picker.unknownPersonViewDelegate = self;
+                picker.displayedPerson = aContact;
+                picker.allowsAddingToAddressBook = YES;
+                picker.allowsActions = YES;
+                picker.title = @"Add an IDD Number";
+                
+                picker.alternateName = @"Choose one option below";
+                UINavigationController * navC = [[UINavigationController alloc] initWithRootViewController:picker];
+                UIBarButtonItem * doneBtn = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemDone target:self action:@selector(dismissViewController)];
+                [picker.navigationItem setRightBarButtonItem:doneBtn];
+       
+                [self presentViewController:navC animated:YES completion:nil];
+            }
+            else
+            {
+                UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error"
+                                                                message:@"Could not create unknown user"
+                                                               delegate:nil
+                                                      cancelButtonTitle:@"Cancel"
+                                                      otherButtonTitles:nil];
+                [alert show];
+            }
+        }
+        CFRelease(phone);
+        CFRelease(aContact);
+    }
+}
+
+-(void)dismissViewController{
+    [self dismissViewControllerAnimated:YES completion:nil];
+}
 -(NSString *)clipboardText{
     NSString* clipboardText = [[UIPasteboard generalPasteboard] valueForPasteboardType:@"public.utf8-plain-text"];
     NSLog(@"clipboard = %@",clipboardText);
@@ -515,4 +564,19 @@
     [self dismissViewControllerAnimated:YES completion:nil];
     return NO;
 }
+
+
+#pragma mark ABUnknownPersonViewControllerDelegate methods
+// Dismisses the picker when users are done creating a contact or adding the displayed person properties to an existing contact.
+- (void)unknownPersonViewController:(ABUnknownPersonViewController *)unknownPersonView didResolveToPerson:(ABRecordRef)person
+{
+    [self.navigationController popViewControllerAnimated:YES];
+}
+
+// Does not allow users to perform default actions such as emailing a contact, when they select a contact property.
+- (BOOL)unknownPersonViewController:(ABUnknownPersonViewController *)personViewController shouldPerformDefaultActionForPerson:(ABRecordRef)person property:(ABPropertyID)property identifier:(ABMultiValueIdentifier)identifier
+{
+	return YES;
+}
+
 @end
