@@ -12,6 +12,7 @@
 #import "WYPopoverController.h"
 #import "SelectorTableViewController.h"
 #import "ASCScreenBrightnessDetector.h"
+#import "UITextField+Custom.h"
 
 @class SettingViewController;
 

@@ -18,6 +18,7 @@
 		1D6B4B9018A9DACE0098ADDB /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3D592E4E177DFD9800C82F74 /* UIKit.framework */; };
 		1D6B4B9618A9DACE0098ADDB /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 1D6B4B9418A9DACE0098ADDB /* InfoPlist.strings */; };
 		1D6B4B9818A9DACE0098ADDB /* IDD_Dialer_Tests.m in Sources */ = {isa = PBXBuildFile; fileRef = 1D6B4B9718A9DACE0098ADDB /* IDD_Dialer_Tests.m */; };
+		1DC9CF7018BADB9C00A9D27C /* UITextField+Custom.m in Sources */ = {isa = PBXBuildFile; fileRef = 1DC9CF6F18BADB9C00A9D27C /* UITextField+Custom.m */; };
 		3D592E4F177DFD9800C82F74 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3D592E4E177DFD9800C82F74 /* UIKit.framework */; };
 		3D592E51177DFD9800C82F74 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3D592E50177DFD9800C82F74 /* Foundation.framework */; };
 		3D592E53177DFD9800C82F74 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3D592E52177DFD9800C82F74 /* CoreGraphics.framework */; };
@@ -66,6 +67,8 @@
 		1D6B4B9518A9DACE0098ADDB /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		1D6B4B9718A9DACE0098ADDB /* IDD_Dialer_Tests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = IDD_Dialer_Tests.m; sourceTree = "<group>"; };
 		1D6B4B9918A9DACE0098ADDB /* IDD Dialer Tests-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "IDD Dialer Tests-Prefix.pch"; sourceTree = "<group>"; };
+		1DC9CF6E18BADB9C00A9D27C /* UITextField+Custom.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UITextField+Custom.h"; sourceTree = "<group>"; };
+		1DC9CF6F18BADB9C00A9D27C /* UITextField+Custom.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UITextField+Custom.m"; sourceTree = "<group>"; };
 		3D592E4B177DFD9800C82F74 /* IDD Dialer.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "IDD Dialer.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		3D592E4E177DFD9800C82F74 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		3D592E50177DFD9800C82F74 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
@@ -199,6 +202,8 @@
 			children = (
 				1D21C45E18B75A89000D3F4E /* ASCScreenBrightnessDetector */,
 				1D0C47ED1890F52C006F35C0 /* WYPopoverController */,
+				1DC9CF6E18BADB9C00A9D27C /* UITextField+Custom.h */,
+				1DC9CF6F18BADB9C00A9D27C /* UITextField+Custom.m */,
 				3D592E5D177DFD9800C82F74 /* AppDelegate.h */,
 				3D592E5E177DFD9800C82F74 /* AppDelegate.m */,
 				3D592E66177DFD9800C82F74 /* MainViewController.h */,
@@ -364,6 +369,7 @@
 			files = (
 				3D592E5B177DFD9800C82F74 /* main.m in Sources */,
 				3D592E5F177DFD9800C82F74 /* AppDelegate.m in Sources */,
+				1DC9CF7018BADB9C00A9D27C /* UITextField+Custom.m in Sources */,
 				3D592E68177DFD9800C82F74 /* MainViewController.m in Sources */,
 				1D21C46118B75A89000D3F4E /* ASCScreenBrightnessDetector.m in Sources */,
 				1D0C47F31890F52C006F35C0 /* WYStoryboardPopoverSegue.m in Sources */,
@@ -534,7 +540,7 @@
 			buildSettings = {
 				ARCHS = "$(ARCHS_STANDARD_INCLUDING_64_BIT)";
 				CLANG_ENABLE_OBJC_ARC = YES;
-				CODE_SIGN_IDENTITY = "iPhone Developer";
+				CODE_SIGN_IDENTITY = "iPhone Developer: Raymond Ying Chuen Li (8R4S594Y3X)";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(DEVELOPER_FRAMEWORKS_DIR)",
@@ -544,6 +550,7 @@
 				INFOPLIST_FILE = "IDD Dialer/IDD Dialer-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE = "120D3384-B6D9-4B2A-B1D4-554A13AD4B8A";
 				WRAPPER_EXTENSION = app;
 			};
 			name = Debug;
@@ -553,7 +560,7 @@
 			buildSettings = {
 				ARCHS = "$(ARCHS_STANDARD_INCLUDING_64_BIT)";
 				CLANG_ENABLE_OBJC_ARC = YES;
-				CODE_SIGN_IDENTITY = "iPhone Developer";
+				CODE_SIGN_IDENTITY = "iPhone Developer: Raymond Ying Chuen Li (8R4S594Y3X)";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(DEVELOPER_FRAMEWORKS_DIR)",
@@ -563,6 +570,7 @@
 				INFOPLIST_FILE = "IDD Dialer/IDD Dialer-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE = "120D3384-B6D9-4B2A-B1D4-554A13AD4B8A";
 				WRAPPER_EXTENSION = app;
 			};
 			name = Release;

@@ -20,6 +20,7 @@
 @property (nonatomic, strong) NSArray * iddArray;
 @property (nonatomic, strong) NSArray * countryArray;
 @property (nonatomic, strong) ASCScreenBrightnessDetector * brightnessDetector;
+@property (nonatomic)         ASCScreenBrightnessStyle brightnessStyle;
 @end
 
 @implementation MainViewController
@@ -29,8 +30,10 @@
 {
     [super viewDidLoad];
 	// Do any additional setup after loading the view, typically from a nib.
-    self.brightnessDetector = [[ASCScreenBrightnessDetector alloc] init];
+    self.brightnessDetector = [ASCScreenBrightnessDetector new];
     [self.brightnessDetector setDelegate:self];
+    self.brightnessStyle = self.brightnessDetector.screenBrightnessStyle;
+    [self setStyle];
     [[self.callBtn layer] setCornerRadius:40];
     [[self.iddBtn layer] setCornerRadius:6];
     [[self.countryBtn layer] setCornerRadius:6];
@@ -53,8 +56,6 @@
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(reloadInitialData) name:@"settingBackPressed" object:nil];
 	
 	[NSTimer scheduledTimerWithTimeInterval:BACKGROUND_CHANGE_INTERVAL target:self selector:@selector(changeBackgroundColor) userInfo:nil repeats:YES];
-    
-    [self setStyle:ASCScreenBrightnessStyleLight];
 }
 
 - (void)didReceiveMemoryWarning
@@ -217,10 +218,12 @@
 }
 
 -(void)fillInputWithClipboard{
-    NSString* number = [self clipboardText];
-    if(!isEmptyString(number)){
-        [self.inputTF setText:number];
-        [self process];
+    if(isEmptyString(self.inputTF.text)){
+        NSString* number = [self clipboardText];
+        if(!isEmptyString(number)){
+            [self.inputTF setText:number];
+            [self process];
+        }
     }
 }
 
@@ -251,30 +254,33 @@
     [UIView commitAnimations];
 }
 
--(void)setStyle:(ASCScreenBrightnessStyle)style{
+-(void)setStyle{
     [self.inputTF.layer setBorderWidth:1];
-    switch (style) {
+    switch (self.brightnessStyle) {
         case ASCScreenBrightnessStyleDark:
             [self.inputTF setTextColor:[UIColor whiteColor]];
             [self.inputTF.layer setBorderColor:[[UIColor whiteColor] CGColor]];
+            [self.inputTF setPlaceholderTextColor:[UIColor colorWithWhite:.8f alpha:1.0f]];
             [self.resultLabel setTextColor:[UIColor whiteColor]];
             [self.settingBtn setTitleColor:[UIColor colorWithRed:50.f/150.f green:79.f/150.f blue:133.f/150.f alpha:1] forState:UIControlStateNormal];
             break;
         case ASCScreenBrightnessStyleLight:
             [self.inputTF setTextColor:[UIColor blackColor]];
             [self.inputTF.layer setBorderColor:[[UIColor blackColor] CGColor]];
+            [self.inputTF setPlaceholderTextColor:[UIColor colorWithWhite:0.f alpha:.5f]];
             [self.resultLabel setTextColor:[UIColor blackColor]];
             [self.settingBtn setTitleColor:[UIColor colorWithRed:50.f/255.f green:79.f/255.f blue:133.f/255.f alpha:1] forState:UIControlStateNormal];
             break;
         default:
             break;
     }
-    [self setNeedsStatusBarAppearanceUpdate];
+    [self.inputTF setNeedsDisplay];
+    [[UIApplication sharedApplication] setStatusBarStyle:self.brightnessStyle==ASCScreenBrightnessStyleLight?UIStatusBarStyleDefault:UIStatusBarStyleLightContent animated:YES];
     [self changeBackgroundColor];
 }
 -(void)changeBackgroundColor{
     CGFloat offset;
-    switch (self.brightnessDetector.screenBrightnessStyle) {
+    switch (self.brightnessStyle) {
         case ASCScreenBrightnessStyleDark:
             offset = 0.25;
             break;
@@ -621,18 +627,8 @@
 
 -(void)screenBrightnessStyleDidChange:(ASCScreenBrightnessStyle)style{
     NSLog(@"brightness has changed");
-    [self setStyle:style];
-}
--(UIStatusBarStyle)preferredStatusBarStyle{
-    switch (self.brightnessDetector.screenBrightnessStyle) {
-        case ASCScreenBrightnessStyleDark:
-            return UIStatusBarStyleLightContent;
-            break;
-        case ASCScreenBrightnessStyleLight:
-            return UIStatusBarStyleDefault;
-        default:
-            break;
-    }
+    self.brightnessStyle = style;
+    [self setStyle];
 }
 
 @end
