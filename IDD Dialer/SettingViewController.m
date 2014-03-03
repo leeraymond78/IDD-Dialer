@@ -7,6 +7,7 @@
 //
 
 #import "SettingViewController.h"
+#import "MainViewController.h"
 
 @interface SettingViewController()
 @property (nonatomic, strong) NSArray * iddArray;
@@ -39,6 +40,10 @@
     [onAppCallSiwtch setOn:[[[NSUserDefaults standardUserDefaults] objectForKey:@"isOnAppCall"] boolValue]];
 }
 
+-(void)viewDidAppear:(BOOL)animated{
+    [self scrollViewDidScroll:self.tableView];
+}
+
 - (void)didReceiveMemoryWarning
 {
     [super didReceiveMemoryWarning];
@@ -56,13 +61,13 @@
 	//write default
     if(!self.iddArray || [self.iddArray count] == 0){
         NSString *path = [[NSBundle mainBundle] pathForResource:
-                          @"idd" ofType:@"plist"];
+                          @"idd_data" ofType:@"plist"];
         
         self.iddArray = [[NSMutableArray alloc] initWithContentsOfFile:path];
     }
     if(!self.countryArray || [self.countryArray count] == 0){
         path = [[NSBundle mainBundle] pathForResource:
-                @"countryCode" ofType:@"plist"];
+                @"countryCode_data" ofType:@"plist"];
         
         self.countryArray = [[NSMutableArray alloc] initWithContentsOfFile:path];
     }
@@ -142,6 +147,69 @@
 	}
     return @"";
 }
+
+-(UIColor *)colorForHeaderInSection:(NSInteger)section{
+	if(section==0){
+        return [UIColor colorWithRed:.5 green:.7 blue:.9 alpha:1.];
+	}else if(section == 1){
+		return [UIColor colorWithRed:.1 green:0.9 blue:0.2 alpha:1.];
+	}else if(section == 2){
+		return [UIColor colorWithRed:1 green:.4 blue:.5 alpha:1.];
+    }
+    return nil;
+}
+
+-(UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section{
+    if(!sectionViewArray){
+        NSMutableArray *tempSectionViewArray = [NSMutableArray new];
+        NSMutableArray *tempCenterViewArray = [NSMutableArray new];
+        
+        for (NSInteger x = 0; x < [self numberOfSectionsInTableView:tableView]; x++) {
+            UIView * sectionView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, self.tableView.frame.size.width, [self tableView:tableView heightForHeaderInSection:section])];
+            [sectionView setBackgroundColor:[UIColor clearColor]];
+            UILabel * centerView = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 180, 20)];
+            [centerView setBackgroundColor:[self colorForHeaderInSection:x]];
+            [centerView setTextAlignment:NSTextAlignmentCenter];
+            [[centerView layer] setCornerRadius:10];
+            [centerView setFont:[UIFont fontWithName:@"HelveticaNeue-Light" size:12.f]];
+            [centerView setTextColor:[UIColor whiteColor]];
+            [centerView setText:[self tableView:tableView titleForHeaderInSection:x]];
+            [sectionView addSubview:centerView];
+            [centerView setCenter:CGPointMake(sectionView.frame.size.width/2, sectionView.frame.size.height/2)];
+            [tempSectionViewArray addObject:sectionView];
+            [tempCenterViewArray addObject:centerView];
+        }
+        
+        sectionViewArray = [NSArray arrayWithArray:tempSectionViewArray];
+        centerViewArray = [NSArray arrayWithArray:tempCenterViewArray];
+    }
+    return sectionViewArray[section];
+}
+
+-(void)scrollViewDidScroll:(UIScrollView *)scrollView{
+    for(UIView * sectionView in sectionViewArray){
+        NSInteger section = [sectionViewArray indexOfObject:sectionView];
+        
+        UIView * centerView = centerViewArray[section];
+        CGRect frame = [centerView frame];
+        
+        CGFloat offset = [sectionView frame].origin.y - scrollView.contentOffset.y;
+        if(offset < 0){
+            offset = 0;
+        }else if(offset >= 80){
+            offset = 80.f;
+        }
+        frame.size.width = 160.f + (offset * 0.5f);
+        [centerView setFrame:frame];
+        [centerView setAlpha:1.f - offset* 0.3f / 80.f];
+        [centerView setCenter:CGPointMake([sectionView frame].size.width/2, [sectionView frame].size.height/2)];
+    }
+}
+
+-(CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section{
+    return 30;
+}
+
 -(NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section{
 	if(section == 1){
 		return [self.countryArray count];
@@ -253,22 +321,21 @@
     if (cell == nil) {
         cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault  reuseIdentifier:MyIdentifier];
         if(indexPath.section==0){
-            [[cell textLabel] setTextColor:[UIColor colorWithRed:.5 green:.7 blue:.9 alpha:1.]];
-            [[cell textLabel] setFont:[UIFont fontWithName:@"HelveticaNeue-Thin" size:25]];
+            [[cell textLabel] setFont:[UIFont fontWithName:@"HelveticaNeue-Thin" size:26]];
         }else{
             [[cell textLabel] setFont:[UIFont fontWithName:@"HelveticaNeue-Thin" size:25]];
         }
         [[cell textLabel] setAdjustsFontSizeToFitWidth:YES];
+        [[cell textLabel] setTextAlignment:NSTextAlignmentCenter];
         
-        [cell setBackgroundColor:[UIColor darkGrayColor]];
+        [cell setBackgroundColor:[UIColor clearColor]];
     }
+    [[cell textLabel] setTextColor:[self colorForHeaderInSection:indexPath.section]];
 	if(indexPath.section==0){
 		[[cell textLabel] setText:[[self.iddArray objectAtIndex:indexPath.row] objectForKey:IDD]];
 	}else if(indexPath.section == 1){
-		[[cell textLabel] setTextColor:[UIColor colorWithRed:.1 green:0.9 blue:0.2 alpha:1.]];
 		[[cell textLabel] setText:[[self.countryArray objectAtIndex:indexPath.row] objectForKey:COUNTRY_NAME]];
 	}else if(indexPath.section == 2){
-		[[cell textLabel] setTextColor:[UIColor colorWithRed:1 green:.4 blue:.5 alpha:1.]];
 		[[cell textLabel] setText:[[self.disabledCountryArray objectAtIndex:indexPath.row] objectForKey:COUNTRY_NAME]];
 	}
     

@@ -7,7 +7,6 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "MainViewController.h"
 @interface AddIDDViewController : UIViewController<UITextFieldDelegate>{
     UITextField* iddTF;
     UISwitch * with00Siwtch;

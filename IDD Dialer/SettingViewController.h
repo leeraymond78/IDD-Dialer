@@ -16,6 +16,9 @@
     IBOutlet UIButton * backbtn;
     
     AddIDDViewController * addIDDVC;
+    
+    NSArray *sectionViewArray;
+    NSArray *centerViewArray;
 }
 
 @end

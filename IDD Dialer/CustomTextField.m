@@ -6,22 +6,9 @@
 //  Copyright (c) 2013 ettadmin. All rights reserved.
 //
 
-#import "UITextField+Custom.h"
+#import "CustomTextField.h"
 
-@implementation UITextField (Custom)
-
-@dynamic placeholderTextColor;
-
--(UIColor *)placeholderTextColor{
-	return objc_getAssociatedObject(self, @"placeHolderTextColor") ;
-}
-
--(void)setPlaceholderTextColor:(UIColor *)color{
-	 objc_setAssociatedObject(self, @"placeHolderTextColor", color, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
-}
-
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wobjc-protocol-method-implementation"
+@implementation CustomTextField
 
 -(void)drawPlaceholderInRect:(CGRect)rect{
 	//Custom place holder text color
@@ -35,6 +22,5 @@
     [[self placeholder] drawInRect:placeholderRect withFont:self.font];
 }
 
-#pragma clang diagnostic pop
 
 @end

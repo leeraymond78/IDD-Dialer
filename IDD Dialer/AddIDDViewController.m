@@ -40,8 +40,8 @@
 
 -(IBAction)hideAndBack:(id)sender{
     NSDictionary* infoDict = [NSDictionary dictionaryWithObjectsAndKeys:
-                              iddTF.text, IDD,
-                              [NSNumber numberWithBool:[self.with00Siwtch isOn]], IDD_WITH00,
+                              iddTF.text, @"IDD",
+                              [NSNumber numberWithBool:[self.with00Siwtch isOn]], @"IDD00",
                               nil];
     [[NSNotificationCenter defaultCenter] postNotificationName:@"AddIDDDone" object:nil userInfo:infoDict];
     [iddTF resignFirstResponder];
