@@ -13,6 +13,8 @@
 		1D21C46118B75A89000D3F4E /* ASCScreenBrightnessDetector.m in Sources */ = {isa = PBXBuildFile; fileRef = 1D21C46018B75A89000D3F4E /* ASCScreenBrightnessDetector.m */; };
 		1D42BCB818AC595C000E2FA1 /* AddressBook.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1D42BCB718AC595C000E2FA1 /* AddressBook.framework */; };
 		1D42BCBA18AC5961000E2FA1 /* AddressBookUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1D42BCB918AC5960000E2FA1 /* AddressBookUI.framework */; };
+		1D56711618C5BCDA00412DC5 /* DiallingCodes.plist in Resources */ = {isa = PBXBuildFile; fileRef = 1D56711518C5BCDA00412DC5 /* DiallingCodes.plist */; };
+		1D56711918C5BD4300412DC5 /* DiallingCodesHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = 1D56711818C5BD4300412DC5 /* DiallingCodesHelper.m */; };
 		1D6B4B8E18A9DACE0098ADDB /* XCTest.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1D6B4B8718A9DA940098ADDB /* XCTest.framework */; };
 		1D6B4B8F18A9DACE0098ADDB /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3D592E50177DFD9800C82F74 /* Foundation.framework */; };
 		1D6B4B9018A9DACE0098ADDB /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3D592E4E177DFD9800C82F74 /* UIKit.framework */; };
@@ -61,6 +63,9 @@
 		1D21C46018B75A89000D3F4E /* ASCScreenBrightnessDetector.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ASCScreenBrightnessDetector.m; sourceTree = "<group>"; };
 		1D42BCB718AC595C000E2FA1 /* AddressBook.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AddressBook.framework; path = System/Library/Frameworks/AddressBook.framework; sourceTree = SDKROOT; };
 		1D42BCB918AC5960000E2FA1 /* AddressBookUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AddressBookUI.framework; path = System/Library/Frameworks/AddressBookUI.framework; sourceTree = SDKROOT; };
+		1D56711518C5BCDA00412DC5 /* DiallingCodes.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = DiallingCodes.plist; sourceTree = "<group>"; };
+		1D56711718C5BD4300412DC5 /* DiallingCodesHelper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DiallingCodesHelper.h; path = DialingCodesHelper/DiallingCodesHelper.h; sourceTree = "<group>"; };
+		1D56711818C5BD4300412DC5 /* DiallingCodesHelper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = DiallingCodesHelper.m; path = DialingCodesHelper/DiallingCodesHelper.m; sourceTree = "<group>"; };
 		1D6B4B8718A9DA940098ADDB /* XCTest.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = XCTest.framework; path = Library/Frameworks/XCTest.framework; sourceTree = DEVELOPER_DIR; };
 		1D6B4B8D18A9DACE0098ADDB /* IDD Dialer Tests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "IDD Dialer Tests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 		1D6B4B9318A9DACE0098ADDB /* IDD Dialer Tests-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "IDD Dialer Tests-Info.plist"; sourceTree = "<group>"; };
@@ -143,6 +148,15 @@
 			path = ASCScreenBrightnessDetector;
 			sourceTree = "<group>";
 		};
+		1D56711A18C5BD4800412DC5 /* DialingCodesHelper */ = {
+			isa = PBXGroup;
+			children = (
+				1D56711718C5BD4300412DC5 /* DiallingCodesHelper.h */,
+				1D56711818C5BD4300412DC5 /* DiallingCodesHelper.m */,
+			);
+			name = DialingCodesHelper;
+			sourceTree = "<group>";
+		};
 		1D6B4B9118A9DACE0098ADDB /* IDD Dialer Tests */ = {
 			isa = PBXGroup;
 			children = (
@@ -203,6 +217,7 @@
 				1D21C45E18B75A89000D3F4E /* ASCScreenBrightnessDetector */,
 				1D0C47ED1890F52C006F35C0 /* WYPopoverController */,
 				1DC9CF6E18BADB9C00A9D27C /* CustomTextField.h */,
+				1D56711A18C5BD4800412DC5 /* DialingCodesHelper */,
 				1DC9CF6F18BADB9C00A9D27C /* CustomTextField.m */,
 				3D592E5D177DFD9800C82F74 /* AppDelegate.h */,
 				3D592E5E177DFD9800C82F74 /* AppDelegate.m */,
@@ -225,6 +240,7 @@
 		3D592E55177DFD9800C82F74 /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
+				1D56711518C5BCDA00412DC5 /* DiallingCodes.plist */,
 				3D6C52F5177EB89500203EB6 /* countryCode_data.plist */,
 				3D6C52F6177EB89500203EB6 /* idd_data.plist */,
 				3D592E56177DFD9800C82F74 /* IDD Dialer-Info.plist */,
@@ -333,6 +349,7 @@
 				3D6C52F7177EB89500203EB6 /* countryCode_data.plist in Resources */,
 				3D6C52F8177EB89500203EB6 /* idd_data.plist in Resources */,
 				3D6C52FD177EE19200203EB6 /* AddIDDViewController.xib in Resources */,
+				1D56711618C5BCDA00412DC5 /* DiallingCodes.plist in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -373,6 +390,7 @@
 				3D592E68177DFD9800C82F74 /* MainViewController.m in Sources */,
 				1D21C46118B75A89000D3F4E /* ASCScreenBrightnessDetector.m in Sources */,
 				1D0C47F31890F52C006F35C0 /* WYStoryboardPopoverSegue.m in Sources */,
+				1D56711918C5BD4300412DC5 /* DiallingCodesHelper.m in Sources */,
 				1D0C47F21890F52C006F35C0 /* WYPopoverController.m in Sources */,
 				1D0C47FC1890F6EE006F35C0 /* SelectorTableViewController.m in Sources */,
 				3D592E77177E3A3B00C82F74 /* SettingViewController.m in Sources */,

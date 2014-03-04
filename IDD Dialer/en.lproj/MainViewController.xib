@@ -23,7 +23,7 @@
             <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
             <subviews>
-                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" reversesTitleShadowWhenHighlighted="YES" adjustsImageWhenDisabled="NO" lineBreakMode="middleTruncation" id="ok6-XC-fbq">
+                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" reversesTitleShadowWhenHighlighted="YES" adjustsImageWhenDisabled="NO" lineBreakMode="tailTruncation" id="ok6-XC-fbq">
                     <rect key="frame" x="20" y="458" width="120" height="46"/>
                     <autoresizingMask key="autoresizingMask" flexibleMinX="YES" widthSizable="YES" flexibleMaxX="YES" flexibleMinY="YES"/>
                     <color key="backgroundColor" red="0.98820304870605469" green="0.37276136222117778" blue="0.29959882919198422" alpha="1" colorSpace="calibratedRGB"/>
@@ -36,7 +36,7 @@
                         <action selector="popSelection:" destination="-1" eventType="touchUpInside" id="y1a-0s-y9n"/>
                     </connections>
                 </button>
-                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" reversesTitleShadowWhenHighlighted="YES" adjustsImageWhenDisabled="NO" lineBreakMode="middleTruncation" id="9Lu-8O-Nwb">
+                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" reversesTitleShadowWhenHighlighted="YES" adjustsImageWhenDisabled="NO" lineBreakMode="tailTruncation" id="9Lu-8O-Nwb">
                     <rect key="frame" x="180" y="458" width="120" height="46"/>
                     <autoresizingMask key="autoresizingMask" flexibleMinX="YES" widthSizable="YES" flexibleMaxX="YES" flexibleMinY="YES"/>
                     <color key="backgroundColor" red="0.20146970393756058" green="0.81544428330439056" blue="0.98820304870605469" alpha="1" colorSpace="calibratedRGB"/>
@@ -71,7 +71,7 @@
                     <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                     <nil key="highlightedColor"/>
                 </label>
-                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" reversesTitleShadowWhenHighlighted="YES" adjustsImageWhenDisabled="NO" lineBreakMode="middleTruncation" id="17">
+                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" reversesTitleShadowWhenHighlighted="YES" adjustsImageWhenDisabled="NO" lineBreakMode="tailTruncation" id="17">
                     <rect key="frame" x="120" y="344" width="80" height="80"/>
                     <autoresizingMask key="autoresizingMask" flexibleMinX="YES" widthSizable="YES" flexibleMaxX="YES" flexibleMinY="YES"/>
                     <color key="backgroundColor" red="0.30980392156862746" green="0.77254901960784317" blue="0.396078431372549" alpha="1" colorSpace="calibratedRGB"/>

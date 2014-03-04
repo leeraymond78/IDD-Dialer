@@ -8,6 +8,7 @@
 
 #import "MainViewController.h"
 #import "SettingViewController.h"
+#import "DiallingCodesHelper.h"
 
 #define BACKGROUND_CHANGE_INTERVAL 3
 
@@ -67,35 +68,20 @@
 #pragma mark - methods
 
 -(void)reloadInitialData{
-    NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
-    NSString *documentsDirectory = [paths objectAtIndex:0];
-    NSString *path = [documentsDirectory stringByAppendingPathComponent:@"idd_data.plist"];
-    self.iddArray = [NSArray arrayWithContentsOfFile:path];
-    path = [documentsDirectory stringByAppendingPathComponent:@"countryCode_data.plist"];
-    self.countryArray = [NSArray arrayWithContentsOfFile:path];
+    self.iddArray = [DiallingCodesHelper initialIDDs];
+	self.countryArray = [DiallingCodesHelper initialCountryCodes];
     
-        //write default
-    if(!self.iddArray || [self.iddArray count] == 0){
-        NSString *path = [[NSBundle mainBundle] pathForResource:
-                          @"idd_data" ofType:@"plist"];
-        
-        self.iddArray = [[NSMutableArray alloc] initWithContentsOfFile:path];
-    }
-    if(!self.countryArray || [self.countryArray count] == 0){
-        path = [[NSBundle mainBundle] pathForResource:
-                @"countryCode_data" ofType:@"plist"];
-        
-        self.countryArray = [[NSMutableArray alloc] initWithContentsOfFile:path];
-    }
-	
 	NSMutableArray * iddValueArray = [NSMutableArray new];
 	for (NSDictionary * dict in self.iddArray) {
 		[iddValueArray addObject:dict[IDD]];
 	}
 	NSMutableArray * countryValueArray = [NSMutableArray new];
-	for (NSDictionary * dict in self.countryArray) {
-		[countryValueArray addObject:dict[COUNTRY_NAME]];
+    [DiallingCodesHelper countryNamesByCode];
+	for (NSString * code in self.countryArray) {
+		[countryValueArray addObject:[DiallingCodesHelper countryNameByCode:code]];
 	}
+    [self.iddSelectionViewController setPreferredContentSize:CGSizeMake(140,0)];
+    [self.countrySelectionViewController setPreferredContentSize:CGSizeMake(250,0)];
 	[self.iddSelectionViewController setDataSource:iddValueArray];
 	[self.countrySelectionViewController setDataSource:countryValueArray];
 }
@@ -108,7 +94,7 @@
 		[self.iddBtn setTitle:@"IDD" forState:UIControlStateNormal];
 	}
 	if(self.countrySelectionViewController.selectedIndex!=-1){
-		NSString * country = self.countryArray[self.countrySelectionViewController.selectedIndex][COUNTRY_NAME];
+		NSString * country = [DiallingCodesHelper countryNameByCode:self.countryArray[self.countrySelectionViewController.selectedIndex]];
 		[self.countryBtn setTitle:country forState:UIControlStateNormal];
 	}else{
 		[self.countryBtn setTitle:@"Country" forState:UIControlStateNormal];
@@ -127,33 +113,6 @@
         }
     }
     return result;
-}
-
--(NSDictionary*)getInfoWithNumber:(NSString*)number{
-    number = [self plainNumberByPhone:number];
-    if(number){
-        NSMutableDictionary* resultDict = nil;
-        unichar firstChar = [number characterAtIndex:0];
-        if([number length] == 8 && (firstChar == '3' || firstChar == '2' || firstChar == '6' || firstChar == '9')){
-            resultDict = [NSMutableDictionary dictionaryWithObjectsAndKeys:
-                          @"852",COUNTRY_CODE,
-                          @"12593",IDD,nil];
-        }else if([number length] == 11 && (firstChar == '1')){
-            resultDict = [NSMutableDictionary dictionaryWithObjectsAndKeys:
-                          @"86",COUNTRY_CODE,
-                          @"1678",IDD,nil];
-        }else if([number length] == 11 && (firstChar == '0')){
-            resultDict = [NSMutableDictionary dictionaryWithObjectsAndKeys:
-                          @"44",COUNTRY_CODE,
-                          @"1678",IDD,nil];
-        }else if([number length] == 10 && (firstChar == '0')){
-            resultDict = [NSMutableDictionary dictionaryWithObjectsAndKeys:
-                          @"886",COUNTRY_CODE,
-                          @"1678",IDD,nil];
-        }
-        return resultDict;
-    }
-    return nil;
 }
 
 -(IBAction)callAction:(id)sender{
@@ -260,14 +219,14 @@
         case ASCScreenBrightnessStyleDark:
             [self.inputTF setTextColor:[UIColor whiteColor]];
             [self.inputTF.layer setBorderColor:[[UIColor whiteColor] CGColor]];
-            [self.inputTF setPlaceholderTextColor:[UIColor colorWithWhite:.8f alpha:1.0f]];
+            [self.inputTF setPlaceholderTextColor:[UIColor colorWithWhite:.6f alpha:.5f]];
             [self.resultLabel setTextColor:[UIColor whiteColor]];
             [self.settingBtn setTitleColor:[UIColor colorWithRed:50.f/150.f green:79.f/150.f blue:133.f/150.f alpha:1] forState:UIControlStateNormal];
             break;
         case ASCScreenBrightnessStyleLight:
             [self.inputTF setTextColor:[UIColor blackColor]];
             [self.inputTF.layer setBorderColor:[[UIColor blackColor] CGColor]];
-            [self.inputTF setPlaceholderTextColor:[UIColor colorWithWhite:0.f alpha:.5f]];
+            [self.inputTF setPlaceholderTextColor:[UIColor colorWithWhite:0.4f alpha:.5f]];
             [self.resultLabel setTextColor:[UIColor blackColor]];
             [self.settingBtn setTitleColor:[UIColor colorWithRed:50.f/255.f green:79.f/255.f blue:133.f/255.f alpha:1] forState:UIControlStateNormal];
             break;
@@ -330,12 +289,12 @@
         BOOL isInternation = [self isInternationByPhone:phone];
 		
 		NSString * plain = [self noZeroNumberByPhone:[self plainNumberByPhone:noIddPhone]];
-		for(NSDictionary* countryObj in self.countryArray){
-			NSString * country = countryObj[COUNTRY_CODE];
+		for(NSString * code in self.countryArray){
+			NSString * diallingCode = [DiallingCodesHelper diallingCodeByCode:code];
             if(isInternation){
                 NSRange range = NSMakeRange(0, 3);
-                if([[plain substringWithRange:range] rangeOfString:country].location == 0){
-                    index = [self.countryArray indexOfObject:countryObj];
+                if([[plain substringWithRange:range] rangeOfString:diallingCode].location == 0){
+                    index = [self.countryArray indexOfObject:code];
                     break;
                 }
             }
@@ -374,7 +333,7 @@
     
 	// remove country code
 	if(countryIndex != -1){
-		NSString * country = self.countryArray[countryIndex][COUNTRY_CODE];
+		NSString * country = [DiallingCodesHelper countryNameByCode:self.countryArray[countryIndex]];
 		NSLog(@"%@ country found = %@", PRETTY_FUNCTION, country);
 		result = [result stringByReplacingOccurrencesOfString:country withString:@""];
 	}
@@ -445,7 +404,7 @@
 		idd = self.iddArray[self.iddSelectionViewController.selectedIndex][IDD];
 	}
 	if(self.countrySelectionViewController.selectedIndex != -1){
-		country = self.countryArray[self.countrySelectionViewController.selectedIndex][COUNTRY_CODE];
+		country = [DiallingCodesHelper diallingCodeByCode:self.countryArray[self.countrySelectionViewController.selectedIndex]];
 	}
     NSString * result = [self formattedPhoneByIdd:idd country:country number:number];
     NSLog(@"%@ Final Output = %@", PRETTY_FUNCTION,result);

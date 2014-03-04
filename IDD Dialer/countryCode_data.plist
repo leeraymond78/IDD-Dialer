@@ -2,53 +2,7 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <array>
-	<dict>
-		<key>CC</key>
-		<string>852</string>
-		<key>CN</key>
-		<string>Hong Kong</string>
-	</dict>
-	<dict>
-		<key>CC</key>
-		<string>86</string>
-		<key>CN</key>
-		<string>China</string>
-	</dict>
-	<dict>
-		<key>CC</key>
-		<string>886</string>
-		<key>CN</key>
-		<string>Taiwan</string>
-	</dict>
-	<dict>
-		<key>CC</key>
-		<string>81</string>
-		<key>CN</key>
-		<string>Japan</string>
-	</dict>
-	<dict>
-		<key>CC</key>
-		<string>65</string>
-		<key>CN</key>
-		<string>Singapore</string>
-	</dict>
-	<dict>
-		<key>CC</key>
-		<string>44</string>
-		<key>CN</key>
-		<string>United Kingdom</string>
-	</dict>
-	<dict>
-		<key>CC</key>
-		<string>1</string>
-		<key>CN</key>
-		<string>United States</string>
-	</dict>
-	<dict>
-		<key>CC</key>
-		<string>853</string>
-		<key>CN</key>
-		<string>Macau</string>
-	</dict>
+	<string>HK</string>
+	<string>MO</string>
 </array>
 </plist>

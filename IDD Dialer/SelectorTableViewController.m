@@ -63,7 +63,7 @@
 -(void)setDataSource:(NSArray *)dataSource{
 	_dataSource = dataSource;
 	
-	self.preferredContentSize = CGSizeMake(200, 30.f * (self.dataSource?self.dataSource.count:30));
+	self.preferredContentSize = CGSizeMake(self.preferredContentSize.width==0?200:self.preferredContentSize.width, 30.f * (self.dataSource?self.dataSource.count:30));
 }
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
 {

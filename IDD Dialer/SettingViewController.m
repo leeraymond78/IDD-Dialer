@@ -8,6 +8,7 @@
 
 #import "SettingViewController.h"
 #import "MainViewController.h"
+#import "DiallingCodesHelper.h"
 
 @interface SettingViewController()
 @property (nonatomic, strong) NSArray * iddArray;
@@ -61,6 +62,7 @@
 
 -(void)viewWillAppear:(BOOL)animated{
     [onAppCallSiwtch setOn:[[[NSUserDefaults standardUserDefaults] objectForKey:@"isOnAppCall"] boolValue]];
+    [self.tableView reloadData];
 }
 
 -(void)viewDidAppear:(BOOL)animated{
@@ -74,29 +76,9 @@
 }
 
 -(void)reloadInitialData{
-	NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
-    NSString *documentsDirectory = [paths objectAtIndex:0];
-    NSString *path = [documentsDirectory stringByAppendingPathComponent:@"idd_data.plist"];
-    self.iddArray = [NSArray arrayWithContentsOfFile:path];
-    path = [documentsDirectory stringByAppendingPathComponent:@"countryCode_data.plist"];
-    self.countryArray = [NSArray arrayWithContentsOfFile:path];
-    
-	//write default
-    if(!self.iddArray || [self.iddArray count] == 0){
-        NSString *path = [[NSBundle mainBundle] pathForResource:
-                          @"idd_data" ofType:@"plist"];
-        
-        self.iddArray = [[NSMutableArray alloc] initWithContentsOfFile:path];
-    }
-    if(!self.countryArray || [self.countryArray count] == 0){
-        path = [[NSBundle mainBundle] pathForResource:
-                @"countryCode_data" ofType:@"plist"];
-        
-        self.countryArray = [[NSMutableArray alloc] initWithContentsOfFile:path];
-    }
-    path = [documentsDirectory stringByAppendingPathComponent:@"disabled_countryCode_data.plist"];
-	
-    self.disabledCountryArray = [NSArray arrayWithContentsOfFile:path];
+    self.iddArray = [DiallingCodesHelper initialIDDs];
+	self.countryArray = [DiallingCodesHelper initialCountryCodes];
+    self.disabledCountryArray = [DiallingCodesHelper initialDisabledCountryCodes];
 }
 
 -(IBAction)switchValueChanged:(id)sender{
@@ -153,6 +135,7 @@
     path = [documentsDirectory stringByAppendingPathComponent:@"countryCode_data.plist"];
     [self.countryArray writeToFile:path atomically:YES];
     path = [documentsDirectory stringByAppendingPathComponent:@"disabled_countryCode_data.plist"];
+    self.disabledCountryArray = [self.disabledCountryArray sortedArrayUsingSelector:@selector(compare:)];
     [self.disabledCountryArray writeToFile:path atomically:YES];
 }
 
@@ -351,9 +334,9 @@
 	if(indexPath.section==0){
 		[[cell textLabel] setText:[[self.iddArray objectAtIndex:indexPath.row] objectForKey:IDD]];
 	}else if(indexPath.section == 1){
-		[[cell textLabel] setText:[[self.countryArray objectAtIndex:indexPath.row] objectForKey:COUNTRY_NAME]];
+		[[cell textLabel] setText:[DiallingCodesHelper countryNameByCode:self.countryArray[indexPath.row]]];
 	}else if(indexPath.section == 2){
-		[[cell textLabel] setText:[[self.disabledCountryArray objectAtIndex:indexPath.row] objectForKey:COUNTRY_NAME]];
+		[[cell textLabel] setText:[DiallingCodesHelper countryNameByCode:self.disabledCountryArray[indexPath.row]]];
 	}
     
     return cell;

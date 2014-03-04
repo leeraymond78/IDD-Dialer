@@ -18,8 +18,6 @@
 
 #define IDD @"IDD"
 #define IDD_WITH00 @"IDD00"
-#define COUNTRY_CODE @"CC"
-#define COUNTRY_NAME @"CN"
 
 @interface MainViewController : UIViewController<UITextFieldDelegate, WYPopoverControllerDelegate, SelectorTableViewControllerDelegate, ABPeoplePickerNavigationControllerDelegate, ABPersonViewControllerDelegate, ABUnknownPersonViewControllerDelegate,ASCScreenBrightnessDetectorDelegate>{
    
