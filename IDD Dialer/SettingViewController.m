@@ -31,6 +31,29 @@
 {
     [super viewDidLoad];
     // Do any additional setup after loading the view from its nib.
+    if(!sectionViewArray){
+        NSMutableArray *tempSectionViewArray = [NSMutableArray new];
+        NSMutableArray *tempCenterViewArray = [NSMutableArray new];
+        
+        for (NSInteger x = 0; x < [self numberOfSectionsInTableView:self.tableView]; x++) {
+            UIView * sectionView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, self.tableView.frame.size.width, [self tableView:self.tableView heightForHeaderInSection:x])];
+            [sectionView setBackgroundColor:[UIColor clearColor]];
+            UILabel * centerView = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 180, 20)];
+            [centerView setBackgroundColor:[self colorForHeaderInSection:x]];
+            [centerView setTextAlignment:NSTextAlignmentCenter];
+            [[centerView layer] setCornerRadius:10];
+            [centerView setFont:[UIFont fontWithName:@"HelveticaNeue-Light" size:12.f]];
+            [centerView setTextColor:[UIColor whiteColor]];
+            [centerView setText:[self tableView:self.tableView titleForHeaderInSection:x]];
+            [sectionView addSubview:centerView];
+            [centerView setCenter:CGPointMake(sectionView.frame.size.width/2, sectionView.frame.size.height/2)];
+            [tempSectionViewArray addObject:sectionView];
+            [tempCenterViewArray addObject:centerView];
+        }
+        sectionViewArray = [NSArray arrayWithArray:tempSectionViewArray];
+        centerViewArray = [NSArray arrayWithArray:tempCenterViewArray];
+    }
+    
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(addIDDDone:) name:@"AddIDDDone" object:nil];
     addIDDVC = [[AddIDDViewController alloc] initWithNibName:@"AddIDDViewController" bundle:nil];
 	[self reloadInitialData];
@@ -106,8 +129,10 @@
     [self.tableView setEditing:!isEditing animated:YES];
     isEditing = !isEditing;
     [backbtn setHidden:isEditing];
-    
+    [((UIBarButtonItem*)sender) setTitle:isEditing?@"Done":@"Edit"];
+    [((UIBarButtonItem*)sender) setTintColor:isEditing?[UIColor redColor]:nil];
 }
+
 -(IBAction)back:(id)sender{
     [self updatePlits];
     [[NSNotificationCenter defaultCenter] postNotificationName:@"settingBackPressed" object:nil];
@@ -160,29 +185,6 @@
 }
 
 -(UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section{
-    if(!sectionViewArray){
-        NSMutableArray *tempSectionViewArray = [NSMutableArray new];
-        NSMutableArray *tempCenterViewArray = [NSMutableArray new];
-        
-        for (NSInteger x = 0; x < [self numberOfSectionsInTableView:tableView]; x++) {
-            UIView * sectionView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, self.tableView.frame.size.width, [self tableView:tableView heightForHeaderInSection:section])];
-            [sectionView setBackgroundColor:[UIColor clearColor]];
-            UILabel * centerView = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 180, 20)];
-            [centerView setBackgroundColor:[self colorForHeaderInSection:x]];
-            [centerView setTextAlignment:NSTextAlignmentCenter];
-            [[centerView layer] setCornerRadius:10];
-            [centerView setFont:[UIFont fontWithName:@"HelveticaNeue-Light" size:12.f]];
-            [centerView setTextColor:[UIColor whiteColor]];
-            [centerView setText:[self tableView:tableView titleForHeaderInSection:x]];
-            [sectionView addSubview:centerView];
-            [centerView setCenter:CGPointMake(sectionView.frame.size.width/2, sectionView.frame.size.height/2)];
-            [tempSectionViewArray addObject:sectionView];
-            [tempCenterViewArray addObject:centerView];
-        }
-        
-        sectionViewArray = [NSArray arrayWithArray:tempSectionViewArray];
-        centerViewArray = [NSArray arrayWithArray:tempCenterViewArray];
-    }
     return sectionViewArray[section];
 }
 
@@ -211,13 +213,22 @@
 }
 
 -(NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section{
-	if(section == 1){
-		return [self.countryArray count];
-	}else if(section == 2){
-		return [self.disabledCountryArray count];
+    NSInteger numberOfRow = 0;
+    if(section == 0){
+        numberOfRow = [self.iddArray count];
+    }
+	else if(section == 1){
+		numberOfRow = [self.countryArray count];
 	}
-	return [self.iddArray count];
-	
+    else if(section == 2){
+		numberOfRow = [self.disabledCountryArray count];
+	}
+    if(numberOfRow == 0){
+        [sectionViewArray[section] setHidden:YES];
+    }else{
+        [sectionViewArray[section] setHidden:NO];
+    }
+    return numberOfRow;
 }
 
 -(BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath{
@@ -241,8 +252,10 @@
         NSMutableArray* tempiddArray = [NSMutableArray arrayWithArray:self.iddArray];
         [tempiddArray removeObjectAtIndex:indexPath.row];
         self.iddArray = tempiddArray;
-        [tableView reloadSections:[NSIndexSet indexSetWithIndex:indexPath.section] withRowAnimation:UITableViewRowAnimationAutomatic];
-        [tableView reloadData];
+        
+        [tableView beginUpdates];
+        [tableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationAutomatic];
+        [tableView endUpdates];
     }else{
         if(editingStyle == UITableViewCellEditingStyleDelete){
             NSMutableArray* tempcountryArray = [NSMutableArray arrayWithArray:self.countryArray];
@@ -252,6 +265,10 @@
             self.disabledCountryArray = tempdisabledCountryArray;
             [tempcountryArray removeObjectAtIndex:indexPath.row];
             self.countryArray = tempcountryArray;
+            [tableView beginUpdates];
+            [tableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationAutomatic];
+            [tableView insertRowsAtIndexPaths:@[[NSIndexPath indexPathForRow:0 inSection:2]] withRowAnimation:UITableViewRowAnimationAutomatic];
+            [tableView endUpdates];
         }else if(editingStyle == UITableViewCellEditingStyleInsert){
             NSMutableArray* tempdisabledCountryArray = [NSMutableArray arrayWithArray:self.disabledCountryArray];
             NSMutableArray* tempcountryArray = [NSMutableArray arrayWithArray:self.countryArray];
@@ -260,10 +277,11 @@
             self.countryArray = tempcountryArray;
             [tempdisabledCountryArray removeObjectAtIndex:indexPath.row];
             self.disabledCountryArray = tempdisabledCountryArray;
+            [tableView beginUpdates];
+            [tableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationAutomatic];
+            [tableView insertRowsAtIndexPaths:@[[NSIndexPath indexPathForRow:0 inSection:1]] withRowAnimation:UITableViewRowAnimationAutomatic];
+            [tableView endUpdates];
         }
-//        [tableView reloadData];
-        [tableView reloadSections:[NSIndexSet indexSetWithIndexesInRange:NSMakeRange(1, 2)] withRowAnimation:UITableViewRowAnimationAutomatic];
-		[tableView reloadData];
     }
 }
 
@@ -308,7 +326,6 @@
 				self.disabledCountryArray = tempDestinationCountryArray;
         }
     }
-	[tableView reloadSections:[NSIndexSet indexSetWithIndexesInRange:NSMakeRange(1, 2)] withRowAnimation:UITableViewRowAnimationAutomatic];
 	[tableView reloadData];
 }
 
