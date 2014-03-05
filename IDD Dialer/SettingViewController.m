@@ -15,6 +15,7 @@
 @property (nonatomic, strong) NSArray * countryArray;
 @property (nonatomic, strong) IBOutlet UITableView * tableView;
 @property (nonatomic, strong) NSArray * disabledCountryArray;
+@property (nonatomic, strong) IBOutlet UITextView * aboutView;
 @end
 
 @implementation SettingViewController
@@ -54,6 +55,15 @@
         sectionViewArray = [NSArray arrayWithArray:tempSectionViewArray];
         centerViewArray = [NSArray arrayWithArray:tempCenterViewArray];
     }
+    NSString *appVersion = [[NSBundle mainBundle] infoDictionary][@"CFBundleShortVersionString"];
+    NSString *buildNumber = [[NSBundle mainBundle] infoDictionary][(NSString *)kCFBundleVersionKey];
+    [self.aboutView setText:[NSString stringWithFormat:@"\n\n\n \
+                             IDD Dialer\
+                             Developed by Raymond Lee\
+                             Version:%@\
+                             Build:%@",appVersion, buildNumber]];
+     
+    [onAppCallSiwtch setOn:[[[NSUserDefaults standardUserDefaults] objectForKey:@"isOnAppCall"] boolValue]];
     
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(addIDDDone:) name:@"AddIDDDone" object:nil];
     addIDDVC = [[AddIDDViewController alloc] initWithNibName:@"AddIDDViewController" bundle:nil];
@@ -61,7 +71,6 @@
 }
 
 -(void)viewWillAppear:(BOOL)animated{
-    [onAppCallSiwtch setOn:[[[NSUserDefaults standardUserDefaults] objectForKey:@"isOnAppCall"] boolValue]];
     [self.tableView reloadData];
 }
 
@@ -175,15 +184,14 @@
     for(UIView * sectionView in sectionViewArray){
         NSInteger section = [sectionViewArray indexOfObject:sectionView];
         
-        UIView * centerView = centerViewArray[section];
-        CGRect frame = [centerView frame];
-        
         CGFloat offset = [sectionView frame].origin.y - scrollView.contentOffset.y;
         if(offset < 0){
             offset = 0;
         }else if(offset >= 80){
             offset = 80.f;
         }
+        UIView * centerView = centerViewArray[section];
+        CGRect frame = [centerView frame];
         frame.size.width = 160.f + (offset * 0.5f);
         [centerView setFrame:frame];
         [centerView setAlpha:1.f - offset* 0.3f / 80.f];
@@ -192,7 +200,7 @@
 }
 
 -(CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section{
-    return 30;
+    return 22;
 }
 
 -(NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section{

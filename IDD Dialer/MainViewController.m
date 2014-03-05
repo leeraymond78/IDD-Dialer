@@ -116,6 +116,7 @@
 }
 
 -(IBAction)callAction:(id)sender{
+    [self popUpViewAnimation:sender];
     [self call];
 }
 
@@ -126,12 +127,16 @@
 
 -(IBAction)longPressAction:(id)sender{
     if([(UILongPressGestureRecognizer*)sender state] == UIGestureRecognizerStateBegan){
+        if(isEmptyString(self.resultLabel.text)){
+            [[[UIAlertView alloc] initWithTitle:@"Oppps" message:@"Please generate a number to continue" delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil] show];
+            return;
+        }
         NSLog(@"long press");
         ABRecordRef aContact = ABPersonCreate();
         CFErrorRef anError = NULL;
         const CFStringRef customLabel = CFSTR( "IDD" );
         ABMultiValueRef phone = ABMultiValueCreateMutable(kABMultiStringPropertyType);
-        bool didAdd = ABMultiValueAddValueAndLabel(phone, (__bridge CFTypeRef)([self.inputTF.text copy]), customLabel, NULL);
+        bool didAdd = ABMultiValueAddValueAndLabel(phone, (__bridge CFTypeRef)([self.resultLabel.text copy]), customLabel, NULL);
         
         if (didAdd == YES)
         {
@@ -149,12 +154,12 @@
                 UINavigationController * navC = [[UINavigationController alloc] initWithRootViewController:picker];
                 UIBarButtonItem * doneBtn = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemDone target:self action:@selector(dismissViewController)];
                 [picker.navigationItem setRightBarButtonItem:doneBtn];
-       
+                
                 [self presentViewController:navC animated:YES completion:nil];
             }
             else
             {
-                UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error"
+                UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Oppps"
                                                                 message:@"Could not create unknown user"
                                                                delegate:nil
                                                       cancelButtonTitle:@"Cancel"
@@ -200,7 +205,7 @@
 }
 
 -(void)showAlertViewWithTitle:(NSString*)title msg:(NSString*)msg{
-    UIAlertView* alertView = [[UIAlertView alloc] initWithTitle:title message:msg delegate:self cancelButtonTitle:@"I got it" otherButtonTitles:nil];
+    UIAlertView* alertView = [[UIAlertView alloc] initWithTitle:title message:msg delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil];
     [alertView show];
 }
 
@@ -487,6 +492,8 @@
 					 permittedArrowDirections:WYPopoverArrowDirectionAny
 									 animated:YES
 									  options:WYPopoverAnimationOptionFadeWithScale];
+    
+    [self popUpViewAnimation:sender];
 }
 
 #pragma mark - WYPopoverControllerDelegate
@@ -588,6 +595,34 @@
     NSLog(@"brightness has changed");
     self.brightnessStyle = style;
     [self setStyle];
+}
+
+#pragma mark - animation 
+
+-(void)popUpViewAnimation:(UIView*)view{
+    CGAffineTransform transform= CGAffineTransformMakeScale(1.2, 1.2);
+    [view setTransform:transform];
+    [UIView animateWithDuration:0.15f delay:.0f options:UIViewAnimationOptionCurveEaseInOut animations:^{
+        CGAffineTransform transform= CGAffineTransformMakeScale(0.92, 0.92);
+        [view setTransform:transform];
+    } completion:^(BOOL finished){
+        if(finished){
+            [UIView animateWithDuration: 0.07f animations:^{
+                CGAffineTransform transform= CGAffineTransformMakeScale(1.05, 1.05);
+                [view setTransform:transform];
+            } completion:^(BOOL finished){
+                if(finished){
+                    [UIView animateWithDuration: 0.07f animations:^{
+                        CGAffineTransform transform= CGAffineTransformMakeScale(1, 1);
+                        [view setTransform:transform];
+                    } completion:^(BOOL finished){
+                        if(finished){
+                        }
+                    }];
+                }
+            }];
+        }
+    }];
 }
 
 @end
