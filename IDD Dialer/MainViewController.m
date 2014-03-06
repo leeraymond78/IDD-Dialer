@@ -9,6 +9,7 @@
 #import "MainViewController.h"
 #import "SettingViewController.h"
 #import "DiallingCodesHelper.h"
+#import "GHContextMenuView.h"
 
 #define BACKGROUND_CHANGE_INTERVAL 3
 
@@ -48,15 +49,19 @@
 	[self checkButtonTitle];
     [self reloadInitialData];
     
-    UILongPressGestureRecognizer *longPress = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(longPressAction:)];
-    [self.callBtn addGestureRecognizer:longPress];
-    
     if([[[NSUserDefaults standardUserDefaults] objectForKey:@"isOnAppCall"] boolValue]){
         [self call];
     }
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(reloadInitialData) name:@"settingBackPressed" object:nil];
 	
 	[NSTimer scheduledTimerWithTimeInterval:BACKGROUND_CHANGE_INTERVAL target:self selector:@selector(changeBackgroundColor) userInfo:nil repeats:YES];
+    
+    GHContextMenuView* overlay = [[GHContextMenuView alloc] init];
+    overlay.dataSource = self;
+    overlay.delegate = self;
+
+    UILongPressGestureRecognizer *longPress = [[UILongPressGestureRecognizer alloc] initWithTarget:overlay action:@selector(longPressDetected:)];
+    [self.callBtn addGestureRecognizer:longPress];
 }
 
 - (void)didReceiveMemoryWarning
@@ -125,8 +130,7 @@
     [[UIApplication sharedApplication] openURL:[NSURL URLWithString:[NSString stringWithFormat:@"tel:%@",self.resultLabel.text]]];
 }
 
--(IBAction)longPressAction:(id)sender{
-    if([(UILongPressGestureRecognizer*)sender state] == UIGestureRecognizerStateBegan){
+-(void)addContactMenu{
         if(isEmptyString(self.resultLabel.text)){
             [[[UIAlertView alloc] initWithTitle:@"Oppps" message:@"Please generate a number to continue" delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil] show];
             return;
@@ -169,7 +173,6 @@
         }
         CFRelease(phone);
         CFRelease(aContact);
-    }
 }
 
 -(void)dismissViewController{
@@ -623,6 +626,50 @@
             }];
         }
     }];
+}
+
+#pragma mark GHContextMenu
+
+
+- (NSInteger) numberOfMenuItems
+{
+    return 3;
+}
+
+-(UIImage*) imageForItemAtIndex:(NSInteger)index
+{
+    NSString* imageName = nil;
+    switch (index) {
+        case 0:
+            imageName = @"contextMenu_contacts@2x";
+            break;
+        case 1:
+            imageName = @"contextMenu_add_user@2x";
+            break;
+        case 2:
+            imageName = @"contextMenu_phone@2x";
+            break;
+        default:
+            break;
+    }
+    return [UIImage imageNamed:imageName];
+}
+
+- (void) didSelectItemAtIndex:(NSInteger)selectedIndex forMenuAtPoint:(CGPoint)point
+{
+    switch (selectedIndex) {
+        case 0:
+            [self importAction:nil];
+            break;
+        case 1:
+            [self addContactMenu];
+            break;
+        case 2:
+            [self callAction:nil];
+            break;
+        default:
+            break;
+    }
 }
 
 @end

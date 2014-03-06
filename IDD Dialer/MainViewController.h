@@ -13,13 +13,14 @@
 #import "SelectorTableViewController.h"
 #import "ASCScreenBrightnessDetector.h"
 #import "CustomTextField.h"
+#import "GHContextMenuView.h"
 
 @class SettingViewController;
 
 #define IDD @"IDD"
 #define IDD_WITH00 @"IDD00"
 
-@interface MainViewController : UIViewController<UITextFieldDelegate, WYPopoverControllerDelegate, SelectorTableViewControllerDelegate, ABPeoplePickerNavigationControllerDelegate, ABPersonViewControllerDelegate, ABUnknownPersonViewControllerDelegate,ASCScreenBrightnessDetectorDelegate>{
+@interface MainViewController : UIViewController<UITextFieldDelegate, WYPopoverControllerDelegate, SelectorTableViewControllerDelegate, ABPeoplePickerNavigationControllerDelegate, ABPersonViewControllerDelegate, ABUnknownPersonViewControllerDelegate,ASCScreenBrightnessDetectorDelegate,GHContextOverlayViewDataSource,GHContextOverlayViewDelegate>{
    
 @private
     IBOutlet	UITapGestureRecognizer * tapGesture;
@@ -31,7 +32,6 @@
 @property (nonatomic, retain) IBOutlet UIButton         *   countryBtn;
 @property (nonatomic, retain) IBOutlet CustomTextField  *   inputTF;
 @property (nonatomic, retain) IBOutlet UILabel          *   resultLabel;
-@property (nonatomic, retain) IBOutlet UIButton         *   importBtn;
 @property (nonatomic, strong) IBOutlet UIButton         *   settingBtn;
 @property (nonatomic, strong) SelectorTableViewController * iddSelectionViewController;
 @property (nonatomic, strong) SelectorTableViewController * countrySelectionViewController;

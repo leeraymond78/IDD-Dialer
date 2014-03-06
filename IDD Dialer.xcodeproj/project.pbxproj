@@ -12,8 +12,13 @@
 		1D0C47FC1890F6EE006F35C0 /* SelectorTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1D0C47FB1890F6EE006F35C0 /* SelectorTableViewController.m */; };
 		1D21C46118B75A89000D3F4E /* ASCScreenBrightnessDetector.m in Sources */ = {isa = PBXBuildFile; fileRef = 1D21C46018B75A89000D3F4E /* ASCScreenBrightnessDetector.m */; };
 		1D33617318C71D7100FD4EBC /* MainViewBackground@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 1D33617218C71D7100FD4EBC /* MainViewBackground@2x.png */; };
+		1D33617718C7293600FD4EBC /* GHContextMenuView.m in Sources */ = {isa = PBXBuildFile; fileRef = 1D33617618C7293600FD4EBC /* GHContextMenuView.m */; };
+		1D33617918C72B6A00FD4EBC /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1D33617818C72B6A00FD4EBC /* QuartzCore.framework */; };
 		1D42BCB818AC595C000E2FA1 /* AddressBook.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1D42BCB718AC595C000E2FA1 /* AddressBook.framework */; };
 		1D42BCBA18AC5961000E2FA1 /* AddressBookUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1D42BCB918AC5960000E2FA1 /* AddressBookUI.framework */; };
+		1D512BC418C808B800476419 /* contextMenu_add_user@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 1D512BC118C808B800476419 /* contextMenu_add_user@2x.png */; };
+		1D512BC518C808B800476419 /* contextMenu_contacts@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 1D512BC218C808B800476419 /* contextMenu_contacts@2x.png */; };
+		1D512BC618C808B800476419 /* contextMenu_phone@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 1D512BC318C808B800476419 /* contextMenu_phone@2x.png */; };
 		1D56711618C5BCDA00412DC5 /* DiallingCodes.plist in Resources */ = {isa = PBXBuildFile; fileRef = 1D56711518C5BCDA00412DC5 /* DiallingCodes.plist */; };
 		1D56711918C5BD4300412DC5 /* DiallingCodesHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = 1D56711818C5BD4300412DC5 /* DiallingCodesHelper.m */; };
 		1D6B4B8E18A9DACE0098ADDB /* XCTest.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1D6B4B8718A9DA940098ADDB /* XCTest.framework */; };
@@ -63,8 +68,14 @@
 		1D21C45F18B75A89000D3F4E /* ASCScreenBrightnessDetector.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ASCScreenBrightnessDetector.h; sourceTree = "<group>"; };
 		1D21C46018B75A89000D3F4E /* ASCScreenBrightnessDetector.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ASCScreenBrightnessDetector.m; sourceTree = "<group>"; };
 		1D33617218C71D7100FD4EBC /* MainViewBackground@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "MainViewBackground@2x.png"; sourceTree = "<group>"; };
+		1D33617518C7293600FD4EBC /* GHContextMenuView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GHContextMenuView.h; sourceTree = "<group>"; };
+		1D33617618C7293600FD4EBC /* GHContextMenuView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GHContextMenuView.m; sourceTree = "<group>"; };
+		1D33617818C72B6A00FD4EBC /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
 		1D42BCB718AC595C000E2FA1 /* AddressBook.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AddressBook.framework; path = System/Library/Frameworks/AddressBook.framework; sourceTree = SDKROOT; };
 		1D42BCB918AC5960000E2FA1 /* AddressBookUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AddressBookUI.framework; path = System/Library/Frameworks/AddressBookUI.framework; sourceTree = SDKROOT; };
+		1D512BC118C808B800476419 /* contextMenu_add_user@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "contextMenu_add_user@2x.png"; sourceTree = "<group>"; };
+		1D512BC218C808B800476419 /* contextMenu_contacts@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "contextMenu_contacts@2x.png"; sourceTree = "<group>"; };
+		1D512BC318C808B800476419 /* contextMenu_phone@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "contextMenu_phone@2x.png"; sourceTree = "<group>"; };
 		1D56711518C5BCDA00412DC5 /* DiallingCodes.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = DiallingCodes.plist; sourceTree = "<group>"; };
 		1D56711718C5BD4300412DC5 /* DiallingCodesHelper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DiallingCodesHelper.h; path = DialingCodesHelper/DiallingCodesHelper.h; sourceTree = "<group>"; };
 		1D56711818C5BD4300412DC5 /* DiallingCodesHelper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = DiallingCodesHelper.m; path = DialingCodesHelper/DiallingCodesHelper.m; sourceTree = "<group>"; };
@@ -119,6 +130,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				1D33617918C72B6A00FD4EBC /* QuartzCore.framework in Frameworks */,
 				1D42BCBA18AC5961000E2FA1 /* AddressBookUI.framework in Frameworks */,
 				1D42BCB818AC595C000E2FA1 /* AddressBook.framework in Frameworks */,
 				3D592E4F177DFD9800C82F74 /* UIKit.framework in Frameworks */,
@@ -153,9 +165,29 @@
 		1D33617118C71D7100FD4EBC /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				1D512BC018C808B800476419 /* ContextMenu */,
 				1D33617218C71D7100FD4EBC /* MainViewBackground@2x.png */,
 			);
 			path = Resources;
+			sourceTree = "<group>";
+		};
+		1D33617418C7293600FD4EBC /* GHContextMenu */ = {
+			isa = PBXGroup;
+			children = (
+				1D33617518C7293600FD4EBC /* GHContextMenuView.h */,
+				1D33617618C7293600FD4EBC /* GHContextMenuView.m */,
+			);
+			path = GHContextMenu;
+			sourceTree = "<group>";
+		};
+		1D512BC018C808B800476419 /* ContextMenu */ = {
+			isa = PBXGroup;
+			children = (
+				1D512BC118C808B800476419 /* contextMenu_add_user@2x.png */,
+				1D512BC218C808B800476419 /* contextMenu_contacts@2x.png */,
+				1D512BC318C808B800476419 /* contextMenu_phone@2x.png */,
+			);
+			path = ContextMenu;
 			sourceTree = "<group>";
 		};
 		1D56711A18C5BD4800412DC5 /* DialingCodesHelper */ = {
@@ -212,6 +244,7 @@
 		3D592E4D177DFD9800C82F74 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				1D33617818C72B6A00FD4EBC /* QuartzCore.framework */,
 				1D42BCB918AC5960000E2FA1 /* AddressBookUI.framework */,
 				1D42BCB718AC595C000E2FA1 /* AddressBook.framework */,
 				1D6B4B8718A9DA940098ADDB /* XCTest.framework */,
@@ -225,6 +258,7 @@
 		3D592E54177DFD9800C82F74 /* IDD Dialer */ = {
 			isa = PBXGroup;
 			children = (
+				1D33617418C7293600FD4EBC /* GHContextMenu */,
 				1D21C45E18B75A89000D3F4E /* ASCScreenBrightnessDetector */,
 				1D0C47ED1890F52C006F35C0 /* WYPopoverController */,
 				1D56711A18C5BD4800412DC5 /* DialingCodesHelper */,
@@ -351,12 +385,15 @@
 			files = (
 				3D592E59177DFD9800C82F74 /* InfoPlist.strings in Resources */,
 				1D33617318C71D7100FD4EBC /* MainViewBackground@2x.png in Resources */,
+				1D512BC418C808B800476419 /* contextMenu_add_user@2x.png in Resources */,
 				3D592E61177DFD9800C82F74 /* Default.png in Resources */,
 				3D592E63177DFD9800C82F74 /* Default@2x.png in Resources */,
 				3D592E65177DFD9800C82F74 /* Default-568h@2x.png in Resources */,
 				3D592E6B177DFD9900C82F74 /* MainViewController.xib in Resources */,
 				3D592E78177E3A3B00C82F74 /* SettingViewController.xib in Resources */,
+				1D512BC618C808B800476419 /* contextMenu_phone@2x.png in Resources */,
 				3D592E7E177E43F700C82F74 /* icon@2x.png in Resources */,
+				1D512BC518C808B800476419 /* contextMenu_contacts@2x.png in Resources */,
 				3D592E80177E43FB00C82F74 /* icon.png in Resources */,
 				3D6C52F7177EB89500203EB6 /* countryCode_data.plist in Resources */,
 				3D6C52F8177EB89500203EB6 /* idd_data.plist in Resources */,
@@ -402,6 +439,7 @@
 				3D592E68177DFD9800C82F74 /* MainViewController.m in Sources */,
 				1D21C46118B75A89000D3F4E /* ASCScreenBrightnessDetector.m in Sources */,
 				1D0C47F31890F52C006F35C0 /* WYStoryboardPopoverSegue.m in Sources */,
+				1D33617718C7293600FD4EBC /* GHContextMenuView.m in Sources */,
 				1D56711918C5BD4300412DC5 /* DiallingCodesHelper.m in Sources */,
 				1D0C47F21890F52C006F35C0 /* WYPopoverController.m in Sources */,
 				1D0C47FC1890F6EE006F35C0 /* SelectorTableViewController.m in Sources */,
