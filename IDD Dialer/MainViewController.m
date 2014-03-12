@@ -13,7 +13,7 @@
 
 #define BACKGROUND_CHANGE_INTERVAL 3
 
-#define PRETTY_FUNCTION [NSString stringWithCString:__PRETTY_FUNCTION__ encoding:[NSString defaultCStringEncoding]]
+#define BLog(formatString, ...) NSLog((@"%s " formatString), __PRETTY_FUNCTION__, ##__VA_ARGS__);
 #define isEmptyString(str) ((str == nil)|| [@"" isEqual:str])
 
 @interface MainViewController()
@@ -126,7 +126,7 @@
 }
 
 -(void)call{
-    NSLog(@"%@ calling %@",PRETTY_FUNCTION ,self.resultLabel.text);
+    BLog(@"calling %@",self.resultLabel.text);
     [[UIApplication sharedApplication] openURL:[NSURL URLWithString:[NSString stringWithFormat:@"tel:%@",self.resultLabel.text]]];
 }
 
@@ -135,7 +135,7 @@
             [[[UIAlertView alloc] initWithTitle:@"Oppps" message:@"Please generate a number to continue" delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil] show];
             return;
         }
-        NSLog(@"long press");
+        BLog(@"long press");
         ABRecordRef aContact = ABPersonCreate();
         CFErrorRef anError = NULL;
         const CFStringRef customLabel = CFSTR( "IDD" );
@@ -180,7 +180,7 @@
 }
 -(NSString *)clipboardText{
     NSString* clipboardText = [[UIPasteboard generalPasteboard] valueForPasteboardType:@"public.utf8-plain-text"];
-    NSLog(@"clipboard = %@",clipboardText);
+    BLog(@"clipboard = %@",clipboardText);
     return [self plainNumberByPhone:clipboardText];
 }
 
@@ -286,7 +286,7 @@
 			}
 		}
 	}
-	NSLog(@"%@ index = %ld", PRETTY_FUNCTION, (long)index);
+	BLog(@"index = %ld", (long)index);
 	return index;
 }
 
@@ -308,7 +308,7 @@
             }
 		}
 	}
-	NSLog(@"%@ index = %ld", PRETTY_FUNCTION, (long)index);
+	BLog(@"index = %ld", (long)index);
 	return index;
 }
 
@@ -317,10 +317,10 @@
 	NSInteger iddIndex = [self iddIndexByPhone:phone];
     if(iddIndex != -1){
 		NSString * idd = self.iddArray[iddIndex][IDD];
-		NSLog(@"%@ idd found = %@", PRETTY_FUNCTION, idd);
+		BLog(@"idd found = %@", idd);
 		result = [phone stringByReplacingOccurrencesOfString:idd withString:@""];
 	}else{
-		NSLog(@"%@ idd not found", PRETTY_FUNCTION);
+		BLog(@"idd not found");
         result = phone;
     }
     return result;
@@ -342,13 +342,13 @@
 	// remove country code
 	if(countryIndex != -1){
 		NSString * country = [DiallingCodesHelper countryNameByCode:self.countryArray[countryIndex]];
-		NSLog(@"%@ country found = %@", PRETTY_FUNCTION, country);
+		BLog(@"%country found = %@", country);
 		result = [result stringByReplacingOccurrencesOfString:country withString:@""];
 	}
     
 	result = [self noZeroNumberByPhone:result];
     
-	NSLog(@"%@ result = %@", PRETTY_FUNCTION, result);
+	BLog(@"result = %@", result);
 	return result;
 }
 
@@ -383,7 +383,7 @@
 		result = [NSString stringWithFormat:@"%@%@%@%@",outIdd,doubleZero,outCountry,number];
 		
 	}
-	NSLog(@"%@ result = %@", PRETTY_FUNCTION, result);
+	BLog(@"result = %@", result);
 	return result;
 }
 
@@ -415,7 +415,7 @@
 		country = [DiallingCodesHelper diallingCodeByCode:self.countryArray[self.countrySelectionViewController.selectedIndex]];
 	}
     NSString * result = [self formattedPhoneByIdd:idd country:country number:number];
-    NSLog(@"%@ Final Output = %@", PRETTY_FUNCTION,result);
+    BLog(@"Final Output = %@",result);
 	[self.resultLabel setText:result];
 }
 
@@ -569,7 +569,7 @@
                                                        , kABPersonFirstNameProperty);
         [self.inputTF setText:targetNumber];
         [self process];
-        NSLog(@"%@ get imported number from %@ with %@", PRETTY_FUNCTION, firstname, targetNumber);
+        BLog(@"get imported number from %@ with %@", firstname, targetNumber);
     }
     [self dismissViewControllerAnimated:YES completion:nil];
     return NO;
@@ -595,7 +595,7 @@
 #pragma mark - brightness
 
 -(void)screenBrightnessStyleDidChange:(ASCScreenBrightnessStyle)style{
-    NSLog(@"brightness has changed");
+    BLog(@"brightness has changed");
     self.brightnessStyle = style;
     [self setStyle];
 }
