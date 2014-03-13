@@ -12,7 +12,6 @@
 #import "WYPopoverController.h"
 #import "SelectorTableViewController.h"
 #import "ASCScreenBrightnessDetector.h"
-#import "CustomTextField.h"
 #import "GHContextMenuView.h"
 
 @class SettingViewController;
@@ -30,7 +29,7 @@
 @property (nonatomic, retain) IBOutlet UIButton         *   callBtn;
 @property (nonatomic, retain) IBOutlet UIButton         *   iddBtn;
 @property (nonatomic, retain) IBOutlet UIButton         *   countryBtn;
-@property (nonatomic, retain) IBOutlet CustomTextField  *   inputTF;
+@property (nonatomic, retain) IBOutlet UITextField      *   inputTF;
 @property (nonatomic, retain) IBOutlet UILabel          *   resultLabel;
 @property (nonatomic, strong) IBOutlet UIButton         *   settingBtn;
 @property (nonatomic, strong) SelectorTableViewController * iddSelectionViewController;

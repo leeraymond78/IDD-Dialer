@@ -21,12 +21,12 @@
 		1D512BC618C808B800476419 /* contextMenu_phone@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 1D512BC318C808B800476419 /* contextMenu_phone@2x.png */; };
 		1D56711618C5BCDA00412DC5 /* DiallingCodes.plist in Resources */ = {isa = PBXBuildFile; fileRef = 1D56711518C5BCDA00412DC5 /* DiallingCodes.plist */; };
 		1D56711918C5BD4300412DC5 /* DiallingCodesHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = 1D56711818C5BD4300412DC5 /* DiallingCodesHelper.m */; };
+		1D663ABB18D1846700B3B537 /* IDNumPadView.m in Sources */ = {isa = PBXBuildFile; fileRef = 1D663ABA18D1846700B3B537 /* IDNumPadView.m */; };
 		1D6B4B8E18A9DACE0098ADDB /* XCTest.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1D6B4B8718A9DA940098ADDB /* XCTest.framework */; };
 		1D6B4B8F18A9DACE0098ADDB /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3D592E50177DFD9800C82F74 /* Foundation.framework */; };
 		1D6B4B9018A9DACE0098ADDB /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3D592E4E177DFD9800C82F74 /* UIKit.framework */; };
 		1D6B4B9618A9DACE0098ADDB /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 1D6B4B9418A9DACE0098ADDB /* InfoPlist.strings */; };
 		1D6B4B9818A9DACE0098ADDB /* IDD_Dialer_Tests.m in Sources */ = {isa = PBXBuildFile; fileRef = 1D6B4B9718A9DACE0098ADDB /* IDD_Dialer_Tests.m */; };
-		1DC9CF7018BADB9C00A9D27C /* CustomTextField.m in Sources */ = {isa = PBXBuildFile; fileRef = 1DC9CF6F18BADB9C00A9D27C /* CustomTextField.m */; };
 		3D592E4F177DFD9800C82F74 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3D592E4E177DFD9800C82F74 /* UIKit.framework */; };
 		3D592E51177DFD9800C82F74 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3D592E50177DFD9800C82F74 /* Foundation.framework */; };
 		3D592E53177DFD9800C82F74 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3D592E52177DFD9800C82F74 /* CoreGraphics.framework */; };
@@ -79,14 +79,14 @@
 		1D56711518C5BCDA00412DC5 /* DiallingCodes.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = DiallingCodes.plist; sourceTree = "<group>"; };
 		1D56711718C5BD4300412DC5 /* DiallingCodesHelper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DiallingCodesHelper.h; path = DialingCodesHelper/DiallingCodesHelper.h; sourceTree = "<group>"; };
 		1D56711818C5BD4300412DC5 /* DiallingCodesHelper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = DiallingCodesHelper.m; path = DialingCodesHelper/DiallingCodesHelper.m; sourceTree = "<group>"; };
+		1D663AB918D1846700B3B537 /* IDNumPadView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = IDNumPadView.h; sourceTree = "<group>"; };
+		1D663ABA18D1846700B3B537 /* IDNumPadView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = IDNumPadView.m; sourceTree = "<group>"; };
 		1D6B4B8718A9DA940098ADDB /* XCTest.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = XCTest.framework; path = Library/Frameworks/XCTest.framework; sourceTree = DEVELOPER_DIR; };
 		1D6B4B8D18A9DACE0098ADDB /* IDD Dialer Tests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "IDD Dialer Tests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 		1D6B4B9318A9DACE0098ADDB /* IDD Dialer Tests-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "IDD Dialer Tests-Info.plist"; sourceTree = "<group>"; };
 		1D6B4B9518A9DACE0098ADDB /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		1D6B4B9718A9DACE0098ADDB /* IDD_Dialer_Tests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = IDD_Dialer_Tests.m; sourceTree = "<group>"; };
 		1D6B4B9918A9DACE0098ADDB /* IDD Dialer Tests-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "IDD Dialer Tests-Prefix.pch"; sourceTree = "<group>"; };
-		1DC9CF6E18BADB9C00A9D27C /* CustomTextField.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CustomTextField.h; sourceTree = "<group>"; };
-		1DC9CF6F18BADB9C00A9D27C /* CustomTextField.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CustomTextField.m; sourceTree = "<group>"; };
 		3D592E4B177DFD9800C82F74 /* IDD Dialer.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "IDD Dialer.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		3D592E4E177DFD9800C82F74 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		3D592E50177DFD9800C82F74 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
@@ -262,8 +262,6 @@
 				1D21C45E18B75A89000D3F4E /* ASCScreenBrightnessDetector */,
 				1D0C47ED1890F52C006F35C0 /* WYPopoverController */,
 				1D56711A18C5BD4800412DC5 /* DialingCodesHelper */,
-				1DC9CF6E18BADB9C00A9D27C /* CustomTextField.h */,
-				1DC9CF6F18BADB9C00A9D27C /* CustomTextField.m */,
 				3D592E5D177DFD9800C82F74 /* AppDelegate.h */,
 				3D592E5E177DFD9800C82F74 /* AppDelegate.m */,
 				3D592E66177DFD9800C82F74 /* MainViewController.h */,
@@ -277,6 +275,8 @@
 				3D6C52F9177EE19200203EB6 /* AddIDDViewController.h */,
 				3D6C52FA177EE19200203EB6 /* AddIDDViewController.m */,
 				3D6C52FB177EE19200203EB6 /* AddIDDViewController.xib */,
+				1D663AB918D1846700B3B537 /* IDNumPadView.h */,
+				1D663ABA18D1846700B3B537 /* IDNumPadView.m */,
 				3D592E55177DFD9800C82F74 /* Supporting Files */,
 			);
 			path = "IDD Dialer";
@@ -435,13 +435,13 @@
 			files = (
 				3D592E5B177DFD9800C82F74 /* main.m in Sources */,
 				3D592E5F177DFD9800C82F74 /* AppDelegate.m in Sources */,
-				1DC9CF7018BADB9C00A9D27C /* CustomTextField.m in Sources */,
 				3D592E68177DFD9800C82F74 /* MainViewController.m in Sources */,
 				1D21C46118B75A89000D3F4E /* ASCScreenBrightnessDetector.m in Sources */,
 				1D0C47F31890F52C006F35C0 /* WYStoryboardPopoverSegue.m in Sources */,
 				1D33617718C7293600FD4EBC /* GHContextMenuView.m in Sources */,
 				1D56711918C5BD4300412DC5 /* DiallingCodesHelper.m in Sources */,
 				1D0C47F21890F52C006F35C0 /* WYPopoverController.m in Sources */,
+				1D663ABB18D1846700B3B537 /* IDNumPadView.m in Sources */,
 				1D0C47FC1890F6EE006F35C0 /* SelectorTableViewController.m in Sources */,
 				3D592E77177E3A3B00C82F74 /* SettingViewController.m in Sources */,
 				3D6C52FC177EE19200203EB6 /* AddIDDViewController.m in Sources */,

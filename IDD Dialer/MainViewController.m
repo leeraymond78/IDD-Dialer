@@ -10,6 +10,7 @@
 #import "SettingViewController.h"
 #import "DiallingCodesHelper.h"
 #import "GHContextMenuView.h"
+#import "IDNumPadView.h"
 
 #define BACKGROUND_CHANGE_INTERVAL 3
 
@@ -23,6 +24,7 @@
 @property (nonatomic, strong) NSArray * countryArray;
 @property (nonatomic, strong) ASCScreenBrightnessDetector * brightnessDetector;
 @property (nonatomic)         ASCScreenBrightnessStyle brightnessStyle;
+@property (nonatomic, strong) IDNumPadView * numpadView;
 @end
 
 @implementation MainViewController
@@ -36,7 +38,7 @@
     [self.brightnessDetector setDelegate:self];
     self.brightnessStyle = self.brightnessDetector.screenBrightnessStyle;
     [self setStyle];
-    [[self.callBtn layer] setCornerRadius:40];
+    [[self.callBtn layer] setCornerRadius:45];
     [[self.iddBtn layer] setCornerRadius:6];
     [[self.countryBtn layer] setCornerRadius:6];
     settingVC = [[SettingViewController alloc]initWithNibName:@"SettingViewController" bundle:nil];
@@ -62,12 +64,22 @@
 
     UILongPressGestureRecognizer *longPress = [[UILongPressGestureRecognizer alloc] initWithTarget:overlay action:@selector(longPressDetected:)];
     [self.callBtn addGestureRecognizer:longPress];
+    
+    _numpadView = [[IDNumPadView alloc] initWithFrame:CGRectMake(0, 0, [[UIScreen mainScreen] bounds].size.width, 400)];
+    [self.inputTF setInputView:_numpadView];
+    [_numpadView setTextField:self.inputTF];
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(textFieldDidChange) name:UITextFieldTextDidChangeNotification object:self.inputTF];
 }
 
 - (void)didReceiveMemoryWarning
 {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
+}
+
+-(void)dealloc{
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
 }
 
 #pragma mark - methods
@@ -195,11 +207,11 @@
 }
 
 -(void)process{
-    [self.inputTF resignFirstResponder];
 	[self reloadOutputForScreenReloadSection:YES];
 }
 
 -(IBAction)hideAndProcess:(id)sender{
+    [self.inputTF resignFirstResponder];
     [self process];
 }
 
@@ -222,25 +234,30 @@
 }
 
 -(void)setStyle{
-    [self.inputTF.layer setBorderWidth:1];
+//    [self.inputTF.layer setBorderWidth:1];
+    
+    NSMutableAttributedString* attributedString = [[NSMutableAttributedString alloc] initWithString:self.inputTF.placeholder];
+    NSDictionary* attributes;
     switch (self.brightnessStyle) {
         case ASCScreenBrightnessStyleDark:
-            [self.inputTF setTextColor:[UIColor whiteColor]];
-            [self.inputTF.layer setBorderColor:[[UIColor whiteColor] CGColor]];
-            [self.inputTF setPlaceholderTextColor:[UIColor colorWithWhite:.6f alpha:.5f]];
+            [self.inputTF setTextColor:[UIColor colorWithWhite:.8 alpha:1]];
+//            [self.inputTF.layer setBorderColor:[[UIColor whiteColor] CGColor]];
+            attributes = @{NSForegroundColorAttributeName:[UIColor colorWithWhite:.7f alpha:.8f]};
             [self.resultLabel setTextColor:[UIColor whiteColor]];
             [self.settingBtn setTitleColor:[UIColor colorWithRed:50.f/150.f green:79.f/150.f blue:133.f/150.f alpha:1] forState:UIControlStateNormal];
             break;
         case ASCScreenBrightnessStyleLight:
-            [self.inputTF setTextColor:[UIColor blackColor]];
-            [self.inputTF.layer setBorderColor:[[UIColor blackColor] CGColor]];
-            [self.inputTF setPlaceholderTextColor:[UIColor colorWithWhite:0.4f alpha:.5f]];
+            [self.inputTF setTextColor:[UIColor colorWithWhite:.2 alpha:1]];
+//            [self.inputTF.layer setBorderColor:[[UIColor blackColor] CGColor]];
+            attributes = @{NSForegroundColorAttributeName:[UIColor colorWithWhite:0.3f alpha:.5f]};
             [self.resultLabel setTextColor:[UIColor blackColor]];
             [self.settingBtn setTitleColor:[UIColor colorWithRed:50.f/255.f green:79.f/255.f blue:133.f/255.f alpha:1] forState:UIControlStateNormal];
             break;
         default:
             break;
     }
+    [attributedString setAttributes:attributes range:NSMakeRange(0, [attributedString length])];
+    [self.inputTF setAttributedPlaceholder:attributedString];
     [self.inputTF setNeedsDisplay];
     [[UIApplication sharedApplication] setStatusBarStyle:self.brightnessStyle==ASCScreenBrightnessStyleLight?UIStatusBarStyleDefault:UIStatusBarStyleLightContent animated:YES];
     [self changeBackgroundColor];
@@ -453,6 +470,10 @@
 }
 
 #pragma mark - textfield delegates
+
+-(void)textFieldDidChange{
+    [self process];
+}
 
 -(void)textFieldDidBeginEditing:(UITextField *)textField{
 	[tapGesture setEnabled:YES];
