@@ -102,6 +102,7 @@
         [keyBtn setBackgroundColor:[UIColor colorWithWhite:1.f alpha:.3f]];
         [[keyBtn titleLabel] setFont:[UIFont fontWithName:@"Helvetica-Light" size:34.f]];
         [keyBtn setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
+        [keyBtn setTitleColor:[UIColor lightGrayColor] forState:UIControlStateHighlighted];
         [[keyBtn layer] setCornerRadius:diameter/2];
         [[keyBtn layer] setBorderWidth:1.5];
         [[keyBtn layer] setBorderColor:[[UIColor lightGrayColor] CGColor]];
@@ -144,26 +145,24 @@
 
 NSDate * dateTapped;
 BOOL isLongPressed;
+
 - (void)keyPressed:(UIButton*)button{
-    if(_textField){
+    if(_textField && [_textField isEditing]){
         if(button.tag == 0){
             dateTapped = [NSDate date];
             isLongPressed = NO;
         }
-        NSString * inText = [_textField text];
-        NSString * outText = [inText stringByAppendingString:[[button titleLabel] text]];
-        [_textField setText:outText];
+        [_textField insertText:[[button titleLabel] text]];
         if ([self.textField isKindOfClass:[UITextField class]])
             [[NSNotificationCenter defaultCenter] postNotificationName:UITextFieldTextDidChangeNotification object:self.textField];
     }
 }
 
 - (void)longPressed:(UILongPressGestureRecognizer*)gesture{
-    if(_textField){
+    if(_textField && [_textField isEditing]){
         if([dateTapped timeIntervalSinceNow] < -1 && !isLongPressed){
-            NSString * inText = [_textField text];
-            NSString * outText = [[inText substringToIndex:inText.length-2] stringByAppendingString:@"+"];
-            [_textField setText:outText];
+            [_textField deleteBackward];
+            [_textField insertText:@"+"];
             if ([self.textField isKindOfClass:[UITextField class]])
                 [[NSNotificationCenter defaultCenter] postNotificationName:UITextFieldTextDidChangeNotification object:self.textField];
             isLongPressed = YES;

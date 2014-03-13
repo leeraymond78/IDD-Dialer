@@ -293,8 +293,9 @@
 
 - (NSInteger)iddIndexByPhone:(NSString*)phone{
 	NSInteger index = -1;
-	if(!isEmptyString(phone) && phone.length > 5){
-		NSString * plain = [self plainNumberByPhone:phone];
+    
+    NSString * plain = [self plainNumberByPhone:phone];
+	if(!isEmptyString(plain) && plain.length > 5){
 		for(NSDictionary* iddObj in self.iddArray){
 			NSString * idd = iddObj[IDD];
 			if([[plain substringToIndex:5] rangeOfString:idd].location != NSNotFound){
@@ -309,18 +310,20 @@
 
 - (NSInteger)countryIndexByPhone:(NSString*)phone{
 	NSInteger index = -1;
-	if(!isEmptyString(phone) && phone.length > 5){
-       NSString * noIddPhone = [self removeIddByPhone:phone];
-        BOOL isInternation = [self isInternationByPhone:phone];
-		
-		NSString * plain = [self noZeroNumberByPhone:[self plainNumberByPhone:noIddPhone]];
-		for(NSString * code in self.countryArray){
-			NSString * diallingCode = [DiallingCodesHelper diallingCodeByCode:code];
-            if(isInternation){
-                NSRange range = NSMakeRange(0, 3);
-                if([[plain substringWithRange:range] rangeOfString:diallingCode].location == 0){
-                    index = [self.countryArray indexOfObject:code];
-                    break;
+	if(!isEmptyString(phone)){
+        NSString * noIddPhone = [self removeIddByPhone:phone];
+        NSString * plain = [self noZeroNumberByPhone:[self plainNumberByPhone:noIddPhone]];
+        
+        if(!isEmptyString(plain) && plain.length > 3){
+            for(NSString * code in self.countryArray){
+                NSString * diallingCode = [DiallingCodesHelper diallingCodeByCode:code];
+                BOOL isInternation = [self isInternationByPhone:phone];
+                if(isInternation){
+                    NSRange range = NSMakeRange(0, 3);
+                    if([[plain substringWithRange:range] rangeOfString:diallingCode].location == 0){
+                        index = [self.countryArray indexOfObject:code];
+                        break;
+                    }
                 }
             }
 		}
@@ -358,8 +361,8 @@
     
 	// remove country code
 	if(countryIndex != -1){
-		NSString * country = [DiallingCodesHelper countryNameByCode:self.countryArray[countryIndex]];
-		BLog(@"%country found = %@", country);
+		NSString * country = [DiallingCodesHelper diallingCodeByCode:self.countryArray[countryIndex]];
+		BLog(@"country found = %@", country);
 		result = [result stringByReplacingOccurrencesOfString:country withString:@""];
 	}
     
@@ -455,7 +458,7 @@
     NSString * result = phone;
     if(!isEmptyString(result)){
         BOOL haveZeroOnFirstCharater = YES;
-        while (haveZeroOnFirstCharater) {
+        while (haveZeroOnFirstCharater && !isEmptyString(result)) {
             unichar temp_firstChar = [result characterAtIndex:0];
             if(temp_firstChar != '0'){
                 haveZeroOnFirstCharater = NO;
