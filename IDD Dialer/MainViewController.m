@@ -188,7 +188,7 @@
 - (NSString *)clipboardText {
     NSString *clipboardText = [[UIPasteboard generalPasteboard] valueForPasteboardType:@"public.utf8-plain-text"];
     BLog(@"clipboard = %@", clipboardText);
-    return [self plainNumberByPhone:clipboardText];
+    return [self plainPhoneNumberByPhone:clipboardText];
 }
 
 - (void)fillInputWithClipboard {
@@ -451,6 +451,19 @@
         for (int x = 0; x < [phone length]; x++) {
             unichar aChar = [phone characterAtIndex:x];
             if ((aChar >= '0' && aChar <= '9')) {
+                [number appendString:[NSString stringWithCharacters:&aChar length:1]];
+            }
+        }
+    }
+    return number;
+}
+
+- (NSString *)plainPhoneNumberByPhone:(NSString *)phone {
+    NSMutableString *number = [NSMutableString stringWithString:@""];
+    if (!isEmptyString(phone)) {
+        for (int x = 0; x < [phone length]; x++) {
+            unichar aChar = [phone characterAtIndex:x];
+            if (aChar >= '0' && aChar <= '9' && aChar =='+' && aChar == '-') {
                 [number appendString:[NSString stringWithCharacters:&aChar length:1]];
             }
         }
