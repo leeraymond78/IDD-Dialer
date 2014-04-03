@@ -7,41 +7,41 @@
 //
 #import "IDNumPadView.h"
 
-@interface IDNumPadView()
+@interface IDNumPadView ()
 
-@property (nonatomic) IBOutletCollection(UIButton) NSArray * keypadButtons;
-@property (nonatomic) NSDictionary * keypadButtonsDict;
+@property(nonatomic) IBOutletCollection(UIButton) NSArray *keypadButtons;
+@property(nonatomic) NSDictionary *keypadButtonsDict;
 
 @end
 
 @implementation IDNumPadView
 
--(void)layoutSubviews{
+- (void)layoutSubviews {
     [super layoutSubviews];
     [self setBackgroundColor:[UIColor clearColor]];
     [self setupButtons];
 }
 
-- (void)setupButtons{
-    NSMutableArray * keyBtns = [NSMutableArray arrayWithCapacity:12];
+- (void)setupButtons {
+    NSMutableArray *keyBtns = [NSMutableArray arrayWithCapacity:12];
     _keypadButtonsDict = [NSMutableDictionary dictionaryWithCapacity:12];
-    
+
     NSInteger column = 3;
     NSInteger row = 4;
     CGFloat diameter = 75;
-    CGFloat widthInterval =  (self.frame.size.width - diameter*column - 28 * 2) / (column - 1);
-    CGFloat heightInterval =  (self.frame.size.height - diameter*row - 28 * 2) / (row - 1);
+    CGFloat widthInterval = (self.frame.size.width - diameter * column - 28 * 2) / (column - 1);
+    CGFloat heightInterval = (self.frame.size.height - diameter * row - 28 * 2) / (row - 1);
     CGFloat xx[column];
     CGFloat yy[row];
-    
-    for(int i = 0; i < column; i++){
-       xx[i] = 28 + (diameter + widthInterval) * i;
+
+    for (int i = 0; i < column; i++) {
+        xx[i] = 28 + (diameter + widthInterval) * i;
     }
-    for(int j = 0; j < row; j++){
+    for (int j = 0; j < row; j++) {
         yy[j] = 28 + (diameter + heightInterval) * j;
     }
     for (NSInteger index = 0; index < 12; index++) {
-        UIButton * keyBtn = [UIButton buttonWithType:UIButtonTypeCustom];
+        UIButton *keyBtn = [UIButton buttonWithType:UIButtonTypeCustom];
         CGFloat x;
         CGFloat y;
         switch (index) {
@@ -103,52 +103,52 @@
         [[keyBtn titleLabel] setFont:[UIFont fontWithName:@"Helvetica-Light" size:34.f]];
         [keyBtn setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
         [keyBtn setTitleColor:[UIColor lightGrayColor] forState:UIControlStateHighlighted];
-        [[keyBtn layer] setCornerRadius:diameter/2];
+        [[keyBtn layer] setCornerRadius:diameter / 2];
         [[keyBtn layer] setBorderWidth:1.5];
         [[keyBtn layer] setBorderColor:[[UIColor lightGrayColor] CGColor]];
         [keyBtn setReversesTitleShadowWhenHighlighted:YES];
         [keyBtn setTag:index];
         id keyTitle;
-        if(index < 10){
+        if (index < 10) {
             keyTitle = @(index);
-        }else if (index == 10){
+        } else if (index == 10) {
             keyTitle = @"*";
-        }else if (index == 11){
+        } else if (index == 11) {
             keyTitle = @"#";
         }
-        [keyBtn setTitle:[NSString stringWithFormat:@"%@",keyTitle]  forState:UIControlStateNormal];
+        [keyBtn setTitle:[NSString stringWithFormat:@"%@", keyTitle] forState:UIControlStateNormal];
         [keyBtn addTarget:self action:@selector(keyPressed:) forControlEvents:UIControlEventTouchDown];
-        if(index == 0){
+        if (index == 0) {
             UILongPressGestureRecognizer *longPress = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(longPressed:)];
             [keyBtn addGestureRecognizer:longPress];
         }
         [keyBtns addObject:keyBtn];
         [self addSubview:keyBtn];
-        [_keypadButtonsDict setValue:keyBtn forKey:[NSString stringWithFormat:@"key%@",@(index)]];
+        [_keypadButtonsDict setValue:keyBtn forKey:[NSString stringWithFormat:@"key%@", @(index)]];
     }
     self.keypadButtons = keyBtns;
 }
 
-- (UIImage *)backgroundImage{
+- (UIImage *)backgroundImage {
     CGRect rect = CGRectMake(0.0f, 0.0f, 1.0f, 1.0f);
     UIGraphicsBeginImageContext(rect.size);
     CGContextRef context = UIGraphicsGetCurrentContext();
-	
+
     CGContextSetFillColorWithColor(context, [[UIColor colorWithWhite:.9f alpha:.9f] CGColor]);
     CGContextFillRect(context, rect);
-	
+
     UIImage *image = UIGraphicsGetImageFromCurrentImageContext();
     UIGraphicsEndImageContext();
-	
+
     return image;
 }
 
-NSDate * dateTapped;
+NSDate *dateTapped;
 BOOL isLongPressed;
 
-- (void)keyPressed:(UIButton*)button{
-    if(_textField && [_textField isEditing]){
-        if(button.tag == 0){
+- (void)keyPressed:(UIButton *)button {
+    if (_textField && [_textField isEditing]) {
+        if (button.tag == 0) {
             dateTapped = [NSDate date];
             isLongPressed = NO;
         }
@@ -158,9 +158,9 @@ BOOL isLongPressed;
     }
 }
 
-- (void)longPressed:(UILongPressGestureRecognizer*)gesture{
-    if(_textField && [_textField isEditing]){
-        if([dateTapped timeIntervalSinceNow] < -1 && !isLongPressed){
+- (void)longPressed:(UILongPressGestureRecognizer *)gesture {
+    if (_textField && [_textField isEditing]) {
+        if ([dateTapped timeIntervalSinceNow] < -1 && !isLongPressed) {
             [_textField deleteBackward];
             [_textField insertText:@"+"];
             if ([self.textField isKindOfClass:[UITextField class]])

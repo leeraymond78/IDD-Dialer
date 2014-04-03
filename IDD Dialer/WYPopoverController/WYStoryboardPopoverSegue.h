@@ -28,13 +28,13 @@
 
 @interface WYStoryboardPopoverSegue : UIStoryboardSegue
 
-- (WYPopoverController*)popoverControllerWithSender:(id)sender
-                           permittedArrowDirections:(WYPopoverArrowDirection)arrowDirections
-                                           animated:(BOOL)animated;
+- (WYPopoverController *)popoverControllerWithSender:(id)sender
+                            permittedArrowDirections:(WYPopoverArrowDirection)arrowDirections
+                                            animated:(BOOL)animated;
 
-- (WYPopoverController*)popoverControllerWithSender:(id)sender
-                           permittedArrowDirections:(WYPopoverArrowDirection)arrowDirections
-                                           animated:(BOOL)animated
-                                            options:(WYPopoverAnimationOptions)options;
+- (WYPopoverController *)popoverControllerWithSender:(id)sender
+                            permittedArrowDirections:(WYPopoverArrowDirection)arrowDirections
+                                            animated:(BOOL)animated
+                                             options:(WYPopoverAnimationOptions)options;
 
 @end

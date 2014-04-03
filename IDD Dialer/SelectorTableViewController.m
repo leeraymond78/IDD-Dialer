@@ -14,23 +14,22 @@
 
 @implementation SelectorTableViewController
 
--(id)initWithDataSource:(NSArray*)dataSource defaultValue:(NSString*)value{
-	self = [SelectorTableViewController new];
-	self.dataSource = dataSource;
-	self.selectedIndex = [self.dataSource indexOfObject:value];
-	return self;
+- (id)initWithDataSource:(NSArray *)dataSource defaultValue:(NSString *)value {
+    self = [SelectorTableViewController new];
+    self.dataSource = dataSource;
+    self.selectedIndex = [self.dataSource indexOfObject:value];
+    return self;
 }
 
--(id)init{
-	self = [super init];
-	
-	self.selectedIndex = -1;
-	
-	return self;
+- (id)init {
+    self = [super init];
+
+    self.selectedIndex = -1;
+
+    return self;
 }
 
-- (id)initWithStyle:(UITableViewStyle)style
-{
+- (id)initWithStyle:(UITableViewStyle)style {
     self = [super initWithStyle:style];
     if (self) {
         // Custom initialization
@@ -38,79 +37,75 @@
     return self;
 }
 
-- (void)viewDidLoad
-{
+- (void)viewDidLoad {
     [super viewDidLoad];
     // Uncomment the following line to preserve selection between presentations.
     // self.clearsSelectionOnViewWillAppear = NO;
- 
+
     // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
     // self.navigationItem.rightBarButtonItem = self.editButtonItem;
 }
 
--(void)viewWillAppear:(BOOL)animated{
-	[self.tableView reloadData];
+- (void)viewWillAppear:(BOOL)animated {
+    [self.tableView reloadData];
 }
 
-- (void)didReceiveMemoryWarning
-{
+- (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
 }
 
 #pragma mark - Table view data source
 
--(void)setDataSource:(NSArray *)dataSource{
-	_dataSource = dataSource;
-	
-	self.preferredContentSize = CGSizeMake(self.preferredContentSize.width==0?200:self.preferredContentSize.width, 30.f * (self.dataSource?self.dataSource.count:30));
+- (void)setDataSource:(NSArray *)dataSource {
+    _dataSource = dataSource;
+
+    self.preferredContentSize = CGSizeMake(self.preferredContentSize.width == 0 ? 200 : self.preferredContentSize.width, 30.f * (self.dataSource ? self.dataSource.count : 30));
 }
-- (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
-{
+
+- (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
     // Return the number of sections.
     return 1;
 }
 
--(CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath{
-	return 30.f;
+- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
+    return 30.f;
 }
 
 
-- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
-{
+- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
     // Return the number of rows in the section.
-	NSInteger num = self.dataSource?self.dataSource.count:0;
+    NSInteger num = self.dataSource ? self.dataSource.count : 0;
     return num;
 }
 
-- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
-{
+- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"Cell"];
-    
+
     if (cell == nil) {
-        cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault  reuseIdentifier:@"Cell"];
-		
-		[[cell textLabel] setFont:[UIFont fontWithName:@"HelveticaNeue-UltraLight" size:25]];
-        
+        cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"Cell"];
+
+        [[cell textLabel] setFont:[UIFont fontWithName:@"HelveticaNeue-UltraLight" size:25]];
+
         [[cell textLabel] setAdjustsFontSizeToFitWidth:YES];
         [[cell textLabel] setTextColor:[UIColor redColor]];
     }
-	if(self.selectedIndex == indexPath.row){
-		cell.accessoryType = UITableViewCellAccessoryCheckmark;
-	}else{
-		cell.accessoryType = UITableViewCellAccessoryNone;
-	}
-	[[cell textLabel] setText:self.dataSource[indexPath.row]];
+    if (self.selectedIndex == indexPath.row) {
+        cell.accessoryType = UITableViewCellAccessoryCheckmark;
+    } else {
+        cell.accessoryType = UITableViewCellAccessoryNone;
+    }
+    [[cell textLabel] setText:self.dataSource[indexPath.row]];
     return cell;
 }
 
--(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
-	[tableView deselectRowAtIndexPath:indexPath animated:YES];
-	self.selectedIndex = indexPath.row;
-	[tableView reloadSections:[NSIndexSet indexSetWithIndex:0] withRowAnimation:UITableViewRowAnimationAutomatic];
-	if([[self delegate] respondsToSelector:@selector(selectorViewDidSelected:)]){
-		[[self delegate] selectorViewDidSelected:self];
-	}
+- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
+    [tableView deselectRowAtIndexPath:indexPath animated:YES];
+    self.selectedIndex = indexPath.row;
+    [tableView reloadSections:[NSIndexSet indexSetWithIndex:0] withRowAnimation:UITableViewRowAnimationAutomatic];
+    if ([[self delegate] respondsToSelector:@selector(selectorViewDidSelected:)]) {
+        [[self delegate] selectorViewDidSelected:self];
+    }
 }
 
 /*

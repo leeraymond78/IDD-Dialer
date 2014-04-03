@@ -8,20 +8,23 @@
 
 #import "ASCScreenBrightnessDetector.h"
 
-@interface ASCScreenBrightnessDetector()
-@property (nonatomic, readwrite) ASCScreenBrightnessStyle screenBrightnessStyle;
-@property (nonatomic, readwrite) CGFloat screenBrightness;
+@interface ASCScreenBrightnessDetector ()
+@property(nonatomic, readwrite) ASCScreenBrightnessStyle screenBrightnessStyle;
+@property(nonatomic, readwrite) CGFloat screenBrightness;
+
 - (void)brightnessDidChange:(NSNotification *)notification;
+
 - (void)addObserver;
+
 - (void)removeObserver;
+
 - (ASCScreenBrightnessStyle)currentSceenBrightnessStyle;
 
 @end
 
 @implementation ASCScreenBrightnessDetector
 
-- (instancetype)init
-{
+- (instancetype)init {
     self = [super init];
     if (self) {
         _threshold = 0.49f;
@@ -31,40 +34,36 @@
     return self;
 }
 
-- (void)dealloc
-{
+- (void)dealloc {
     [self removeObserver];
 }
 
 #pragma mark - Class extension methods
 
-- (void)brightnessDidChange:(NSNotification *)notification
-{
+- (void)brightnessDidChange:(NSNotification *)notification {
     if ([self.delegate respondsToSelector:@selector(screenBrightnessDidChange:)]) {
         [self.delegate screenBrightnessDidChange:self.screenBrightness];
     }
-    
+
     if (self.screenBrightnessStyle == [self currentSceenBrightnessStyle]) {
         return;
     }
-    
+
     self.screenBrightnessStyle = [self currentSceenBrightnessStyle];
-    
+
     if ([self.delegate respondsToSelector:@selector(screenBrightnessStyleDidChange:)]) {
         [self.delegate screenBrightnessStyleDidChange:self.screenBrightnessStyle];
     }
 }
 
-- (ASCScreenBrightnessStyle)currentSceenBrightnessStyle
-{
+- (ASCScreenBrightnessStyle)currentSceenBrightnessStyle {
     if (self.screenBrightness > self.threshold) {
         return ASCScreenBrightnessStyleLight;
     }
     return ASCScreenBrightnessStyleDark;
 }
 
-- (void)addObserver
-{
+- (void)addObserver {
     NSNotificationCenter *center = [NSNotificationCenter defaultCenter];
     [center addObserver:self
                selector:@selector(brightnessDidChange:)
@@ -72,14 +71,13 @@
                  object:[UIScreen mainScreen]];
 }
 
-- (void)removeObserver
-{
+- (void)removeObserver {
     [[NSNotificationCenter defaultCenter] removeObserver:self];
 }
 
 #pragma mark - Property Getter
 
--(CGFloat)screenBrightness {
+- (CGFloat)screenBrightness {
     return [UIScreen mainScreen].brightness;
 }
 

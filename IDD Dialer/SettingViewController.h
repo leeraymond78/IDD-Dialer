@@ -9,14 +9,14 @@
 #import <UIKit/UIKit.h>
 #import "AddIDDViewController.h"
 
-@interface SettingViewController : UIViewController<UITableViewDataSource, UITableViewDelegate>{
-    IBOutlet UISwitch * onAppCallSiwtch;
+@interface SettingViewController : UIViewController <UITableViewDataSource, UITableViewDelegate> {
+    IBOutlet UISwitch *onAppCallSiwtch;
     BOOL isEditing;
-    
-    IBOutlet UIButton * backbtn;
-    
-    AddIDDViewController * addIDDVC;
-    
+
+    IBOutlet UIButton *backbtn;
+
+    AddIDDViewController *addIDDVC;
+
     NSArray *sectionViewArray;
     NSArray *centerViewArray;
 }

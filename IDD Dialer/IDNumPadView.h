@@ -10,6 +10,6 @@
 
 @interface IDNumPadView : UIView
 
-@property (nonatomic, strong) UITextField * textField;
+@property(nonatomic, strong) UITextField *textField;
 
 @end

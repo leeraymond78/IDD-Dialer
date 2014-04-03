@@ -28,8 +28,7 @@
 
 ////////////////////////////////////////////////////////////////////////////
 
-@interface WYStoryboardPopoverSegue()
-{
+@interface WYStoryboardPopoverSegue () {
     WYPopoverController *popoverController;
     id sender;
     WYPopoverArrowDirection arrowDirections;
@@ -43,18 +42,15 @@
 
 @implementation WYStoryboardPopoverSegue
 
-- (void)perform
-{
-    if ([sender isKindOfClass:[UIBarButtonItem class]])
-    {
-        [popoverController presentPopoverFromBarButtonItem:(UIBarButtonItem*)sender
+- (void)perform {
+    if ([sender isKindOfClass:[UIBarButtonItem class]]) {
+        [popoverController presentPopoverFromBarButtonItem:(UIBarButtonItem *) sender
                                   permittedArrowDirections:arrowDirections
                                                   animated:animated
                                                    options:options];
     }
-    else if ([sender isKindOfClass:[UIView class]])
-    {
-        UIView *view = (UIView *)sender;
+    else if ([sender isKindOfClass:[UIView class]]) {
+        UIView *view = (UIView *) sender;
         [popoverController presentPopoverFromRect:view.bounds
                                            inView:view
                          permittedArrowDirections:arrowDirections
@@ -65,8 +61,7 @@
 
 - (WYPopoverController *)popoverControllerWithSender:(id)aSender
                             permittedArrowDirections:(WYPopoverArrowDirection)aArrowDirections
-                                            animated:(BOOL)aAnimated
-{
+                                            animated:(BOOL)aAnimated {
     return [self popoverControllerWithSender:aSender
                     permittedArrowDirections:aArrowDirections
                                     animated:aAnimated
@@ -76,20 +71,18 @@
 - (WYPopoverController *)popoverControllerWithSender:(id)aSender
                             permittedArrowDirections:(WYPopoverArrowDirection)aArrowDirections
                                             animated:(BOOL)aAnimated
-                                             options:(WYPopoverAnimationOptions)aOptions
-{
+                                             options:(WYPopoverAnimationOptions)aOptions {
     sender = aSender;
     arrowDirections = aArrowDirections;
     animated = aAnimated;
     options = aOptions;
-    
+
     popoverController = [[WYPopoverController alloc] initWithContentViewController:self.destinationViewController];
-    
+
     return popoverController;
 }
 
-- (void)dealloc
-{
+- (void)dealloc {
     sender = nil;
     popoverController = nil;
 }

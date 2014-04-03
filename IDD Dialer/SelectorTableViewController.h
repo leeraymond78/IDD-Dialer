@@ -14,17 +14,17 @@
 @interface SelectorTableViewController : UITableViewController {
 }
 
-@property (nonatomic, retain) id<SelectorTableViewControllerDelegate> delegate;
+@property(nonatomic, retain) id <SelectorTableViewControllerDelegate> delegate;
 
-@property (nonatomic) NSInteger selectedIndex;
+@property(nonatomic) NSInteger selectedIndex;
 
-@property (nonatomic, strong) NSArray * dataSource;
+@property(nonatomic, strong) NSArray *dataSource;
 
--(id)initWithDataSource:(NSArray*)dataSource defaultValue:(NSString*)value;
+- (id)initWithDataSource:(NSArray *)dataSource defaultValue:(NSString *)value;
 
 @end
 
-@protocol SelectorTableViewControllerDelegate<NSObject>
+@protocol SelectorTableViewControllerDelegate <NSObject>
 @optional
 - (void)selectorViewDidSelected:(SelectorTableViewController *)selectorView;
 @end
