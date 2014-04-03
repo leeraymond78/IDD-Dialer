@@ -23,6 +23,7 @@
 
 @private
     IBOutlet    UITapGestureRecognizer *tapGesture;
+    IBOutlet    UISwipeGestureRecognizer *swipeDelGesture;
     SettingViewController *settingVC;
 }
 

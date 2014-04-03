@@ -13,6 +13,7 @@
                 <outlet property="inputTF" destination="8" id="16"/>
                 <outlet property="resultLabel" destination="14" id="15"/>
                 <outlet property="settingBtn" destination="34" id="ViM-ed-zCu"/>
+                <outlet property="swipeDelGesture" destination="lFi-yw-CRA" id="Ryj-iN-jUE"/>
                 <outlet property="tapGesture" destination="30" id="ltG-TE-EQf"/>
                 <outlet property="view" destination="6" id="7"/>
             </connections>
@@ -25,6 +26,9 @@
                 <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="MainViewBackground.png" id="ebF-TY-utV" userLabel="bg">
                     <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                    <connections>
+                        <outletCollection property="gestureRecognizers" destination="lFi-yw-CRA" appends="YES" id="qsO-ti-sVZ"/>
+                    </connections>
                 </imageView>
                 <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumScaleFactor="0.15000000000000008" id="14" userLabel="result">
                     <rect key="frame" x="0.0" y="79" width="320" height="56"/>
@@ -32,8 +36,11 @@
                     <fontDescription key="fontDescription" name="HelveticaNeue-Thin" family="Helvetica Neue" pointSize="56"/>
                     <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                     <nil key="highlightedColor"/>
+                    <connections>
+                        <outletCollection property="gestureRecognizers" destination="lFi-yw-CRA" appends="YES" id="qbW-Zt-FNT"/>
+                    </connections>
                 </label>
-                <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" placeholder="Phone Number Here" textAlignment="center" minimumFontSize="5" clearButtonMode="whileEditing" id="8">
+                <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" placeholder="Phone Number Here" textAlignment="center" minimumFontSize="5" clearButtonMode="whileEditing" id="8" userLabel="inputTF">
                     <rect key="frame" x="0.0" y="143" width="320" height="20"/>
                     <autoresizingMask key="autoresizingMask" flexibleMinX="YES" widthSizable="YES" flexibleMaxX="YES" flexibleMinY="YES" flexibleMaxY="YES"/>
                     <color key="textColor" white="0.25513229927007297" alpha="1" colorSpace="calibratedWhite"/>
@@ -41,6 +48,7 @@
                     <textInputTraits key="textInputTraits" autocorrectionType="no" keyboardType="phonePad" keyboardAppearance="light" returnKeyType="go" enablesReturnKeyAutomatically="YES"/>
                     <connections>
                         <outlet property="delegate" destination="-1" id="20"/>
+                        <outletCollection property="gestureRecognizers" destination="lFi-yw-CRA" appends="YES" id="b8e-QD-Gpf"/>
                     </connections>
                 </textField>
                 <view contentMode="scaleToFill" id="dtl-vi-Cyz" userLabel="line">
@@ -111,6 +119,7 @@
             <simulatedScreenMetrics key="simulatedDestinationMetrics" type="retina4"/>
             <connections>
                 <outletCollection property="gestureRecognizers" destination="30" appends="YES" id="8bX-E2-RZG"/>
+                <outletCollection property="gestureRecognizers" destination="lFi-yw-CRA" appends="YES" id="Cpz-vl-J88"/>
             </connections>
         </view>
         <tapGestureRecognizer enabled="NO" id="30">
@@ -118,6 +127,12 @@
                 <action selector="hideAndProcess:" destination="-1" id="32"/>
             </connections>
         </tapGestureRecognizer>
+        <swipeGestureRecognizer direction="left" id="lFi-yw-CRA">
+            <connections>
+                <action selector="swipeToDelete:" destination="-1" id="4hL-dl-jQJ"/>
+                <outlet property="delegate" destination="-1" id="9kQ-iy-vGe"/>
+            </connections>
+        </swipeGestureRecognizer>
     </objects>
     <resources>
         <image name="MainViewBackground.png" width="320" height="568"/>

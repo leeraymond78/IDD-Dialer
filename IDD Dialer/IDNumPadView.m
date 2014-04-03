@@ -9,7 +9,6 @@
 
 @interface IDNumPadView ()
 
-@property(nonatomic) IBOutletCollection(UIButton) NSArray *keypadButtons;
 @property(nonatomic) NSDictionary *keypadButtonsDict;
 
 @end
@@ -118,6 +117,8 @@
         }
         [keyBtn setTitle:[NSString stringWithFormat:@"%@", keyTitle] forState:UIControlStateNormal];
         [keyBtn addTarget:self action:@selector(keyPressed:) forControlEvents:UIControlEventTouchDown];
+        [keyBtn addTarget:self action:@selector(keyUp:) forControlEvents:UIControlEventTouchUpInside];
+        [keyBtn addTarget:self action:@selector(keyUp:) forControlEvents:UIControlEventTouchUpOutside];
         if (index == 0) {
             UILongPressGestureRecognizer *longPress = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(longPressed:)];
             [keyBtn addGestureRecognizer:longPress];
@@ -126,7 +127,6 @@
         [self addSubview:keyBtn];
         [_keypadButtonsDict setValue:keyBtn forKey:[NSString stringWithFormat:@"key%@", @(index)]];
     }
-    self.keypadButtons = keyBtns;
 }
 
 - (UIImage *)backgroundImage {
@@ -147,6 +147,7 @@ NSDate *dateTapped;
 BOOL isLongPressed;
 
 - (void)keyPressed:(UIButton *)button {
+    [button setBackgroundColor:[UIColor colorWithWhite:.8f alpha:.2f]];
     if (_textField && [_textField isEditing]) {
         if (button.tag == 0) {
             dateTapped = [NSDate date];
@@ -156,6 +157,10 @@ BOOL isLongPressed;
         if ([self.textField isKindOfClass:[UITextField class]])
             [[NSNotificationCenter defaultCenter] postNotificationName:UITextFieldTextDidChangeNotification object:self.textField];
     }
+}
+
+- (void)keyUp:(UIButton *)button {
+    [button setBackgroundColor:[UIColor colorWithWhite:1.f alpha:.3f]];
 }
 
 - (void)longPressed:(UILongPressGestureRecognizer *)gesture {

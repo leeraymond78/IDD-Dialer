@@ -151,7 +151,7 @@
     ABMultiValueRef phone = ABMultiValueCreateMutable(kABMultiStringPropertyType);
     bool didAdd = ABMultiValueAddValueAndLabel(phone, (__bridge CFTypeRef) ([self.resultLabel.text copy]), customLabel, NULL);
 
-    if (didAdd == YES) {
+    if (didAdd) {
         ABRecordSetValue(aContact, kABPersonPhoneProperty, phone, &anError);
         if (anError == NULL) {
             ABUnknownPersonViewController *picker = [[ABUnknownPersonViewController alloc] init];
@@ -276,9 +276,17 @@
     }                completion:nil];
 }
 
+#pragma mark - gestures
+
+- (IBAction)swipeToDelete:(UISwipeGestureRecognizer *)swipe {
+    if (swipe == swipeDelGesture) {
+        [self.inputTF deleteBackward];
+    }
+}
+
 #pragma mark - processing
 
-- (BOOL)isInternationByPhone:(NSString *)phone {
+- (BOOL)isInternationalByPhone:(NSString *)phone {
     NSRange plusRange = [phone rangeOfString:@"+"];
     NSString *noIddPhone = [self removeIddByPhone:phone];
     NSRange zeroRange = [noIddPhone rangeOfString:@"00"];
@@ -314,8 +322,8 @@
         if (!isEmptyString(plain) && plain.length > 3) {
             for (NSString *code in self.countryArray) {
                 NSString *diallingCode = [DiallingCodesHelper diallingCodeByCode:code];
-                BOOL isInternation = [self isInternationByPhone:phone];
-                if (isInternation) {
+                BOOL isInternational = [self isInternationalByPhone:phone];
+                if (isInternational) {
                     NSRange range = NSMakeRange(0, 3);
                     if ([[plain substringWithRange:range] rangeOfString:diallingCode].location == 0) {
                         index = [self.countryArray indexOfObject:code];

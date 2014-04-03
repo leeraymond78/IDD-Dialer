@@ -61,7 +61,7 @@
                              Version:%@\
                              Build:%@", appVersion, buildNumber]];
 
-    [onAppCallSiwtch setOn:[[[NSUserDefaults standardUserDefaults] objectForKey:@"isOnAppCall"] boolValue]];
+    [onAppCallSwitch setOn:[[[NSUserDefaults standardUserDefaults] objectForKey:@"isOnAppCall"] boolValue]];
 
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(addIDDDone:) name:@"AddIDDDone" object:nil];
     addIDDVC = [[AddIDDViewController alloc] initWithNibName:@"AddIDDViewController" bundle:nil];
@@ -88,8 +88,8 @@
 }
 
 - (IBAction)switchValueChanged:(id)sender {
-    if (sender == onAppCallSiwtch) {
-        [[NSUserDefaults standardUserDefaults] setObject:[NSNumber numberWithBool:[onAppCallSiwtch isOn]] forKey:@"isOnAppCall"];
+    if (sender == onAppCallSwitch) {
+        [[NSUserDefaults standardUserDefaults] setObject:[NSNumber numberWithBool:[onAppCallSwitch isOn]] forKey:@"isOnAppCall"];
     }
 }
 
@@ -116,7 +116,7 @@
 - (IBAction)editTV:(id)sender {
     [self.tableView setEditing:!isEditing animated:YES];
     isEditing = !isEditing;
-    [backbtn setHidden:isEditing];
+    [backBtn setHidden:isEditing];
     [((UIBarButtonItem *) sender) setTitle:isEditing ? @"Done" : @"Edit"];
     [((UIBarButtonItem *) sender) setTintColor:isEditing ? [UIColor redColor] : nil];
 }
@@ -247,13 +247,13 @@
         [tableView endUpdates];
     } else {
         if (editingStyle == UITableViewCellEditingStyleDelete) {
-            NSMutableArray *tempcountryArray = [NSMutableArray arrayWithArray:self.countryArray];
-            NSMutableArray *tempdisabledCountryArray = [NSMutableArray arrayWithArray:self.disabledCountryArray];
-            NSDictionary *removingObj = [tempcountryArray objectAtIndex:indexPath.row];
-            [tempdisabledCountryArray insertObject:removingObj atIndex:0];
-            self.disabledCountryArray = tempdisabledCountryArray;
-            [tempcountryArray removeObjectAtIndex:indexPath.row];
-            self.countryArray = tempcountryArray;
+            NSMutableArray *tempCountryArray = [NSMutableArray arrayWithArray:self.countryArray];
+            NSMutableArray *tempDisabledCountryArray = [NSMutableArray arrayWithArray:self.disabledCountryArray];
+            NSDictionary *removingObj = [tempCountryArray objectAtIndex:indexPath.row];
+            [tempDisabledCountryArray insertObject:removingObj atIndex:0];
+            self.disabledCountryArray = tempDisabledCountryArray;
+            [tempCountryArray removeObjectAtIndex:indexPath.row];
+            self.countryArray = tempCountryArray;
             [tableView beginUpdates];
             [tableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationAutomatic];
             [tableView insertRowsAtIndexPaths:@[[NSIndexPath indexPathForRow:0 inSection:2]] withRowAnimation:UITableViewRowAnimationAutomatic];
@@ -278,11 +278,11 @@
     NSInteger source = sourceIndexPath.section;
     NSInteger des = destinationIndexPath.section;
     if (source == 0 && des == 0) {
-        NSMutableArray *tempiddArray = [NSMutableArray arrayWithArray:self.iddArray];
-        NSDictionary *removingObj = [tempiddArray objectAtIndex:sourceIndexPath.row];
-        [tempiddArray removeObjectAtIndex:sourceIndexPath.row];
-        [tempiddArray insertObject:removingObj atIndex:destinationIndexPath.row];
-        self.iddArray = tempiddArray;
+        NSMutableArray *tempIDDArray = [NSMutableArray arrayWithArray:self.iddArray];
+        NSDictionary *removingObj = [tempIDDArray objectAtIndex:sourceIndexPath.row];
+        [tempIDDArray removeObjectAtIndex:sourceIndexPath.row];
+        [tempIDDArray insertObject:removingObj atIndex:destinationIndexPath.row];
+        self.iddArray = tempIDDArray;
     } else if (source != 0 && des != 0) {
         if (source == des) {
             NSMutableArray *tempSourceCountryArray = [NSMutableArray arrayWithArray:source == 1 ? self.countryArray : self.disabledCountryArray];

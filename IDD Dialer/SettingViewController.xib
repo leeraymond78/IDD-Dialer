@@ -8,8 +8,8 @@
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="SettingViewController">
             <connections>
                 <outlet property="aboutView" destination="21" id="QHr-nC-aoR"/>
-                <outlet property="backbtn" destination="15" id="34"/>
-                <outlet property="onAppCallSiwtch" destination="4" id="16"/>
+                <outlet property="backBtn" destination="15" id="34"/>
+                <outlet property="onAppCallSwitch" destination="4" id="16"/>
                 <outlet property="tableView" destination="22" id="y62-Lb-JwV"/>
                 <outlet property="view" destination="1" id="3"/>
             </connections>

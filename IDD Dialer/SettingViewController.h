@@ -10,10 +10,10 @@
 #import "AddIDDViewController.h"
 
 @interface SettingViewController : UIViewController <UITableViewDataSource, UITableViewDelegate> {
-    IBOutlet UISwitch *onAppCallSiwtch;
+    IBOutlet UISwitch *onAppCallSwitch;
     BOOL isEditing;
 
-    IBOutlet UIButton *backbtn;
+    IBOutlet UIButton *backBtn;
 
     AddIDDViewController *addIDDVC;
 
