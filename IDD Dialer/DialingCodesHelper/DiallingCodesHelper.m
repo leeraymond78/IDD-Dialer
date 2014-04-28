@@ -71,7 +71,7 @@
 + (NSMutableArray *)initialIDDs {
     NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
     NSString *documentsDirectory = [paths objectAtIndex:0];
-    NSString *path = [documentsDirectory stringByAppendingPathComponent:@"idd_data.plist"];
+    NSString *path = [documentsDirectory stringByAppendingPathComponent:@"IDDData.plist"];
     NSMutableArray *iddArray = [NSArray arrayWithContentsOfFile:path];;
     //write default
     if (!iddArray || [iddArray count] == 0) {
@@ -87,7 +87,7 @@
 + (NSMutableArray *)initialCountryCodes {
     NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
     NSString *documentsDirectory = [paths objectAtIndex:0];
-    NSString *path = [documentsDirectory stringByAppendingPathComponent:@"countryCode_data.plist"];
+    NSString *path = [documentsDirectory stringByAppendingPathComponent:@"CountryCodeData.plist"];
     NSMutableArray *countryArray = [NSArray arrayWithContentsOfFile:path];
 
     //write default
@@ -103,7 +103,7 @@
 + (NSMutableArray *)initialDisabledCountryCodes {
     NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
     NSString *documentsDirectory = [paths objectAtIndex:0];
-    NSString *path = [documentsDirectory stringByAppendingPathComponent:@"disabled_countryCode_data.plist"];
+    NSString *path = [documentsDirectory stringByAppendingPathComponent:@"DisabledCountryCodeData.plist"];
     NSMutableArray *dCountryArray = [NSMutableArray arrayWithContentsOfFile:path];
 
     NSArray *countryArray = [self initialCountryCodes];

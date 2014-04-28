@@ -136,11 +136,11 @@
 - (void)updatePlits {
     NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
     NSString *documentsDirectory = [paths objectAtIndex:0];
-    NSString *path = [documentsDirectory stringByAppendingPathComponent:@"idd_data.plist"];
+    NSString *path = [documentsDirectory stringByAppendingPathComponent:@"IDDData.plist"];
     [self.iddArray writeToFile:path atomically:YES];
-    path = [documentsDirectory stringByAppendingPathComponent:@"countryCode_data.plist"];
+    path = [documentsDirectory stringByAppendingPathComponent:@"CountryCodeData.plist"];
     [self.countryArray writeToFile:path atomically:YES];
-    path = [documentsDirectory stringByAppendingPathComponent:@"disabled_countryCode_data.plist"];
+    path = [documentsDirectory stringByAppendingPathComponent:@"DisabledCountryCodeData.plist"];
     self.disabledCountryArray = [self.disabledCountryArray sortedArrayUsingSelector:@selector(compare:)];
     [self.disabledCountryArray writeToFile:path atomically:YES];
 }
