@@ -9,6 +9,21 @@
 #import "DiallingCodesHelper.h"
 
 @implementation DiallingCodesHelper
+static DiallingCodesHelper *_helper;
+
++ (DiallingCodesHelper *)sharedHelper {
+    if (!_helper) {
+        _helper = [[DiallingCodesHelper alloc] init];
+    }
+    return _helper;
+}
+
+- (id)init {
+    self.iddArray = [DiallingCodesHelper initialIDDs];
+    self.countryCodeArray = [DiallingCodesHelper initialCountryCodes];
+    self.disabledCountryCodeArray = [DiallingCodesHelper initialDisabledCountryCodes];
+    return [super init];
+}
 
 #pragma mark - country codes
 
@@ -80,7 +95,7 @@
 
         iddArray = [[NSMutableArray alloc] initWithContentsOfFile:path];
     }
-    NSLog(@"INIT: idd = %d", iddArray.count);
+    NSLog(@"INIT: idd = %lu", (unsigned long) iddArray.count);
     return iddArray;
 }
 
@@ -88,7 +103,7 @@
     NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
     NSString *documentsDirectory = [paths objectAtIndex:0];
     NSString *path = [documentsDirectory stringByAppendingPathComponent:@"CountryCodeData.plist"];
-    NSMutableArray *countryArray = [NSArray arrayWithContentsOfFile:path];
+    NSMutableArray *countryArray = [NSMutableArray arrayWithContentsOfFile:path];
 
     //write default
     if (!countryArray || [countryArray count] == 0) {
@@ -106,7 +121,7 @@
     NSString *path = [documentsDirectory stringByAppendingPathComponent:@"DisabledCountryCodeData.plist"];
     NSMutableArray *dCountryArray = [NSMutableArray arrayWithContentsOfFile:path];
 
-    NSArray *countryArray = [self initialCountryCodes];
+    NSMutableArray *countryArray = [self initialCountryCodes];
     if (!dCountryArray || [dCountryArray count] == 0) {
         dCountryArray = [NSMutableArray new];
         for (NSString *code in [self countryCodes]) {
@@ -126,4 +141,20 @@
 + (NSString *)diallingCodeByCode:(NSString *)code {
     return [self diallingCodesByCode][code];
 }
+
+
++ (NSString *)preferenceByCode:(NSString *)code {
+    NSString *preference;
+    NSDictionary *preferenceDict;
+    NSString *path = [[NSBundle mainBundle] pathForResource:
+            @"Perference"                            ofType:@"plist"];
+    preferenceDict = [[NSDictionary alloc] initWithContentsOfFile:path];
+    preference = preferenceDict[code];
+    return preference;
+}
+
++ (void)setPreferenceByCode:(NSString *)code {
+
+}
+
 @end

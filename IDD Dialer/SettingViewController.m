@@ -11,10 +11,7 @@
 #import "DiallingCodesHelper.h"
 
 @interface SettingViewController ()
-@property(nonatomic, strong) NSArray *iddArray;
-@property(nonatomic, strong) NSArray *countryArray;
 @property(nonatomic, strong) IBOutlet UITableView *tableView;
-@property(nonatomic, strong) NSArray *disabledCountryArray;
 @property(nonatomic, strong) IBOutlet UITextView *aboutView;
 @end
 
@@ -65,7 +62,6 @@
 
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(addIDDDone:) name:@"AddIDDDone" object:nil];
     addIDDVC = [[AddIDDViewController alloc] initWithNibName:@"AddIDDViewController" bundle:nil];
-    [self reloadInitialData];
 }
 
 - (void)viewWillAppear:(BOOL)animated {
@@ -81,12 +77,6 @@
     // Dispose of any resources that can be recreated.
 }
 
-- (void)reloadInitialData {
-    self.iddArray = [DiallingCodesHelper initialIDDs];
-    self.countryArray = [DiallingCodesHelper initialCountryCodes];
-    self.disabledCountryArray = [DiallingCodesHelper initialDisabledCountryCodes];
-}
-
 - (IBAction)switchValueChanged:(id)sender {
     if (sender == onAppCallSwitch) {
         [[NSUserDefaults standardUserDefaults] setObject:[NSNumber numberWithBool:[onAppCallSwitch isOn]] forKey:@"isOnAppCall"];
@@ -98,19 +88,19 @@
 }
 
 - (void)addIDDDone:(NSNotification *)notification {
-    NSDictionary *infoDict = [notification userInfo];
-    NSString *targetIDD = [infoDict objectForKey:IDD];
-    if (![targetIDD isEqual:@""]) {
-        for (NSDictionary *IDDDict in self.iddArray) {
-            if ([[IDDDict objectForKey:IDD] isEqual:targetIDD]) {
-                return;
+    @synchronized (idds) {
+        NSDictionary *infoDict = [notification userInfo];
+        NSString *targetIDD = [infoDict objectForKey:IDD];
+        if (![targetIDD isEqual:@""]) {
+            for (NSDictionary *IDDDict in idds) {
+                if ([[IDDDict objectForKey:IDD] isEqual:targetIDD]) {
+                    return;
+                }
             }
+            [idds addObject:infoDict];
         }
-        NSMutableArray *tempiddArray = [NSMutableArray arrayWithArray:self.iddArray];
-        [tempiddArray addObject:infoDict];
-        self.iddArray = tempiddArray;
-        [self.tableView reloadData];
     }
+    [self.tableView reloadData];
 }
 
 - (IBAction)editTV:(id)sender {
@@ -137,12 +127,18 @@
     NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
     NSString *documentsDirectory = [paths objectAtIndex:0];
     NSString *path = [documentsDirectory stringByAppendingPathComponent:@"IDDData.plist"];
-    [self.iddArray writeToFile:path atomically:YES];
+    @synchronized (idds) {
+        [idds writeToFile:path atomically:YES];
+    }
     path = [documentsDirectory stringByAppendingPathComponent:@"CountryCodeData.plist"];
-    [self.countryArray writeToFile:path atomically:YES];
+    @synchronized (countries) {
+        [countries writeToFile:path atomically:YES];
+    }
     path = [documentsDirectory stringByAppendingPathComponent:@"DisabledCountryCodeData.plist"];
-    self.disabledCountryArray = [self.disabledCountryArray sortedArrayUsingSelector:@selector(compare:)];
-    [self.disabledCountryArray writeToFile:path atomically:YES];
+    @synchronized (disabledCountries) {
+        [disabledCountries sortUsingSelector:@selector(compare:)];
+        [disabledCountries writeToFile:path atomically:YES];
+    }
 }
 
 #pragma mark - table view delegate
@@ -203,13 +199,19 @@
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
     NSInteger numberOfRow = 0;
     if (section == 0) {
-        numberOfRow = [self.iddArray count];
+        @synchronized (idds) {
+            numberOfRow = [idds count];
+        }
     }
     else if (section == 1) {
-        numberOfRow = [self.countryArray count];
+        @synchronized (countries) {
+            numberOfRow = [countries count];
+        }
     }
     else if (section == 2) {
-        numberOfRow = [self.disabledCountryArray count];
+        @synchronized (disabledCountries) {
+            numberOfRow = [disabledCountries count];
+        }
     }
     if (numberOfRow == 0) {
         [sectionViewArray[section] setHidden:YES];
@@ -238,34 +240,34 @@
 - (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath {
     NSInteger section = indexPath.section;
     if (section == 0) {
-        NSMutableArray *tempiddArray = [NSMutableArray arrayWithArray:self.iddArray];
-        [tempiddArray removeObjectAtIndex:indexPath.row];
-        self.iddArray = tempiddArray;
+        @synchronized (idds) {
+            [idds removeObjectAtIndex:indexPath.row];
+        }
 
         [tableView beginUpdates];
         [tableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationAutomatic];
         [tableView endUpdates];
     } else {
         if (editingStyle == UITableViewCellEditingStyleDelete) {
-            NSMutableArray *tempCountryArray = [NSMutableArray arrayWithArray:self.countryArray];
-            NSMutableArray *tempDisabledCountryArray = [NSMutableArray arrayWithArray:self.disabledCountryArray];
-            NSDictionary *removingObj = [tempCountryArray objectAtIndex:indexPath.row];
-            [tempDisabledCountryArray insertObject:removingObj atIndex:0];
-            self.disabledCountryArray = tempDisabledCountryArray;
-            [tempCountryArray removeObjectAtIndex:indexPath.row];
-            self.countryArray = tempCountryArray;
+            @synchronized (countries) {
+                @synchronized (disabledCountries) {
+                    NSDictionary *removingObj = [countries objectAtIndex:indexPath.row];
+                    [disabledCountries insertObject:removingObj atIndex:0];
+                    [countries removeObjectAtIndex:indexPath.row];
+                }
+            }
             [tableView beginUpdates];
             [tableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationAutomatic];
             [tableView insertRowsAtIndexPaths:@[[NSIndexPath indexPathForRow:0 inSection:2]] withRowAnimation:UITableViewRowAnimationAutomatic];
             [tableView endUpdates];
         } else if (editingStyle == UITableViewCellEditingStyleInsert) {
-            NSMutableArray *tempdisabledCountryArray = [NSMutableArray arrayWithArray:self.disabledCountryArray];
-            NSMutableArray *tempcountryArray = [NSMutableArray arrayWithArray:self.countryArray];
-            NSDictionary *removingObj = [tempdisabledCountryArray objectAtIndex:indexPath.row];
-            [tempcountryArray insertObject:removingObj atIndex:0];
-            self.countryArray = tempcountryArray;
-            [tempdisabledCountryArray removeObjectAtIndex:indexPath.row];
-            self.disabledCountryArray = tempdisabledCountryArray;
+            @synchronized (countries) {
+                @synchronized (disabledCountries) {
+                    NSDictionary *removingObj = [disabledCountries objectAtIndex:indexPath.row];
+                    [countries insertObject:removingObj atIndex:0];
+                    [disabledCountries removeObjectAtIndex:indexPath.row];
+                }
+            }
             [tableView beginUpdates];
             [tableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationAutomatic];
             [tableView insertRowsAtIndexPaths:@[[NSIndexPath indexPathForRow:0 inSection:1]] withRowAnimation:UITableViewRowAnimationAutomatic];
@@ -278,41 +280,33 @@
     NSInteger source = sourceIndexPath.section;
     NSInteger des = destinationIndexPath.section;
     if (source == 0 && des == 0) {
-        NSMutableArray *tempIDDArray = [NSMutableArray arrayWithArray:self.iddArray];
-        NSDictionary *removingObj = [tempIDDArray objectAtIndex:sourceIndexPath.row];
-        [tempIDDArray removeObjectAtIndex:sourceIndexPath.row];
-        [tempIDDArray insertObject:removingObj atIndex:destinationIndexPath.row];
-        self.iddArray = tempIDDArray;
+        @synchronized (idds) {
+            NSDictionary *removingObj = [idds objectAtIndex:sourceIndexPath.row];
+            [idds removeObjectAtIndex:sourceIndexPath.row];
+            [idds insertObject:removingObj atIndex:destinationIndexPath.row];
+        }
     } else if (source != 0 && des != 0) {
         if (source == des) {
-            NSMutableArray *tempSourceCountryArray = [NSMutableArray arrayWithArray:source == 1 ? self.countryArray : self.disabledCountryArray];
-            NSDictionary *removingObj = [tempSourceCountryArray objectAtIndex:sourceIndexPath.row];
-            [tempSourceCountryArray removeObjectAtIndex:sourceIndexPath.row];
+            @synchronized (source == 1 ? countries : disabledCountries) {
+                NSMutableArray *tempSourceCountryArray = source == 1 ? countries : disabledCountries;
+                NSDictionary *removingObj = [tempSourceCountryArray objectAtIndex:sourceIndexPath.row];
+                [tempSourceCountryArray removeObjectAtIndex:sourceIndexPath.row];
             [tempSourceCountryArray insertObject:removingObj atIndex:destinationIndexPath.row];
-            if (source == 1)
-                self.countryArray = tempSourceCountryArray;
-            if (source == 2)
-                self.disabledCountryArray = tempSourceCountryArray;
+            }
         } else {
-            NSMutableArray *tempSourceCountryArray;
-            NSMutableArray *tempDestinationCountryArray;
-            tempSourceCountryArray = [NSMutableArray arrayWithArray:source == 1 ? self.countryArray : self.disabledCountryArray];
-            tempDestinationCountryArray = [NSMutableArray arrayWithArray:des == 1 ? self.countryArray : self.disabledCountryArray];
-            NSDictionary *removingObj = [tempSourceCountryArray objectAtIndex:sourceIndexPath.row];
 
-            [tempDestinationCountryArray insertObject:removingObj atIndex:destinationIndexPath.row];
+            @synchronized (source == 1 ? countries : disabledCountries) {
+                NSMutableArray *tempSourceCountryArray;
+                NSMutableArray *tempDestinationCountryArray;
+                tempSourceCountryArray = source == 1 ? countries : disabledCountries;
+                tempDestinationCountryArray = des == 1 ? countries : disabledCountries;
+                NSDictionary *removingObj = [tempSourceCountryArray objectAtIndex:sourceIndexPath.row];
 
-            if (source == 1)
-                self.countryArray = tempSourceCountryArray;
-            if (source == 2)
-                self.disabledCountryArray = tempSourceCountryArray;
+                [tempDestinationCountryArray insertObject:removingObj atIndex:destinationIndexPath.row];
 
-            [tempSourceCountryArray removeObjectAtIndex:sourceIndexPath.row];
+                [tempSourceCountryArray removeObjectAtIndex:sourceIndexPath.row];
 
-            if (des == 1)
-                self.countryArray = tempDestinationCountryArray;
-            if (des == 2)
-                self.disabledCountryArray = tempDestinationCountryArray;
+            }
         }
     }
     [tableView reloadData];
@@ -338,11 +332,17 @@
     }
     [[cell textLabel] setTextColor:[self colorForHeaderInSection:indexPath.section]];
     if (indexPath.section == 0) {
-        [[cell textLabel] setText:[[self.iddArray objectAtIndex:indexPath.row] objectForKey:IDD]];
+        @synchronized (idds) {
+            [[cell textLabel] setText:[[idds objectAtIndex:indexPath.row] objectForKey:IDD]];
+        }
     } else if (indexPath.section == 1) {
-        [[cell textLabel] setText:[DiallingCodesHelper countryNameByCode:self.countryArray[indexPath.row]]];
+        @synchronized (countries) {
+            [[cell textLabel] setText:[DiallingCodesHelper countryNameByCode:countries[indexPath.row]]];
+        }
     } else if (indexPath.section == 2) {
-        [[cell textLabel] setText:[DiallingCodesHelper countryNameByCode:self.disabledCountryArray[indexPath.row]]];
+        @synchronized (disabledCountries) {
+            [[cell textLabel] setText:[DiallingCodesHelper countryNameByCode:disabledCountries[indexPath.row]]];
+        }
     }
 
     return cell;

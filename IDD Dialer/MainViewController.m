@@ -16,11 +16,10 @@
 #define BLog(formatString, ...) NSLog((@"%s " formatString), __PRETTY_FUNCTION__, ##__VA_ARGS__);
 #define isEmptyString(str) ((str == nil)|| [@"" isEqual:str])
 
+
 @interface MainViewController ()
 @property(nonatomic, strong) WYPopoverController *iddPopoverController;
 @property(nonatomic, strong) WYPopoverController *countryPopOverController;
-@property(nonatomic, strong) NSArray *iddArray;
-@property(nonatomic, strong) NSArray *countryArray;
 @property(nonatomic, strong) ASCScreenBrightnessDetector *brightnessDetector;
 @property(nonatomic) ASCScreenBrightnessStyle brightnessStyle;
 @property(nonatomic, strong) IDNumPadView *numpadView;
@@ -82,16 +81,14 @@
 #pragma mark - methods
 
 - (void)reloadInitialData {
-    self.iddArray = [DiallingCodesHelper initialIDDs];
-    self.countryArray = [DiallingCodesHelper initialCountryCodes];
 
     NSMutableArray *iddValueArray = [NSMutableArray new];
-    for (NSDictionary *dict in self.iddArray) {
+    for (NSDictionary *dict in idds) {
         [iddValueArray addObject:dict[IDD]];
     }
     NSMutableArray *countryValueArray = [NSMutableArray new];
     [DiallingCodesHelper countryNamesByCode];
-    for (NSString *code in self.countryArray) {
+    for (NSString *code in countries) {
         [countryValueArray addObject:[DiallingCodesHelper countryNameByCode:code]];
     }
     [self.iddSelectionViewController setPreferredContentSize:CGSizeMake(140, 0)];
@@ -102,13 +99,13 @@
 
 - (void)checkButtonTitle {
     if (self.iddSelectionViewController.selectedIndex != -1) {
-        NSString *idd = self.iddArray[self.iddSelectionViewController.selectedIndex][IDD];
-        [self.iddBtn setTitle:idd forState:UIControlStateNormal];
+        NSString *iddCode = idds[self.iddSelectionViewController.selectedIndex][IDD];
+        [self.iddBtn setTitle:iddCode forState:UIControlStateNormal];
     } else {
         [self.iddBtn setTitle:@"IDD" forState:UIControlStateNormal];
     }
     if (self.countrySelectionViewController.selectedIndex != -1) {
-        NSString *country = [DiallingCodesHelper countryNameByCode:self.countryArray[self.countrySelectionViewController.selectedIndex]];
+        NSString *country = [DiallingCodesHelper countryNameByCode:countries[self.countrySelectionViewController.selectedIndex]];
         [self.countryBtn setTitle:country forState:UIControlStateNormal];
     } else {
         [self.countryBtn setTitle:@"Country" forState:UIControlStateNormal];
@@ -301,10 +298,10 @@
 
     NSString *plain = [self plainNumberByPhone:phone];
     if (!isEmptyString(plain) && plain.length > 5) {
-        for (NSDictionary *iddObj in self.iddArray) {
+        for (NSDictionary *iddObj in idds) {
             NSString *idd = iddObj[IDD];
             if ([[plain substringToIndex:5] rangeOfString:idd].location != NSNotFound) {
-                index = [self.iddArray indexOfObject:iddObj];
+                index = [idds indexOfObject:iddObj];
                 break;
             }
         }
@@ -320,13 +317,13 @@
         NSString *plain = [self noZeroNumberByPhone:[self plainNumberByPhone:noIddPhone]];
 
         if (!isEmptyString(plain) && plain.length > 3) {
-            for (NSString *code in self.countryArray) {
+            for (NSString *code in countries) {
                 NSString *diallingCode = [DiallingCodesHelper diallingCodeByCode:code];
                 BOOL isInternational = [self isInternationalByPhone:phone];
                 if (isInternational) {
                     NSRange range = NSMakeRange(0, 3);
                     if ([[plain substringWithRange:range] rangeOfString:diallingCode].location == 0) {
-                        index = [self.countryArray indexOfObject:code];
+                        index = [countries indexOfObject:code];
                         break;
                     }
                 }
@@ -341,7 +338,7 @@
     NSString *result = @"";
     NSInteger iddIndex = [self iddIndexByPhone:phone];
     if (iddIndex != -1) {
-        NSString *idd = self.iddArray[iddIndex][IDD];
+        NSString *idd = idds[iddIndex][IDD];
         BLog(@"idd found = %@", idd);
         result = [phone stringByReplacingOccurrencesOfString:idd withString:@""];
     } else {
@@ -366,7 +363,7 @@
 
     // remove country code
     if (countryIndex != -1) {
-        NSString *country = [DiallingCodesHelper diallingCodeByCode:self.countryArray[countryIndex]];
+        NSString *country = [DiallingCodesHelper diallingCodeByCode:countries[countryIndex]];
         BLog(@"country found = %@", country);
         result = [result stringByReplacingOccurrencesOfString:country withString:@""];
     }
@@ -393,7 +390,7 @@
     if (!isEmptyString(number)) {
         NSString *doubleZero = @"";
         if (!isEmptyString(idd)) {
-            BOOL withDoubleZero = [[self getObjectFromArrayWithValue:idd Key:IDD wantedKey:IDD_WITH00 array:self.iddArray] boolValue];
+            BOOL withDoubleZero = [[self getObjectFromArrayWithValue:idd Key:IDD wantedKey:IDD_WITH00 array:idds] boolValue];
             doubleZero = withDoubleZero ? @"00" : @"";
             outIdd = [idd stringByAppendingString:divider];
         }
@@ -434,10 +431,10 @@
     indexIDD = self.iddSelectionViewController.selectedIndex;
     indexCC = self.countrySelectionViewController.selectedIndex;
     if (self.iddSelectionViewController.selectedIndex != -1) {
-        idd = self.iddArray[self.iddSelectionViewController.selectedIndex][IDD];
+        idd = idds[self.iddSelectionViewController.selectedIndex][IDD];
     }
     if (self.countrySelectionViewController.selectedIndex != -1) {
-        country = [DiallingCodesHelper diallingCodeByCode:self.countryArray[self.countrySelectionViewController.selectedIndex]];
+        country = [DiallingCodesHelper diallingCodeByCode:countries[self.countrySelectionViewController.selectedIndex]];
     }
     NSString *result = [self formattedPhoneByIdd:idd country:country number:number];
     BLog(@"Final Output = %@", result);
