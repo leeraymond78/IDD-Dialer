@@ -27,7 +27,6 @@
 		1D6B4B9018A9DACE0098ADDB /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3D592E4E177DFD9800C82F74 /* UIKit.framework */; };
 		1D6B4B9618A9DACE0098ADDB /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 1D6B4B9418A9DACE0098ADDB /* InfoPlist.strings */; };
 		1D6B4B9818A9DACE0098ADDB /* IDD_Dialer_Tests.m in Sources */ = {isa = PBXBuildFile; fileRef = 1D6B4B9718A9DACE0098ADDB /* IDD_Dialer_Tests.m */; };
-		1DD7EA22190E471D006C94A4 /* Preference.plist in Resources */ = {isa = PBXBuildFile; fileRef = 1DD7EA21190E471D006C94A4 /* Preference.plist */; };
 		3D592E4F177DFD9800C82F74 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3D592E4E177DFD9800C82F74 /* UIKit.framework */; };
 		3D592E51177DFD9800C82F74 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3D592E50177DFD9800C82F74 /* Foundation.framework */; };
 		3D592E53177DFD9800C82F74 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3D592E52177DFD9800C82F74 /* CoreGraphics.framework */; };
@@ -88,7 +87,6 @@
 		1D6B4B9518A9DACE0098ADDB /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		1D6B4B9718A9DACE0098ADDB /* IDD_Dialer_Tests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = IDD_Dialer_Tests.m; sourceTree = "<group>"; };
 		1D6B4B9918A9DACE0098ADDB /* IDD Dialer Tests-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "IDD Dialer Tests-Prefix.pch"; sourceTree = "<group>"; };
-		1DD7EA21190E471D006C94A4 /* Preference.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Preference.plist; sourceTree = "<group>"; };
 		3D592E4B177DFD9800C82F74 /* IDD Dialer.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "IDD Dialer.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		3D592E4E177DFD9800C82F74 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		3D592E50177DFD9800C82F74 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
@@ -288,7 +286,6 @@
 			isa = PBXGroup;
 			children = (
 				1D56711518C5BCDA00412DC5 /* DiallingCodes.plist */,
-				1DD7EA21190E471D006C94A4 /* Preference.plist */,
 				3D6C52F5177EB89500203EB6 /* CountryCodeData.plist */,
 				3D6C52F6177EB89500203EB6 /* IDDData.plist */,
 				3D592E56177DFD9800C82F74 /* IDD Dialer-Info.plist */,
@@ -394,7 +391,6 @@
 				3D592E65177DFD9800C82F74 /* Default-568h@2x.png in Resources */,
 				3D592E6B177DFD9900C82F74 /* MainViewController.xib in Resources */,
 				3D592E78177E3A3B00C82F74 /* SettingViewController.xib in Resources */,
-				1DD7EA22190E471D006C94A4 /* Preference.plist in Resources */,
 				1D512BC618C808B800476419 /* contextMenu_phone@2x.png in Resources */,
 				3D592E7E177E43F700C82F74 /* icon@2x.png in Resources */,
 				1D512BC518C808B800476419 /* contextMenu_contacts@2x.png in Resources */,
@@ -574,7 +570,7 @@
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNINITIALIZED_AUTOS = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 6.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = iphoneos;
 			};
@@ -598,7 +594,7 @@
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNINITIALIZED_AUTOS = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 6.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
 				OTHER_CFLAGS = "-DNS_BLOCK_ASSERTIONS=1";
 				SDKROOT = iphoneos;
 				VALIDATE_PRODUCT = YES;

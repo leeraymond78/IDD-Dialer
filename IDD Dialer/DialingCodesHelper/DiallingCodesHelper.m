@@ -22,6 +22,7 @@ static DiallingCodesHelper *_helper;
     self.iddArray = [DiallingCodesHelper initialIDDs];
     self.countryCodeArray = [DiallingCodesHelper initialCountryCodes];
     self.disabledCountryCodeArray = [DiallingCodesHelper initialDisabledCountryCodes];
+    self.preferenceDict = [DiallingCodesHelper initialPreference];
     return [super init];
 }
 
@@ -84,9 +85,7 @@ static DiallingCodesHelper *_helper;
 #pragma mark - init data
 
 + (NSMutableArray *)initialIDDs {
-    NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
-    NSString *documentsDirectory = [paths objectAtIndex:0];
-    NSString *path = [documentsDirectory stringByAppendingPathComponent:@"IDDData.plist"];
+    NSString *path = [[self documentsDirectory] stringByAppendingPathComponent:@"IDDData.plist"];
     NSMutableArray *iddArray = [NSArray arrayWithContentsOfFile:path];;
     //write default
     if (!iddArray || [iddArray count] == 0) {
@@ -100,9 +99,7 @@ static DiallingCodesHelper *_helper;
 }
 
 + (NSMutableArray *)initialCountryCodes {
-    NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
-    NSString *documentsDirectory = [paths objectAtIndex:0];
-    NSString *path = [documentsDirectory stringByAppendingPathComponent:@"CountryCodeData.plist"];
+    NSString *path = [[self documentsDirectory] stringByAppendingPathComponent:@"CountryCodeData.plist"];
     NSMutableArray *countryArray = [NSMutableArray arrayWithContentsOfFile:path];
 
     //write default
@@ -116,9 +113,7 @@ static DiallingCodesHelper *_helper;
 }
 
 + (NSMutableArray *)initialDisabledCountryCodes {
-    NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
-    NSString *documentsDirectory = [paths objectAtIndex:0];
-    NSString *path = [documentsDirectory stringByAppendingPathComponent:@"DisabledCountryCodeData.plist"];
+    NSString *path = [[self documentsDirectory] stringByAppendingPathComponent:@"DisabledCountryCodeData.plist"];
     NSMutableArray *dCountryArray = [NSMutableArray arrayWithContentsOfFile:path];
 
     NSMutableArray *countryArray = [self initialCountryCodes];
@@ -134,6 +129,16 @@ static DiallingCodesHelper *_helper;
     return dCountryArray;
 }
 
++ (NSMutableDictionary *)initialPreference {
+    NSString *path = [[self documentsDirectory] stringByAppendingPathComponent:@"Preference.plist"];
+    NSMutableDictionary *preDict = [NSMutableDictionary dictionaryWithContentsOfFile:path];
+    if (!preDict) {
+        preDict = [NSMutableDictionary dictionaryWithCapacity:0];
+    }
+    NSLog(@"INIT: preference = %lu", (unsigned long) preDict.count);
+    return preDict;
+}
+
 + (NSString *)countryNameByCode:(NSString *)code {
     return [self countryNamesByCode][code];
 }
@@ -144,17 +149,50 @@ static DiallingCodesHelper *_helper;
 
 
 + (NSString *)preferenceByCode:(NSString *)code {
-    NSString *preference;
-    NSDictionary *preferenceDict;
-    NSString *path = [[NSBundle mainBundle] pathForResource:
-            @"Perference"                            ofType:@"plist"];
-    preferenceDict = [[NSDictionary alloc] initWithContentsOfFile:path];
-    preference = preferenceDict[code];
-    return preference;
+    @synchronized (preferenceIDDs) {
+        NSString *preference;
+        preference = preferenceIDDs[code];
+        if (preference) {
+            NSInteger index = NSNotFound;
+            for (NSDictionary *dict in idds) {
+                if ([preference isEqual:dict[@"IDD"]]) {
+                    index = [idds indexOfObject:dict];
+                    break;
+                }
+            }
+            if (index != NSNotFound) {
+                return preference;
+            } else {
+                [self setPreference:nil code:code];
+
+            }
+        }
+    }
+    return nil;
 }
 
-+ (void)setPreferenceByCode:(NSString *)code {
++ (void)setPreference:(NSString *)preference code:(NSString *)code {
+    if (code) {
+        @synchronized (preferenceIDDs) {
+            if (preference) {
+                preferenceIDDs[code] = preference;
+            } else {
+                [preferenceIDDs removeObjectForKey:code];
+            }
+            NSString *path = [[self documentsDirectory] stringByAppendingPathComponent:@"Preference.plist"];
+            [preferenceIDDs writeToFile:path atomically:YES];
+        }
+    } else {
+        NSLog(@"code is nil");
+    }
+}
 
+#pragma mark - others
+
++ (NSString *)documentsDirectory {
+    NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
+    NSString *documentsDirectory = [paths objectAtIndex:0];
+    return documentsDirectory;
 }
 
 @end

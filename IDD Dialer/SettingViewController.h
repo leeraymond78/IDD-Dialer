@@ -8,8 +8,9 @@
 
 #import <UIKit/UIKit.h>
 #import "AddIDDViewController.h"
+#import "SelectorTableViewController.h"
 
-@interface SettingViewController : UIViewController <UITableViewDataSource, UITableViewDelegate> {
+@interface SettingViewController : UIViewController <UITableViewDataSource, UITableViewDelegate,SelectorTableViewControllerDelegate> {
     IBOutlet UISwitch *onAppCallSwitch;
     BOOL isEditing;
 
@@ -19,6 +20,7 @@
 
     NSArray *sectionViewArray;
     NSArray *centerViewArray;
+    SelectorTableViewController *preferenceViewController;
 }
 
 @end

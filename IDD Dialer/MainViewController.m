@@ -310,6 +310,26 @@
     return index;
 }
 
+- (NSInteger)iddIndexByPreference:(NSString*)preference{
+    NSInteger index = -1;
+    
+    if(preference){
+        for (NSDictionary *iddObj in idds) {
+            NSString *idd = iddObj[IDD];
+            if ([idd isEqualToString:preference]) {
+                index = [idds indexOfObject:iddObj];
+                break;
+            }
+        }
+    }
+    BLog(@"index = %ld", (long) index);
+    return index;
+}
+
+- (NSInteger)iddIndexByCode:(NSString*)code{
+    return [self iddIndexByPreference:[DiallingCodesHelper preferenceByCode:code]];
+}
+
 - (NSInteger)countryIndexByPhone:(NSString *)phone {
     NSInteger index = -1;
     if (!isEmptyString(phone)) {
@@ -410,11 +430,16 @@
 }
 
 - (void)reloadOutputForScreenReloadSection:(BOOL)isReload {
-    NSInteger indexIDD;
-    NSInteger indexCC;
+    NSInteger indexIDD = -1;
+    NSInteger indexCC = -1;
     if (isReload) {
-        indexIDD = [self iddIndexByPhone:self.inputTF.text];
         indexCC = [self countryIndexByPhone:self.inputTF.text];
+        if(indexCC != -1){
+            indexIDD = [self iddIndexByCode:countries[indexCC]];
+        }
+        if(indexCC == -1 || indexIDD == -1){
+            indexIDD = [self iddIndexByPhone:self.inputTF.text];
+        }
 
         if (indexIDD != -1) {
             [self.iddSelectionViewController setSelectedIndex:indexIDD];
@@ -460,12 +485,12 @@
     if (!isEmptyString(phone)) {
         for (int x = 0; x < [phone length]; x++) {
             unichar aChar = [phone characterAtIndex:x];
-            if (aChar >= '0' && aChar <= '9' && aChar == '+' && aChar == '-') {
+            if ((aChar >= '0' && aChar <= '9') || aChar == '+' || aChar == '-') {
                 [number appendString:[NSString stringWithCharacters:&aChar length:1]];
             }
         }
     }
-    return number;
+    return [NSString stringWithString:number];
 }
 
 - (NSString *)noZeroNumberByPhone:(NSString *)phone {
@@ -514,6 +539,7 @@
         if (!self.iddPopoverController) {
             self.iddPopoverController = [[WYPopoverController alloc] initWithContentViewController:self.iddSelectionViewController];
         } else if ([self.iddPopoverController isPopoverVisible]) {
+            [self.iddPopoverController dismissPopoverAnimated:YES];
             return;
         }
         popoverController = self.iddPopoverController;
@@ -522,6 +548,7 @@
         if (!self.countryPopOverController) {
             self.countryPopOverController = [[WYPopoverController alloc] initWithContentViewController:self.countrySelectionViewController];
         } else if ([self.countryPopOverController isPopoverVisible]) {
+            [self.countryPopOverController dismissPopoverAnimated:YES];
             return;
         }
         popoverController = self.countryPopOverController;

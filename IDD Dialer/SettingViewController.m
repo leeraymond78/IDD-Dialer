@@ -9,10 +9,14 @@
 #import "SettingViewController.h"
 #import "MainViewController.h"
 #import "DiallingCodesHelper.h"
+#import "WYPopoverController.h"
 
-@interface SettingViewController ()
+@interface SettingViewController ()<WYPopoverControllerDelegate>{
+    NSInteger selectedCell;
+}
 @property(nonatomic, strong) IBOutlet UITableView *tableView;
 @property(nonatomic, strong) IBOutlet UITextView *aboutView;
+@property (nonatomic, strong) WYPopoverController * preferPopoverController;
 @end
 
 @implementation SettingViewController
@@ -28,6 +32,11 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view from its nib.
+    
+    preferenceViewController = [SelectorTableViewController new];
+    [preferenceViewController setDelegate:self];
+    [preferenceViewController setPreferredContentSize:CGSizeMake(140, 0)];
+    
     if (!sectionViewArray) {
         NSMutableArray *tempSectionViewArray = [NSMutableArray new];
         NSMutableArray *tempCenterViewArray = [NSMutableArray new];
@@ -124,20 +133,68 @@
 }
 
 - (void)updatePlits {
-    NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
-    NSString *documentsDirectory = [paths objectAtIndex:0];
-    NSString *path = [documentsDirectory stringByAppendingPathComponent:@"IDDData.plist"];
+    NSString *path = [[DiallingCodesHelper documentsDirectory] stringByAppendingPathComponent:@"IDDData.plist"];
     @synchronized (idds) {
         [idds writeToFile:path atomically:YES];
     }
-    path = [documentsDirectory stringByAppendingPathComponent:@"CountryCodeData.plist"];
+    path = [[DiallingCodesHelper documentsDirectory] stringByAppendingPathComponent:@"CountryCodeData.plist"];
     @synchronized (countries) {
         [countries writeToFile:path atomically:YES];
     }
-    path = [documentsDirectory stringByAppendingPathComponent:@"DisabledCountryCodeData.plist"];
+    path = [[DiallingCodesHelper documentsDirectory] stringByAppendingPathComponent:@"DisabledCountryCodeData.plist"];
     @synchronized (disabledCountries) {
         [disabledCountries sortUsingSelector:@selector(compare:)];
         [disabledCountries writeToFile:path atomically:YES];
+    }
+}
+
+#pragma mark - delegates
+
+- (void)popSelection:(NSIndexPath*)indexPath {
+    if(!self.preferPopoverController){
+        self.preferPopoverController =[[WYPopoverController alloc] initWithContentViewController:preferenceViewController];
+    }
+    if ([self.preferPopoverController isPopoverVisible]) {
+        [self.preferPopoverController dismissPopoverAnimated:YES];
+        return;
+    }
+    UIView * theView =[self.tableView cellForRowAtIndexPath:indexPath];
+    selectedCell = indexPath.row;
+    NSString * code = countries[selectedCell];
+    NSString * preference = [DiallingCodesHelper preferenceByCode:code];
+    NSInteger selectedIndex = -1;
+    
+    NSMutableArray *iddValueArray = [NSMutableArray new];
+    for (NSUInteger x = 0 ; x < [idds count] ; x++) {
+        NSDictionary * dict = idds[x];
+        if([preference isEqual:dict[IDD]]){
+            selectedIndex = x;
+        }
+        [iddValueArray addObject:dict[IDD]];
+    }
+    [preferenceViewController setSelectedIndex:selectedIndex];
+    
+    [preferenceViewController setDataSource:iddValueArray];
+    self.preferPopoverController.delegate = self;
+    self.preferPopoverController.passthroughViews = @[theView];
+    self.preferPopoverController.popoverLayoutMargins = UIEdgeInsetsMake(10, 10, 10, 10);
+    self.preferPopoverController.wantsDefaultContentAppearance = NO;
+    [self.preferPopoverController presentPopoverFromRect:theView.bounds
+                                            inView:theView
+                          permittedArrowDirections:WYPopoverArrowDirectionAny
+                                          animated:YES
+                                           options:WYPopoverAnimationOptionFadeWithScale];
+}
+
+- (void)selectorViewDidSelected:(SelectorTableViewController *)selectorView {
+    if (selectorView == preferenceViewController) {
+        [self.preferPopoverController dismissPopoverAnimated:YES];
+        
+        NSInteger selectedIndex = [preferenceViewController selectedIndex];
+        if(selectedIndex != -1){
+            NSString * code = countries[selectedCell];
+            [DiallingCodesHelper setPreference:idds[selectedIndex][@"IDD"] code:code];
+        }
     }
 }
 
@@ -344,7 +401,18 @@
             [[cell textLabel] setText:[DiallingCodesHelper countryNameByCode:disabledCountries[indexPath.row]]];
         }
     }
-
     return cell;
+}
+-(BOOL)tableView:(UITableView *)tableView shouldHighlightRowAtIndexPath:(NSIndexPath *)indexPath{
+    if(indexPath.section == 1){
+        return YES;
+    }else{
+        return NO;
+    }
+}
+
+-(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
+    [tableView deselectRowAtIndexPath:indexPath animated:YES];
+    [self popSelection:indexPath];
 }
 @end
