@@ -98,17 +98,19 @@
 }
 
 - (void)checkButtonTitle {
-    if (self.iddSelectionViewController.selectedIndex != -1) {
-        NSString *iddCode = idds[self.iddSelectionViewController.selectedIndex][IDD];
-        [self.iddBtn setTitle:iddCode forState:UIControlStateNormal];
-    } else {
+    NSInteger iddIndex = self.iddSelectionViewController.selectedIndex;
+    if (iddIndex == IDNoSelection ) {
         [self.iddBtn setTitle:@"IDD" forState:UIControlStateNormal];
-    }
-    if (self.countrySelectionViewController.selectedIndex != -1) {
-        NSString *country = [DiallingCodesHelper countryNameByCode:countries[self.countrySelectionViewController.selectedIndex]];
-        [self.countryBtn setTitle:country forState:UIControlStateNormal];
     } else {
+        NSString *iddCode = idds[iddIndex][IDD];
+        [self.iddBtn setTitle:iddCode forState:UIControlStateNormal];
+    }
+    NSInteger ccIndex = self.countrySelectionViewController.selectedIndex;
+    if (ccIndex == IDNoSelection) {
         [self.countryBtn setTitle:@"Country" forState:UIControlStateNormal];
+    } else {
+        NSString *country = [DiallingCodesHelper countryNameByCode:countries[ccIndex]];
+        [self.countryBtn setTitle:country forState:UIControlStateNormal];
     }
 }
 
@@ -310,10 +312,10 @@
     return index;
 }
 
-- (NSInteger)iddIndexByPreference:(NSString*)preference{
+- (NSInteger)iddIndexByPreference:(NSString *)preference {
     NSInteger index = -1;
-    
-    if(preference){
+
+    if (preference) {
         for (NSDictionary *iddObj in idds) {
             NSString *idd = iddObj[IDD];
             if ([idd isEqualToString:preference]) {
@@ -326,7 +328,7 @@
     return index;
 }
 
-- (NSInteger)iddIndexByCode:(NSString*)code{
+- (NSInteger)iddIndexByCode:(NSString *)code {
     return [self iddIndexByPreference:[DiallingCodesHelper preferenceByCode:code]];
 }
 
@@ -405,6 +407,7 @@
 - (NSString *)_phoneByIdd:(NSString *)idd country:(NSString *)country number:(NSString *)number divider:(NSString *)divider {
     NSString *result = @"";
     divider = divider ? divider : @"";
+    NSString *plusSign = @"";
     NSString *outIdd = @"";
     NSString *outCountry = @"";
     if (!isEmptyString(number)) {
@@ -413,6 +416,8 @@
             BOOL withDoubleZero = [[self getObjectFromArrayWithValue:idd Key:IDD wantedKey:IDD_WITH00 array:idds] boolValue];
             doubleZero = withDoubleZero ? @"00" : @"";
             outIdd = [idd stringByAppendingString:divider];
+        } else {
+            plusSign = @"+";
         }
         if (!isEmptyString(country)) {
             outCountry = [country stringByAppendingString:divider];
@@ -422,7 +427,7 @@
         if (!isEmptyString(doubleZero)) {
             doubleZero = [doubleZero stringByAppendingString:divider];
         }
-        result = [NSString stringWithFormat:@"%@%@%@%@", outIdd, doubleZero, outCountry, number];
+        result = [NSString stringWithFormat:@"%@%@%@%@%@", outIdd, doubleZero, plusSign, outCountry, number];
 
     }
     BLog(@"result = %@", result);
@@ -434,19 +439,17 @@
     NSInteger indexCC = -1;
     if (isReload) {
         indexCC = [self countryIndexByPhone:self.inputTF.text];
-        if(indexCC != -1){
+        if (indexCC != -1) {
             indexIDD = [self iddIndexByCode:countries[indexCC]];
         }
-        if(indexCC == -1 || indexIDD == -1){
+        if (indexCC == -1 || indexIDD == -1) {
             indexIDD = [self iddIndexByPhone:self.inputTF.text];
         }
 
-        if (indexIDD != -1) {
-            [self.iddSelectionViewController setSelectedIndex:indexIDD];
-        }
-        if (indexCC != -1) {
-            [self.countrySelectionViewController setSelectedIndex:indexCC];
-        }
+        [self.iddSelectionViewController setSelectedIndex:indexIDD];
+
+        [self.countrySelectionViewController setSelectedIndex:indexCC];
+
         [self checkButtonTitle];
     }
     NSString *number = [self numberByPhone:self.inputTF.text];
@@ -455,11 +458,11 @@
     NSString *country = @"";
     indexIDD = self.iddSelectionViewController.selectedIndex;
     indexCC = self.countrySelectionViewController.selectedIndex;
-    if (self.iddSelectionViewController.selectedIndex != -1) {
-        idd = idds[self.iddSelectionViewController.selectedIndex][IDD];
+    if (indexIDD != -1) {
+        idd = idds[indexIDD][IDD];
     }
-    if (self.countrySelectionViewController.selectedIndex != -1) {
-        country = [DiallingCodesHelper diallingCodeByCode:countries[self.countrySelectionViewController.selectedIndex]];
+    if (indexCC != -1) {
+        country = [DiallingCodesHelper diallingCodeByCode:countries[indexCC]];
     }
     NSString *result = [self formattedPhoneByIdd:idd country:country number:number];
     BLog(@"Final Output = %@", result);

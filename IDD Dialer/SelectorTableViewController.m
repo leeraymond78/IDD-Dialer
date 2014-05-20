@@ -24,7 +24,7 @@
 - (id)init {
     self = [super init];
 
-    self.selectedIndex = -1;
+    self.selectedIndex = IDNoSelection;
 
     return self;
 }
@@ -54,14 +54,42 @@
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
 }
+#pragma mark - public methods
+
+- (void)setSelectedIndex:(NSInteger)selectedIndex {
+    _selectedIndex = selectedIndex + 1;
+    [self.tableView reloadData];
+}
+
+- (NSInteger)selectedIndex {
+    if (_selectedIndex == 0) {
+        return IDNoSelection;
+    } else if (_selectedIndex == IDNoSelection) {
+        return IDNoSelection;
+    } else {
+        return _selectedIndex - 1;
+    }
+}
+
+- (NSString *)selectedValue {
+    if (_selectedIndex == IDNoSelection) {
+        return nil;
+    } else {
+        NSString *result = _dataSource[_selectedIndex];
+        return result;
+    }
+}
+
+- (void)setDataSource:(NSArray *)dataSource {
+    NSMutableArray *tempArray = [NSMutableArray arrayWithArray:dataSource];
+    [tempArray insertObject:@"None" atIndex:0];
+    _dataSource = [[NSArray alloc] initWithArray:tempArray copyItems:YES];
+
+    self.preferredContentSize = CGSizeMake(self.preferredContentSize.width == 0 ? 200 : self.preferredContentSize.width, 30.f * (_dataSource ? _dataSource.count : 30));
+}
 
 #pragma mark - Table view data source
 
-- (void)setDataSource:(NSArray *)dataSource {
-    _dataSource = dataSource;
-
-    self.preferredContentSize = CGSizeMake(self.preferredContentSize.width == 0 ? 200 : self.preferredContentSize.width, 30.f * (self.dataSource ? self.dataSource.count : 30));
-}
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
     // Return the number of sections.
@@ -90,18 +118,26 @@
         [[cell textLabel] setAdjustsFontSizeToFitWidth:YES];
         [[cell textLabel] setTextColor:[UIColor redColor]];
     }
-    if (self.selectedIndex == indexPath.row) {
+    if (_selectedIndex == indexPath.row) {
         cell.accessoryType = UITableViewCellAccessoryCheckmark;
     } else {
         cell.accessoryType = UITableViewCellAccessoryNone;
     }
-    [[cell textLabel] setText:self.dataSource[indexPath.row]];
+    NSString *labelText;
+
+    if ([self.dataSource count] > indexPath.row) {
+        labelText = self.dataSource[indexPath.row];
+    } else {
+        labelText = @"";
+    }
+    [[cell textLabel] setText:labelText];
+
     return cell;
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
-    self.selectedIndex = indexPath.row;
+    _selectedIndex = indexPath.row;
     [tableView reloadSections:[NSIndexSet indexSetWithIndex:0] withRowAnimation:UITableViewRowAnimationAutomatic];
     if ([[self delegate] respondsToSelector:@selector(selectorViewDidSelected:)]) {
         [[self delegate] selectorViewDidSelected:self];
