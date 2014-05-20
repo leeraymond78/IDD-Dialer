@@ -10,11 +10,12 @@
 #import "AddIDDViewController.h"
 #import "SelectorTableViewController.h"
 
-@interface SettingViewController : UIViewController <UITableViewDataSource, UITableViewDelegate,SelectorTableViewControllerDelegate> {
+@interface SettingViewController : UIViewController <UITableViewDataSource, UITableViewDelegate, SelectorTableViewControllerDelegate, UISearchBarDelegate> {
     IBOutlet UISwitch *onAppCallSwitch;
     BOOL isEditing;
 
     IBOutlet UIButton *backBtn;
+    IBOutlet UISearchBar *searchBar;
 
     AddIDDViewController *addIDDVC;
 

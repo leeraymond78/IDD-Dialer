@@ -10,6 +10,10 @@
 #define disabledCountries [DiallingCodesHelper sharedHelper].disabledCountryCodeArray
 #define preferenceIDDs [DiallingCodesHelper sharedHelper].preferenceDict
 
+
+#define BLog(formatString, ...) NSLog((@"%s " formatString), __PRETTY_FUNCTION__, ##__VA_ARGS__);
+#define isEmptyString(str) ((str == nil)|| [@"" isEqual:str])
+
 @interface DiallingCodesHelper : NSObject
 
 @property(nonatomic, strong) NSMutableArray *iddArray;

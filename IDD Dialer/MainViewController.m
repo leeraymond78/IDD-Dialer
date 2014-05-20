@@ -13,9 +13,6 @@
 
 #define BACKGROUND_CHANGE_INTERVAL 3
 
-#define BLog(formatString, ...) NSLog((@"%s " formatString), __PRETTY_FUNCTION__, ##__VA_ARGS__);
-#define isEmptyString(str) ((str == nil)|| [@"" isEqual:str])
-
 
 @interface MainViewController ()
 @property(nonatomic, strong) WYPopoverController *iddPopoverController;

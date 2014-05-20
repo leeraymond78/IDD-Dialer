@@ -11,12 +11,12 @@
 #import "DiallingCodesHelper.h"
 #import "WYPopoverController.h"
 
-@interface SettingViewController ()<WYPopoverControllerDelegate>{
-    NSInteger selectedCell;
+@interface SettingViewController () <WYPopoverControllerDelegate> {
+    NSString *selectedCell;
 }
 @property(nonatomic, strong) IBOutlet UITableView *tableView;
 @property(nonatomic, strong) IBOutlet UITextView *aboutView;
-@property (nonatomic, strong) WYPopoverController * preferPopoverController;
+@property(nonatomic, strong) WYPopoverController *preferPopoverController;
 @end
 
 @implementation SettingViewController
@@ -32,11 +32,31 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view from its nib.
-    
+
+    [self.tableView setScrollsToTop:YES];
+
+    // loop around subviews of UISearchBar
+    for (UIView *subview in [searchBar subviews]) {
+        for (UIView *searchBarSubview in [subview subviews]) {
+            if ([searchBarSubview conformsToProtocol:@protocol(UITextInputTraits)]) {
+                @try {
+                    // set style of keyboard
+                    [(UITextField *) searchBarSubview setKeyboardAppearance:UIKeyboardAppearanceAlert];
+
+                    // always force return key to be enabled
+                    [(UITextField *) searchBarSubview setEnablesReturnKeyAutomatically:NO];
+                }
+                @catch (NSException *e) {
+                    // ignore exception
+                }
+            }
+        }
+    }
+
     preferenceViewController = [SelectorTableViewController new];
     [preferenceViewController setDelegate:self];
     [preferenceViewController setPreferredContentSize:CGSizeMake(140, 0)];
-    
+
     if (!sectionViewArray) {
         NSMutableArray *tempSectionViewArray = [NSMutableArray new];
         NSMutableArray *tempCenterViewArray = [NSMutableArray new];
@@ -150,50 +170,48 @@
 
 #pragma mark - delegates
 
-- (void)popSelection:(NSIndexPath*)indexPath {
-    if(!self.preferPopoverController){
-        self.preferPopoverController =[[WYPopoverController alloc] initWithContentViewController:preferenceViewController];
+- (void)popSelection:(NSIndexPath *)indexPath {
+    if (!self.preferPopoverController) {
+        self.preferPopoverController = [[WYPopoverController alloc] initWithContentViewController:preferenceViewController];
     }
     if ([self.preferPopoverController isPopoverVisible]) {
         [self.preferPopoverController dismissPopoverAnimated:YES];
         return;
     }
-    UIView * theView =[self.tableView cellForRowAtIndexPath:indexPath];
-    selectedCell = indexPath.row;
-    NSString * code = countries[selectedCell];
-    NSString * preference = [DiallingCodesHelper preferenceByCode:code];
+    UIView *theView = [self.tableView cellForRowAtIndexPath:indexPath];
+    selectedCell = [self countriesArray][indexPath.row];
+    NSString *preference = [DiallingCodesHelper preferenceByCode:selectedCell];
     NSInteger selectedIndex = -1;
-    
+
     NSMutableArray *iddValueArray = [NSMutableArray new];
-    for (NSUInteger x = 0 ; x < [idds count] ; x++) {
-        NSDictionary * dict = idds[x];
-        if([preference isEqual:dict[IDD]]){
+    for (NSUInteger x = 0; x < [idds count]; x++) {
+        NSDictionary *dict = idds[x];
+        if ([preference isEqual:dict[IDD]]) {
             selectedIndex = x;
         }
         [iddValueArray addObject:dict[IDD]];
     }
     [preferenceViewController setSelectedIndex:selectedIndex];
-    
+
     [preferenceViewController setDataSource:iddValueArray];
     self.preferPopoverController.delegate = self;
     self.preferPopoverController.passthroughViews = @[theView];
     self.preferPopoverController.popoverLayoutMargins = UIEdgeInsetsMake(10, 10, 10, 10);
     self.preferPopoverController.wantsDefaultContentAppearance = NO;
     [self.preferPopoverController presentPopoverFromRect:theView.bounds
-                                            inView:theView
-                          permittedArrowDirections:WYPopoverArrowDirectionAny
-                                          animated:YES
-                                           options:WYPopoverAnimationOptionFadeWithScale];
+                                                  inView:theView
+                                permittedArrowDirections:WYPopoverArrowDirectionAny
+                                                animated:YES
+                                                 options:WYPopoverAnimationOptionFadeWithScale];
 }
 
 - (void)selectorViewDidSelected:(SelectorTableViewController *)selectorView {
     if (selectorView == preferenceViewController) {
         [self.preferPopoverController dismissPopoverAnimated:YES];
-        
+
         NSInteger selectedIndex = [preferenceViewController selectedIndex];
-        if(selectedIndex != -1){
-            NSString * code = countries[selectedCell];
-            [DiallingCodesHelper setPreference:idds[selectedIndex][@"IDD"] code:code];
+        if (selectedIndex != -1) {
+            [DiallingCodesHelper setPreference:idds[selectedIndex][@"IDD"] code:selectedCell];
         }
     }
 }
@@ -256,19 +274,13 @@
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
     NSInteger numberOfRow = 0;
     if (section == 0) {
-        @synchronized (idds) {
-            numberOfRow = [idds count];
-        }
+        numberOfRow = [[self iddArray] count];
     }
     else if (section == 1) {
-        @synchronized (countries) {
-            numberOfRow = [countries count];
-        }
+        numberOfRow = [[self countriesArray] count];
     }
     else if (section == 2) {
-        @synchronized (disabledCountries) {
-            numberOfRow = [disabledCountries count];
-        }
+        numberOfRow = [[self disableCountriesArray] count];
     }
     if (numberOfRow == 0) {
         [sectionViewArray[section] setHidden:YES];
@@ -283,7 +295,7 @@
 }
 
 - (BOOL)tableView:(UITableView *)tableView canMoveRowAtIndexPath:(NSIndexPath *)indexPath {
-    return YES;
+    return isEmptyString(searchBar.text);
 }
 
 - (UITableViewCellEditingStyle)tableView:(UITableView *)tableView editingStyleForRowAtIndexPath:(NSIndexPath *)indexPath {
@@ -297,38 +309,41 @@
 - (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath {
     NSInteger section = indexPath.section;
     if (section == 0) {
-        @synchronized (idds) {
-            [idds removeObjectAtIndex:indexPath.row];
-        }
-
+        NSDictionary *removingObj = [self iddArray][indexPath.row];
         [tableView beginUpdates];
+        @synchronized (idds) {
+            [idds removeObject:removingObj];
+        }
         [tableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationAutomatic];
         [tableView endUpdates];
+
     } else {
         if (editingStyle == UITableViewCellEditingStyleDelete) {
             @synchronized (countries) {
                 @synchronized (disabledCountries) {
-                    NSDictionary *removingObj = [countries objectAtIndex:indexPath.row];
+                    NSDictionary *removingObj = [[self countriesArray] objectAtIndex:indexPath.row];
+                    [tableView beginUpdates];
                     [disabledCountries insertObject:removingObj atIndex:0];
-                    [countries removeObjectAtIndex:indexPath.row];
+                    [tableView insertRowsAtIndexPaths:@[[NSIndexPath indexPathForRow:0 inSection:2]] withRowAnimation:UITableViewRowAnimationAutomatic];
+                    [countries removeObject:removingObj];
+                    [tableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationAutomatic];
+                    [tableView endUpdates];
                 }
             }
-            [tableView beginUpdates];
-            [tableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationAutomatic];
-            [tableView insertRowsAtIndexPaths:@[[NSIndexPath indexPathForRow:0 inSection:2]] withRowAnimation:UITableViewRowAnimationAutomatic];
-            [tableView endUpdates];
+
         } else if (editingStyle == UITableViewCellEditingStyleInsert) {
             @synchronized (countries) {
                 @synchronized (disabledCountries) {
-                    NSDictionary *removingObj = [disabledCountries objectAtIndex:indexPath.row];
+                    NSDictionary *removingObj = [[self disableCountriesArray] objectAtIndex:indexPath.row];
+                    [tableView beginUpdates];
                     [countries insertObject:removingObj atIndex:0];
-                    [disabledCountries removeObjectAtIndex:indexPath.row];
+                    [tableView insertRowsAtIndexPaths:@[[NSIndexPath indexPathForRow:0 inSection:1]] withRowAnimation:UITableViewRowAnimationAutomatic];
+                    [disabledCountries removeObject:removingObj];
+                    [tableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationAutomatic];
+                    [tableView endUpdates];
                 }
             }
-            [tableView beginUpdates];
-            [tableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationAutomatic];
-            [tableView insertRowsAtIndexPaths:@[[NSIndexPath indexPathForRow:0 inSection:1]] withRowAnimation:UITableViewRowAnimationAutomatic];
-            [tableView endUpdates];
+
         }
     }
 }
@@ -348,7 +363,7 @@
                 NSMutableArray *tempSourceCountryArray = source == 1 ? countries : disabledCountries;
                 NSDictionary *removingObj = [tempSourceCountryArray objectAtIndex:sourceIndexPath.row];
                 [tempSourceCountryArray removeObjectAtIndex:sourceIndexPath.row];
-            [tempSourceCountryArray insertObject:removingObj atIndex:destinationIndexPath.row];
+                [tempSourceCountryArray insertObject:removingObj atIndex:destinationIndexPath.row];
             }
         } else {
 
@@ -389,30 +404,127 @@
     }
     [[cell textLabel] setTextColor:[self colorForHeaderInSection:indexPath.section]];
     if (indexPath.section == 0) {
-        @synchronized (idds) {
-            [[cell textLabel] setText:[[idds objectAtIndex:indexPath.row] objectForKey:IDD]];
-        }
+        [[cell textLabel] setText:[[[self iddArray] objectAtIndex:indexPath.row] objectForKey:IDD]];
+
     } else if (indexPath.section == 1) {
-        @synchronized (countries) {
-            [[cell textLabel] setText:[DiallingCodesHelper countryNameByCode:countries[indexPath.row]]];
-        }
+        [[cell textLabel] setText:[DiallingCodesHelper countryNameByCode:[self countriesArray][indexPath.row]]];
+
     } else if (indexPath.section == 2) {
-        @synchronized (disabledCountries) {
-            [[cell textLabel] setText:[DiallingCodesHelper countryNameByCode:disabledCountries[indexPath.row]]];
-        }
+        [[cell textLabel] setText:[DiallingCodesHelper countryNameByCode:[self disableCountriesArray][indexPath.row]]];
     }
     return cell;
 }
--(BOOL)tableView:(UITableView *)tableView shouldHighlightRowAtIndexPath:(NSIndexPath *)indexPath{
-    if(indexPath.section == 1){
+
+- (BOOL)tableView:(UITableView *)tableView shouldHighlightRowAtIndexPath:(NSIndexPath *)indexPath {
+    if (indexPath.section == 1) {
         return YES;
-    }else{
+    } else {
         return NO;
     }
 }
 
--(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
+- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
     [self popSelection:indexPath];
 }
+
+#pragma mark - search bar delegate
+
+- (void)searchBar:(UISearchBar *)searchBar textDidChange:(NSString *)searchText {
+    [self.tableView reloadData];
+}
+
+- (void)searchBarSearchButtonClicked:(UISearchBar *)aSearchBar {
+    [aSearchBar resignFirstResponder];
+}
+
+- (NSMutableArray *)iddArray {
+    NSString *keyword = [searchBar.text lowercaseString];
+    if (!isEmptyString(keyword)) {
+        NSMutableArray *filteredArray = [[NSMutableArray alloc] initWithCapacity:0];
+        @synchronized (idds) {
+            for (NSDictionary *iddDict in idds) {
+                if ([((NSString *) iddDict[IDD]) rangeOfString:keyword].location != NSNotFound) {
+                    [filteredArray addObject:iddDict];
+                }
+            }
+        }
+        return filteredArray;
+    } else {
+        return idds;
+    }
+}
+
+- (NSMutableArray *)countriesArray {
+    NSString *keyword = [searchBar.text lowercaseString];
+    if (!isEmptyString(keyword)) {
+        NSMutableArray *filteredArray = [[NSMutableArray alloc] initWithCapacity:0];
+        @synchronized (countries) {
+            for (NSString *cc in countries) {
+                BOOL isMatched = NO;
+                if ([cc rangeOfString:keyword].location != NSNotFound) {
+                    isMatched = YES;
+                }
+                if (!isMatched) {
+                    NSString *dialingCode = [[DiallingCodesHelper diallingCodeByCode:cc] lowercaseString];
+                    if (!isEmptyString(dialingCode)) {
+                        if ([dialingCode rangeOfString:keyword].location != NSNotFound) {
+                            isMatched = YES;
+                        }
+                    }
+                    if (!isMatched) {
+                        NSString *name = [[DiallingCodesHelper countryNameByCode:cc] lowercaseString];
+                        if ([name rangeOfString:keyword].location != NSNotFound) {
+                            isMatched = YES;
+                        }
+                    }
+                }
+                if (isMatched) {
+                    [filteredArray addObject:cc];
+                }
+            }
+        }
+        return filteredArray;
+    } else {
+        return countries;
+    }
+}
+
+- (NSMutableArray *)disableCountriesArray {
+    NSString *keyword = [searchBar.text lowercaseString];
+    if (!isEmptyString(keyword)) {
+        NSMutableArray *filteredArray = [[NSMutableArray alloc] initWithCapacity:0];
+
+        @synchronized (disabledCountries) {
+            for (NSString *cc in disabledCountries) {
+                BOOL isMatched = NO;
+                if ([cc rangeOfString:keyword].location != NSNotFound) {
+                    isMatched = YES;
+                }
+                if (!isMatched) {
+                    NSString *dialingCode = [[DiallingCodesHelper diallingCodeByCode:cc] lowercaseString];
+                    if (!isEmptyString(dialingCode)) {
+                        if ([dialingCode rangeOfString:keyword].location != NSNotFound) {
+                            isMatched = YES;
+                        }
+                    }
+                    if (!isMatched) {
+                        NSString *name = [[DiallingCodesHelper countryNameByCode:cc] lowercaseString];
+                        if ([name rangeOfString:keyword].location != NSNotFound) {
+                            isMatched = YES;
+                        }
+                    }
+                }
+                if (isMatched) {
+                    [filteredArray addObject:cc];
+                }
+            }
+        }
+        return filteredArray;
+    } else {
+        return disabledCountries;
+    }
+}
+
+
 @end
