@@ -423,6 +423,7 @@
             outCountry = [country stringByAppendingString:divider];
         } else {
             doubleZero = @"";
+            plusSign = @"";
         }
         if (!isEmptyString(doubleZero)) {
             doubleZero = [doubleZero stringByAppendingString:divider];
