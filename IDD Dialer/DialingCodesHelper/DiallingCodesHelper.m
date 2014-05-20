@@ -50,7 +50,7 @@ static DiallingCodesHelper *_helper;
         NSMutableDictionary *namesByCode = [NSMutableDictionary dictionary];
         for (NSString *code in [NSLocale ISOCountryCodes]) {
             NSString *identifier = [NSLocale localeIdentifierFromComponents:@{NSLocaleCountryCode : code}];
-            NSString *countryName = [[NSLocale localeWithLocaleIdentifier:@"en_GB"] displayNameForKey:NSLocaleIdentifier value:identifier];
+            NSString *countryName = [[NSLocale localeWithLocaleIdentifier:[NSLocale preferredLanguages][0]] displayNameForKey:NSLocaleIdentifier value:identifier];
             if (countryName) namesByCode[code] = countryName;
         }
         _countryNamesByCode = [namesByCode copy];
