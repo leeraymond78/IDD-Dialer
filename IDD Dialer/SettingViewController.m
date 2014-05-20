@@ -462,7 +462,7 @@
         @synchronized (countries) {
             for (NSString *cc in countries) {
                 BOOL isMatched = NO;
-                if ([cc rangeOfString:keyword].location != NSNotFound) {
+                if ([[cc lowercaseString] rangeOfString:keyword].location != NSNotFound) {
                     isMatched = YES;
                 }
                 if (!isMatched) {
@@ -498,7 +498,7 @@
         @synchronized (disabledCountries) {
             for (NSString *cc in disabledCountries) {
                 BOOL isMatched = NO;
-                if ([cc rangeOfString:keyword].location != NSNotFound) {
+                if ([[cc lowercaseString] rangeOfString:keyword].location != NSNotFound) {
                     isMatched = YES;
                 }
                 if (!isMatched) {
