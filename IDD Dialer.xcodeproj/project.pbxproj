@@ -27,6 +27,7 @@
 		1D6B4B9018A9DACE0098ADDB /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3D592E4E177DFD9800C82F74 /* UIKit.framework */; };
 		1D6B4B9618A9DACE0098ADDB /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 1D6B4B9418A9DACE0098ADDB /* InfoPlist.strings */; };
 		1D6B4B9818A9DACE0098ADDB /* IDD_Dialer_Tests.m in Sources */ = {isa = PBXBuildFile; fileRef = 1D6B4B9718A9DACE0098ADDB /* IDD_Dialer_Tests.m */; };
+		1DD83897192F427700589C3E /* MRoundedButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 1DD83896192F427700589C3E /* MRoundedButton.m */; };
 		3D592E4F177DFD9800C82F74 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3D592E4E177DFD9800C82F74 /* UIKit.framework */; };
 		3D592E51177DFD9800C82F74 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3D592E50177DFD9800C82F74 /* Foundation.framework */; };
 		3D592E53177DFD9800C82F74 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3D592E52177DFD9800C82F74 /* CoreGraphics.framework */; };
@@ -87,6 +88,8 @@
 		1D6B4B9518A9DACE0098ADDB /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		1D6B4B9718A9DACE0098ADDB /* IDD_Dialer_Tests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = IDD_Dialer_Tests.m; sourceTree = "<group>"; };
 		1D6B4B9918A9DACE0098ADDB /* IDD Dialer Tests-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "IDD Dialer Tests-Prefix.pch"; sourceTree = "<group>"; };
+		1DD83895192F427700589C3E /* MRoundedButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MRoundedButton.h; sourceTree = "<group>"; };
+		1DD83896192F427700589C3E /* MRoundedButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MRoundedButton.m; sourceTree = "<group>"; };
 		3D592E4B177DFD9800C82F74 /* IDD Dialer.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "IDD Dialer.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		3D592E4E177DFD9800C82F74 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		3D592E50177DFD9800C82F74 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
@@ -218,6 +221,15 @@
 			name = "Supporting Files";
 			sourceTree = "<group>";
 		};
+		1DD83894192F427700589C3E /* MRoundedButton */ = {
+			isa = PBXGroup;
+			children = (
+				1DD83895192F427700589C3E /* MRoundedButton.h */,
+				1DD83896192F427700589C3E /* MRoundedButton.m */,
+			);
+			path = MRoundedButton;
+			sourceTree = "<group>";
+		};
 		3D592E42177DFD9800C82F74 = {
 			isa = PBXGroup;
 			children = (
@@ -262,6 +274,7 @@
 				1D21C45E18B75A89000D3F4E /* ASCScreenBrightnessDetector */,
 				1D0C47ED1890F52C006F35C0 /* WYPopoverController */,
 				1D56711A18C5BD4800412DC5 /* DialingCodesHelper */,
+				1DD83894192F427700589C3E /* MRoundedButton */,
 				3D592E5D177DFD9800C82F74 /* AppDelegate.h */,
 				3D592E5E177DFD9800C82F74 /* AppDelegate.m */,
 				3D592E66177DFD9800C82F74 /* MainViewController.h */,
@@ -434,6 +447,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				3D592E5B177DFD9800C82F74 /* main.m in Sources */,
+				1DD83897192F427700589C3E /* MRoundedButton.m in Sources */,
 				3D592E5F177DFD9800C82F74 /* AppDelegate.m in Sources */,
 				3D592E68177DFD9800C82F74 /* MainViewController.m in Sources */,
 				1D21C46118B75A89000D3F4E /* ASCScreenBrightnessDetector.m in Sources */,
