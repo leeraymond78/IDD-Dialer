@@ -496,7 +496,7 @@ NSString *const kMRoundedButtonRestoreHighlightState        = @"restoreHighlight
     }
     
     MRoundedButtonAppearanceManager *manager = [MRoundedButtonAppearanceManager sharedManager];
-    [manager.appearanceProxys setObject:proxy forKey:identifier];
+    (manager.appearanceProxys)[identifier] = proxy;
 }
 
 + (void)unregisterAppearanceProxyIdentier:(NSString *)identifier
@@ -512,7 +512,7 @@ NSString *const kMRoundedButtonRestoreHighlightState        = @"restoreHighlight
 
 + (NSDictionary *)appearanceForIdentifier:(NSString *)identifier
 {
-    return [[MRoundedButtonAppearanceManager sharedManager].appearanceProxys objectForKey:identifier];
+    return ([MRoundedButtonAppearanceManager sharedManager].appearanceProxys)[identifier];
 }
 
 @end

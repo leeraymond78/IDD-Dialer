@@ -114,10 +114,10 @@
 - (id)getObjectFromArrayWithValue:(NSString *)value Key:(NSString *)key wantedKey:(NSString *)wantedKey array:(NSArray *)array {
     id result = nil;
     for (NSDictionary *dict in array) {
-        id dictFromKey = [dict objectForKey:key];
+        id dictFromKey = dict[key];
         if (dictFromKey) {
             if ([dictFromKey isEqualToString:value]) {
-                result = [dict objectForKey:wantedKey];
+                result = dict[wantedKey];
                 break;
             }
         }
@@ -410,7 +410,8 @@
     if (!isEmptyString(number)) {
         NSString *doubleZero = @"";
         if (!isEmptyString(idd)) {
-            BOOL withDoubleZero = [[self getObjectFromArrayWithValue:idd Key:IDD wantedKey:IDD_WITH00 array:idds] boolValue];
+            id temp00Zero = [self getObjectFromArrayWithValue:idd Key:IDD wantedKey:IDD_WITH00 array:idds];
+            BOOL withDoubleZero = [temp00Zero boolValue];
             doubleZero = withDoubleZero ? @"00" : @"";
             outIdd = [idd stringByAppendingString:divider];
         } else {

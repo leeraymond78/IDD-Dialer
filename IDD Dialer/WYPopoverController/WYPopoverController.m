@@ -81,7 +81,7 @@ static char const *const UINavigationControllerEmbedInPopoverTagKey = "UINavigat
 }
 
 - (void)setEmbedInPopover:(BOOL)value {
-    objc_setAssociatedObject(self, UINavigationControllerEmbedInPopoverTagKey, [NSNumber numberWithBool:value], OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+    objc_setAssociatedObject(self, UINavigationControllerEmbedInPopoverTagKey, @(value), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
 }
 
 - (void)sizzled_pushViewController:(UIViewController *)viewController animated:(BOOL)animated {
@@ -214,7 +214,7 @@ static CGFloat edgeSizeFromCornerRadius(CGFloat cornerRadius) {
 
 - (BOOL)getValueOfRed:(CGFloat *)red green:(CGFloat *)green blue:(CGFloat *)blue alpha:(CGFloat *)apha;
 
-- (NSString *)hexString;
+@property (NS_NONATOMIC_IOSONLY, readonly, copy) NSString *hexString;
 
 - (UIColor *)colorByLighten:(CGFloat)d;
 
@@ -335,7 +335,7 @@ static CGFloat edgeSizeFromCornerRadius(CGFloat cornerRadius) {
 @synthesize wantsDefaultContentAppearance;
 @synthesize borderWidth;
 
-- (id)initWithFrame:(CGRect)frame {
+- (instancetype)initWithFrame:(CGRect)frame {
     self = [super initWithFrame:frame];
     if (self) {
         self.backgroundColor = [UIColor clearColor];
@@ -349,9 +349,8 @@ static CGFloat edgeSizeFromCornerRadius(CGFloat cornerRadius) {
     CGContextRef context = UIGraphicsGetCurrentContext();
 
     //// Gradient Declarations
-    NSArray *fillGradientColors = [NSArray arrayWithObjects:
-            (id) gradientTopColor.CGColor,
-            (id) gradientBottomColor.CGColor, nil];
+    NSArray *fillGradientColors = @[(id) gradientTopColor.CGColor,
+            (id) gradientBottomColor.CGColor];
     CGFloat fillGradientLocations[] = {0, 1};
     CGGradientRef fillGradient = CGGradientCreateWithColors(colorSpace, (__bridge CFArrayRef) fillGradientColors, fillGradientLocations);
 
@@ -507,11 +506,11 @@ static CGFloat edgeSizeFromCornerRadius(CGFloat cornerRadius) {
 
 - (void)setViewController:(UIViewController *)viewController;
 
-- (CGRect)outerRect;
+@property (NS_NONATOMIC_IOSONLY, readonly) CGRect outerRect;
 
-- (CGRect)innerRect;
+@property (NS_NONATOMIC_IOSONLY, readonly) CGRect innerRect;
 
-- (CGRect)arrowRect;
+@property (NS_NONATOMIC_IOSONLY, readonly) CGRect arrowRect;
 
 - (CGRect)outerRect:(CGRect)rect arrowDirection:(WYPopoverArrowDirection)aArrowDirection;
 
@@ -519,7 +518,7 @@ static CGFloat edgeSizeFromCornerRadius(CGFloat cornerRadius) {
 
 - (CGRect)arrowRect:(CGRect)rect arrowDirection:(WYPopoverArrowDirection)aArrowDirection;
 
-- (id)initWithContentSize:(CGSize)contentSize;
+- (instancetype)initWithContentSize:(CGSize)contentSize;
 
 - (BOOL)isTouchedAtPoint:(CGPoint)point;
 
@@ -633,7 +632,7 @@ static CGFloat edgeSizeFromCornerRadius(CGFloat cornerRadius) {
     }
 }
 
-- (id)initWithContentSize:(CGSize)aContentSize {
+- (instancetype)initWithContentSize:(CGSize)aContentSize {
     self = [super initWithFrame:CGRectMake(0, 0, aContentSize.width, aContentSize.height)];
 
     if (self != nil) {
@@ -907,9 +906,8 @@ static CGFloat edgeSizeFromCornerRadius(CGFloat cornerRadius) {
         CGColorSpaceRef colorSpace = CGColorSpaceCreateDeviceRGB();
 
         //// Gradient Declarations
-        NSArray *fillGradientColors = [NSArray arrayWithObjects:
-                (id) self.fillTopColor.CGColor,
-                (id) self.fillBottomColor.CGColor, nil];
+        NSArray *fillGradientColors = @[(id) self.fillTopColor.CGColor,
+                (id) self.fillBottomColor.CGColor];
         CGFloat fillGradientLocations[] = {0, 1};
         CGGradientRef fillGradient = CGGradientCreateWithColors(colorSpace, (__bridge CFArrayRef) fillGradientColors, fillGradientLocations);
 
@@ -1262,7 +1260,7 @@ static CGFloat edgeSizeFromCornerRadius(CGFloat cornerRadius) {
 @synthesize isPopoverVisible;
 @synthesize popoverLayoutMargins;
 
-- (id)initWithContentViewController:(UIViewController *)aViewController {
+- (instancetype)initWithContentViewController:(UIViewController *)aViewController {
     self = [super init];
 
     if (self) {
@@ -1294,7 +1292,7 @@ static CGFloat edgeSizeFromCornerRadius(CGFloat cornerRadius) {
         NSInteger lastIndex = count - 1;
 
         for (NSInteger i = lastIndex; i >= 0; i--) {
-            UIView *view = [keyWindow.subviews objectAtIndex:i];
+            UIView *view = (keyWindow.subviews)[i];
 
             //WY_LOG(@"rootView.subview[%i] = %@", i, view);
 
@@ -1584,7 +1582,7 @@ static CGFloat edgeSizeFromCornerRadius(CGFloat cornerRadius) {
 
         if ([navigationController viewControllers] && [[navigationController viewControllers] count] > 0) {
 #ifdef WY_BASE_SDK_7_ENABLED
-            UIViewController *firstViewController = (UIViewController *) [[navigationController viewControllers] objectAtIndex:0];
+            UIViewController *firstViewController = (UIViewController *) [navigationController viewControllers][0];
 
             if ([firstViewController respondsToSelector:@selector(setEdgesForExtendedLayout:)]) {
                 [firstViewController setEdgesForExtendedLayout:UIRectEdgeNone];
@@ -1996,7 +1994,7 @@ static CGFloat edgeSizeFromCornerRadius(CGFloat cornerRadius) {
     }];
 
     for (NSUInteger i = 0; i < [areas count]; i++) {
-        WYPopoverArea *popoverArea = (WYPopoverArea *) [areas objectAtIndex:i];
+        WYPopoverArea *popoverArea = (WYPopoverArea *) areas[i];
 
         if (popoverArea.areaSize.width >= contentSize.width) {
             arrowDirection = popoverArea.arrowDirection;
@@ -2006,7 +2004,7 @@ static CGFloat edgeSizeFromCornerRadius(CGFloat cornerRadius) {
 
     if (arrowDirection == WYPopoverArrowDirectionUnknown) {
         if ([areas count] > 0) {
-            arrowDirection = ((WYPopoverArea *) [areas objectAtIndex:0]).arrowDirection;
+            arrowDirection = ((WYPopoverArea *) areas[0]).arrowDirection;
         }
         else {
             if ((arrowDirections & WYPopoverArrowDirectionDown) == WYPopoverArrowDirectionDown) {
@@ -2160,7 +2158,7 @@ static CGFloat GetStatusBarHeight() {
 
 - (void)keyboardWillShow:(NSNotification *)notification {
     NSDictionary *info = [notification userInfo];
-    keyboardRect = [[info objectForKey:UIKeyboardFrameEndUserInfoKey] CGRectValue];
+    keyboardRect = [info[UIKeyboardFrameEndUserInfoKey] CGRectValue];
     [self positionPopover];
     [containerView setNeedsDisplay];
 }

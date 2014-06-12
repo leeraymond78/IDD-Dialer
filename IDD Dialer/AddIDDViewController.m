@@ -13,7 +13,7 @@
 @synthesize iddTF;
 @synthesize with00Siwtch;
 
-- (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil {
+- (instancetype)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil {
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
     if (self) {
         // Custom initialization
@@ -36,10 +36,8 @@
 }
 
 - (IBAction)hideAndBack:(id)sender {
-    NSDictionary *infoDict = [NSDictionary dictionaryWithObjectsAndKeys:
-            iddTF.text, @"IDD",
-            [NSNumber numberWithBool:[self.with00Siwtch isOn]], @"IDD00",
-            nil];
+    NSDictionary *infoDict = @{@"IDD": iddTF.text,
+            @"IDD00": @([self.with00Siwtch isOn])};
     [[NSNotificationCenter defaultCenter] postNotificationName:@"AddIDDDone" object:nil userInfo:infoDict];
     [iddTF resignFirstResponder];
     [iddTF setText:@""];

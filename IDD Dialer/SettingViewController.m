@@ -22,7 +22,7 @@
 @implementation SettingViewController
 
 
-- (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil {
+- (instancetype)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil {
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
     if (self) {
     }
@@ -79,8 +79,8 @@
         sectionViewArray = [NSArray arrayWithArray:tempSectionViewArray];
         centerViewArray = [NSArray arrayWithArray:tempCenterViewArray];
     }
-    NSString *appVersion = [[NSBundle mainBundle] infoDictionary][@"CFBundleShortVersionString"];
-    NSString *buildNumber = [[NSBundle mainBundle] infoDictionary][(NSString *) kCFBundleVersionKey];
+    NSString *buildNumber = [[NSBundle mainBundle] infoDictionary][@"CFBundleShortVersionString"];
+    NSString * appVersion= [[NSBundle mainBundle] infoDictionary][(NSString *) kCFBundleVersionKey];
     [self.aboutView setText:[NSString stringWithFormat:@"\n\n\n \
                              IDD Dialer\
                              Developed by Raymond Lee\
@@ -108,7 +108,7 @@
 
 - (IBAction)switchValueChanged:(id)sender {
     if (sender == onAppCallSwitch) {
-        [[NSUserDefaults standardUserDefaults] setObject:[NSNumber numberWithBool:[onAppCallSwitch isOn]] forKey:@"isOnAppCall"];
+        [[NSUserDefaults standardUserDefaults] setObject:@([onAppCallSwitch isOn]) forKey:@"isOnAppCall"];
     }
 }
 
@@ -119,10 +119,10 @@
 - (void)addIDDDone:(NSNotification *)notification {
     @synchronized (idds) {
         NSDictionary *infoDict = [notification userInfo];
-        NSString *targetIDD = [infoDict objectForKey:IDD];
+        NSString *targetIDD = infoDict[IDD];
         if (![targetIDD isEqual:@""]) {
             for (NSDictionary *IDDDict in idds) {
-                if ([[IDDDict objectForKey:IDD] isEqual:targetIDD]) {
+                if ([IDDDict[IDD] isEqual:targetIDD]) {
                     return;
                 }
             }
@@ -321,7 +321,7 @@
         if (editingStyle == UITableViewCellEditingStyleDelete) {
             @synchronized (countries) {
                 @synchronized (disabledCountries) {
-                    NSDictionary *removingObj = [[self countriesArray] objectAtIndex:indexPath.row];
+                    NSDictionary *removingObj = [self countriesArray][indexPath.row];
                     [tableView beginUpdates];
                     [disabledCountries insertObject:removingObj atIndex:0];
                     [tableView insertRowsAtIndexPaths:@[[NSIndexPath indexPathForRow:0 inSection:2]] withRowAnimation:UITableViewRowAnimationAutomatic];
@@ -334,7 +334,7 @@
         } else if (editingStyle == UITableViewCellEditingStyleInsert) {
             @synchronized (countries) {
                 @synchronized (disabledCountries) {
-                    NSDictionary *removingObj = [[self disableCountriesArray] objectAtIndex:indexPath.row];
+                    NSDictionary *removingObj = [self disableCountriesArray][indexPath.row];
                     [tableView beginUpdates];
                     [countries insertObject:removingObj atIndex:0];
                     [tableView insertRowsAtIndexPaths:@[[NSIndexPath indexPathForRow:0 inSection:1]] withRowAnimation:UITableViewRowAnimationAutomatic];
@@ -353,7 +353,7 @@
     NSInteger des = destinationIndexPath.section;
     if (source == 0 && des == 0) {
         @synchronized (idds) {
-            NSDictionary *removingObj = [idds objectAtIndex:sourceIndexPath.row];
+            NSDictionary *removingObj = (idds)[sourceIndexPath.row];
             [idds removeObjectAtIndex:sourceIndexPath.row];
             [idds insertObject:removingObj atIndex:destinationIndexPath.row];
         }
@@ -361,7 +361,7 @@
         if (source == des) {
             @synchronized (source == 1 ? countries : disabledCountries) {
                 NSMutableArray *tempSourceCountryArray = source == 1 ? countries : disabledCountries;
-                NSDictionary *removingObj = [tempSourceCountryArray objectAtIndex:sourceIndexPath.row];
+                NSDictionary *removingObj = tempSourceCountryArray[sourceIndexPath.row];
                 [tempSourceCountryArray removeObjectAtIndex:sourceIndexPath.row];
                 [tempSourceCountryArray insertObject:removingObj atIndex:destinationIndexPath.row];
             }
@@ -372,7 +372,7 @@
                 NSMutableArray *tempDestinationCountryArray;
                 tempSourceCountryArray = source == 1 ? countries : disabledCountries;
                 tempDestinationCountryArray = des == 1 ? countries : disabledCountries;
-                NSDictionary *removingObj = [tempSourceCountryArray objectAtIndex:sourceIndexPath.row];
+                NSDictionary *removingObj = tempSourceCountryArray[sourceIndexPath.row];
 
                 [tempDestinationCountryArray insertObject:removingObj atIndex:destinationIndexPath.row];
 
@@ -404,7 +404,7 @@
     }
     [[cell textLabel] setTextColor:[self colorForHeaderInSection:indexPath.section]];
     if (indexPath.section == 0) {
-        [[cell textLabel] setText:[[[self iddArray] objectAtIndex:indexPath.row] objectForKey:IDD]];
+        [[cell textLabel] setText:[self iddArray][indexPath.row][IDD]];
 
     } else if (indexPath.section == 1) {
         [[cell textLabel] setText:[DiallingCodesHelper countryNameByCode:[self countriesArray][indexPath.row]]];

@@ -22,7 +22,7 @@
 
 @property(nonatomic, strong) NSArray *dataSource;
 
-- (id)initWithDataSource:(NSArray *)dataSource defaultValue:(NSString *)value;
+- (instancetype)initWithDataSource:(NSArray *)dataSource defaultValue:(NSString *)value;
 
 - (NSString *)selectedValue;
 

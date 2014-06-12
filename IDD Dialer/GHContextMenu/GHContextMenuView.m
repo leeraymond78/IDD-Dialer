@@ -58,7 +58,7 @@ CGFloat const GHAnimationDelay = GHAnimationDuration / 5;
 
 @implementation GHContextMenuView
 
-- (id)init {
+- (instancetype)init {
     self = [super initWithFrame:[[UIScreen mainScreen] bounds]];
     if (self) {
         // Initialization code
@@ -263,7 +263,7 @@ CGFloat const GHAnimationDelay = GHAnimationDuration / 5;
         CGFloat angle = [self angleBeweenStartinPoint:self.longPressLocation endingPoint:self.curretnLocation];
         NSInteger closeToIndex = -1;
         for (int i = 0; i < self.menuItems.count; i++) {
-            GHMenuItemLocation *itemLocation = [self.itemLocations objectAtIndex:i];
+            GHMenuItemLocation *itemLocation = (self.itemLocations)[i];
             if (fabs(itemLocation.angle - angle) < self.angleBetweenItems / 2) {
                 closeToIndex = i;
                 break;
@@ -272,7 +272,7 @@ CGFloat const GHAnimationDelay = GHAnimationDuration / 5;
 
         if (closeToIndex >= 0 && closeToIndex < self.menuItems.count) {
 
-            GHMenuItemLocation *itemLocation = [self.itemLocations objectAtIndex:closeToIndex];
+            GHMenuItemLocation *itemLocation = (self.itemLocations)[closeToIndex];
 
             CGFloat distanceFromCenter = sqrt(pow(self.curretnLocation.x - self.longPressLocation.x, 2) + pow(self.curretnLocation.y - self.longPressLocation.y, 2));
 
@@ -281,7 +281,7 @@ CGFloat const GHAnimationDelay = GHAnimationDuration / 5;
             CGFloat distanceFromItem = fabsf(distanceFromCenter - self.radius) - GHMenuItemSize / (2 * sqrt(2));
 
             if (fabs(distanceFromItem) < toleranceDistance) {
-                CALayer *layer = [self.menuItems objectAtIndex:closeToIndex];
+                CALayer *layer = (self.menuItems)[closeToIndex];
                 layer.backgroundColor = self.itemBGHighlightedColor;
 
                 CGFloat distanceFromItemBorder = fabs(distanceFromItem);
@@ -319,7 +319,7 @@ CGFloat const GHAnimationDelay = GHAnimationDuration / 5;
 - (void)resetPreviousSelection {
     if (self.prevIndex >= 0) {
         CALayer *layer = self.menuItems[self.prevIndex];
-        GHMenuItemLocation *itemLocation = [self.itemLocations objectAtIndex:self.prevIndex];
+        GHMenuItemLocation *itemLocation = (self.itemLocations)[self.prevIndex];
         layer.position = itemLocation.position;
         layer.backgroundColor = self.itemBGColor;
         layer.transform = CATransform3DIdentity;
@@ -337,7 +337,7 @@ CGFloat const GHAnimationDelay = GHAnimationDuration / 5;
         layer.opacity = 0;
         CGPoint fromPosition = self.longPressLocation;
 
-        GHMenuItemLocation *location = [self.itemLocations objectAtIndex:index];
+        GHMenuItemLocation *location = (self.itemLocations)[index];
         CGPoint toPosition = location.position;
 
         double delayInSeconds = index * GHAnimationDelay;
@@ -350,7 +350,7 @@ CGFloat const GHAnimationDelay = GHAnimationDuration / 5;
         positionAnimation.timingFunction = [CAMediaTimingFunction functionWithControlPoints:0.45f :1.2f :0.75f :1.0f];
         positionAnimation.duration = GHAnimationDuration;
         positionAnimation.beginTime = [layer convertTime:CACurrentMediaTime() fromLayer:nil] + delayInSeconds;
-        [positionAnimation setValue:[NSNumber numberWithUnsignedInteger:index] forKey:isShowing ? GHShowAnimationID : GHDismissAnimationID];
+        [positionAnimation setValue:@(index) forKey:isShowing ? GHShowAnimationID : GHDismissAnimationID];
         positionAnimation.delegate = self;
 
         [layer addAnimation:positionAnimation forKey:@"riseAnimation"];
@@ -362,7 +362,7 @@ CGFloat const GHAnimationDelay = GHAnimationDuration / 5;
         NSUInteger index = [[anim valueForKey:GHShowAnimationID] unsignedIntegerValue];
         CALayer *layer = self.menuItems[index];
 
-        GHMenuItemLocation *location = [self.itemLocations objectAtIndex:index];
+        GHMenuItemLocation *location = (self.itemLocations)[index];
         CGFloat toAlpha = 1.0;
 
         layer.position = location.position;

@@ -14,14 +14,14 @@
 
 @implementation SelectorTableViewController
 
-- (id)initWithDataSource:(NSArray *)dataSource defaultValue:(NSString *)value {
+- (instancetype)initWithDataSource:(NSArray *)dataSource defaultValue:(NSString *)value {
     self = [SelectorTableViewController new];
     self.dataSource = dataSource;
     self.selectedIndex = [self.dataSource indexOfObject:value];
     return self;
 }
 
-- (id)init {
+- (instancetype)init {
     self = [super init];
 
     self.selectedIndex = IDNoSelection;
@@ -29,7 +29,7 @@
     return self;
 }
 
-- (id)initWithStyle:(UITableViewStyle)style {
+- (instancetype)initWithStyle:(UITableViewStyle)style {
     self = [super initWithStyle:style];
     if (self) {
         // Custom initialization

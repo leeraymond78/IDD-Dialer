@@ -7,8 +7,9 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "AddIDDViewController.h"
+#import "IDDDialer-Swift.h"
 #import "SelectorTableViewController.h"
+
 
 @interface SettingViewController : UIViewController <UITableViewDataSource, UITableViewDelegate, SelectorTableViewControllerDelegate, UISearchBarDelegate> {
     IBOutlet UISwitch *onAppCallSwitch;

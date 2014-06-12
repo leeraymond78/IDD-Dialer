@@ -18,7 +18,7 @@ static DiallingCodesHelper *_helper;
     return _helper;
 }
 
-- (id)init {
+- (instancetype)init {
     self.iddArray = [DiallingCodesHelper initialIDDs];
     self.countryCodeArray = [DiallingCodesHelper initialCountryCodes];
     self.disabledCountryCodeArray = [DiallingCodesHelper initialDisabledCountryCodes];
@@ -85,12 +85,12 @@ static DiallingCodesHelper *_helper;
 #pragma mark - init data
 
 + (NSMutableArray *)initialIDDs {
-    NSString *path = [[self documentsDirectory] stringByAppendingPathComponent:@"IDDData.plist"];
-    NSMutableArray *iddArray = [NSArray arrayWithContentsOfFile:path];;
+    NSString *path = [[self documentsDirectory] stringByAppendingPathComponent:@"idd_data"];
+    NSMutableArray *iddArray = [NSMutableArray arrayWithContentsOfFile:path];;
     //write default
     if (!iddArray || [iddArray count] == 0) {
         NSString *path = [[NSBundle mainBundle] pathForResource:
-                @"idd_data"                              ofType:@"plist"];
+                @"IDDData"                              ofType:@"plist"];
 
         iddArray = [[NSMutableArray alloc] initWithContentsOfFile:path];
     }
@@ -99,13 +99,13 @@ static DiallingCodesHelper *_helper;
 }
 
 + (NSMutableArray *)initialCountryCodes {
-    NSString *path = [[self documentsDirectory] stringByAppendingPathComponent:@"CountryCodeData.plist"];
+    NSString *path = [[self documentsDirectory] stringByAppendingPathComponent:@"countryCode_data"];
     NSMutableArray *countryArray = [NSMutableArray arrayWithContentsOfFile:path];
 
     //write default
     if (!countryArray || [countryArray count] == 0) {
         path = [[NSBundle mainBundle] pathForResource:
-                @"countryCode_data"            ofType:@"plist"];
+                @"CountryCodeData"            ofType:@"plist"];
         countryArray = [[NSMutableArray alloc] initWithContentsOfFile:path];
     }
     NSLog(@"INIT: enabled country = %lu", (unsigned long) countryArray.count);
@@ -191,7 +191,7 @@ static DiallingCodesHelper *_helper;
 
 + (NSString *)documentsDirectory {
     NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
-    NSString *documentsDirectory = [paths objectAtIndex:0];
+    NSString *documentsDirectory = paths[0];
     return documentsDirectory;
 }
 
