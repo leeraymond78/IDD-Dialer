@@ -81,7 +81,7 @@
     }
     NSString *buildNumber = [[NSBundle mainBundle] infoDictionary][@"CFBundleShortVersionString"];
     NSString * appVersion= [[NSBundle mainBundle] infoDictionary][(NSString *) kCFBundleVersionKey];
-    [self.aboutView setText:[NSString stringWithFormat:@"\n\n\n \
+    [self.aboutView setText:[NSString stringWithFormat:@"\n\n\n\n \
                              IDD Dialer\
                              Developed by Raymond Lee\
                              Version:%@\
@@ -149,23 +149,24 @@
     [UIView setAnimationTransition:trans forView:[self.view window] cache:YES];
     [self dismissViewControllerAnimated:NO completion:nil];
     [UIView commitAnimations];
-
 }
 
 - (void)updatePlits {
-    NSString *path = [[DiallingCodesHelper documentsDirectory] stringByAppendingPathComponent:@"IDDData.plist"];
+    NSLog(@"About to update plists");
+    NSString *path = [[DiallingCodesHelper documentsDirectory] stringByAppendingPathComponent:@"idd_record.plist"];
     @synchronized (idds) {
         [idds writeToFile:path atomically:YES];
     }
-    path = [[DiallingCodesHelper documentsDirectory] stringByAppendingPathComponent:@"CountryCodeData.plist"];
+    path = [[DiallingCodesHelper documentsDirectory] stringByAppendingPathComponent:@"cc_record.plist"];
     @synchronized (countries) {
         [countries writeToFile:path atomically:YES];
     }
-    path = [[DiallingCodesHelper documentsDirectory] stringByAppendingPathComponent:@"DisabledCountryCodeData.plist"];
+    path = [[DiallingCodesHelper documentsDirectory] stringByAppendingPathComponent:@"dcc_record.plist"];
     @synchronized (disabledCountries) {
         [disabledCountries sortUsingSelector:@selector(compare:)];
         [disabledCountries writeToFile:path atomically:YES];
     }
+    NSLog(@"all plists updated");
 }
 
 #pragma mark - delegates

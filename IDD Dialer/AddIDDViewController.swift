@@ -46,11 +46,8 @@ class AddIDDViewController: UIViewController {
     
     @IBAction func hideAndBack(AnyObject){
         if(!iddTF.text.isEmpty){
-            let infoDict = [
-                "IDD":iddTF.text,
-                "IDD00":String(with00Siwtch.on)
-            ]
-            NSNotificationCenter.defaultCenter().postNotificationName("AddIDDDone", object:nil, userInfo:infoDict)
+            let iddRecord = IDDRecord(iddCode: iddTF.text, with00: with00Siwtch.on)
+            NSNotificationCenter.defaultCenter().postNotificationName("AddIDDDone", object:nil, userInfo:["IDDRecord":iddRecord])
         }
         iddTF.resignFirstResponder()
         iddTF.text=""

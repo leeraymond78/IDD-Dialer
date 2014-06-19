@@ -123,7 +123,7 @@
 //        [keyBtn setReversesTitleShadowWhenHighlighted:YES];
         [keyBtn setTag:index];
         id keyTitle;
-        NSString * subTitle = detialedSubDict[[NSString stringWithFormat:@"%d", index]] ;
+        NSString * subTitle = detialedSubDict[[NSString stringWithFormat:@"%ld", (long)index]] ;
         if (index < 10) {
             keyTitle = @(index);
         } else if (index == 10) {

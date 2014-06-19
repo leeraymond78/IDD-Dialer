@@ -7,21 +7,22 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "IDDDialer-Swift.h"
+//#import "IDDDialer-Swift.h"
+#import "AddIDDViewController.h"
 #import "SelectorTableViewController.h"
 
 
 @interface SettingViewController : UIViewController <UITableViewDataSource, UITableViewDelegate, SelectorTableViewControllerDelegate, UISearchBarDelegate> {
-    IBOutlet UISwitch *onAppCallSwitch;
+    
     BOOL isEditing;
-
+    IBOutlet UISwitch *onAppCallSwitch;
     IBOutlet UIButton *backBtn;
     IBOutlet UISearchBar *searchBar;
 
-    AddIDDViewController *addIDDVC;
-
     NSArray *sectionViewArray;
     NSArray *centerViewArray;
+    
+    AddIDDViewController *addIDDVC;
     SelectorTableViewController *preferenceViewController;
 }
 

@@ -7,12 +7,15 @@
 //
 
 #import "MainViewController.h"
-#import "SettingViewController.h"
-#import "DiallingCodesHelper.h"
+//#import "SettingViewController.h"
+//#import "DiallingCodesHelper.h"
 #import "IDNumPadView.h"
+#import "IDDDialer-Swift.h"
 
 #define BACKGROUND_CHANGE_INTERVAL 3
 
+#define BLog(formatString, ...) NSLog((@"%s " formatString), __PRETTY_FUNCTION__, ##__VA_ARGS__);
+#define isEmptyString(str) ((str == nil)|| [@"" isEqual:str])
 
 @interface MainViewController ()
 @property(nonatomic, strong) WYPopoverController *iddPopoverController;
@@ -27,6 +30,7 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+
     // Do any additional setup after loading the view, typically from a nib.
     self.brightnessDetector = [ASCScreenBrightnessDetector new];
     [self.brightnessDetector setDelegate:self];
@@ -59,6 +63,7 @@
     UILongPressGestureRecognizer *longPress = [[UILongPressGestureRecognizer alloc] initWithTarget:overlay action:@selector(longPressDetected:)];
     [self.callBtn addGestureRecognizer:longPress];
 
+    // the custom keyboard
 //    _numpadView = [[IDNumPadView alloc] initWithFrame:CGRectMake(0, 0, [[UIScreen mainScreen] bounds].size.width, 400)];
 //    [self.inputTF setInputView:_numpadView];
 //    [_numpadView setTextField:self.inputTF];
@@ -80,13 +85,13 @@
 - (void)reloadInitialData {
 
     NSMutableArray *iddValueArray = [NSMutableArray new];
-    for (NSDictionary *dict in idds) {
-        [iddValueArray addObject:dict[IDD]];
+    for (IDDRecord *iddObj in [[DiallingCodesHelper sharedHelperMethod] iddArray]) {
+        [iddValueArray addObject:iddObj.iddCode];
     }
     NSMutableArray *countryValueArray = [NSMutableArray new];
-    [DiallingCodesHelper countryNamesByCode];
-    for (NSString *code in countries) {
-        [countryValueArray addObject:[DiallingCodesHelper countryNameByCode:code]];
+//    [DiallingCodesHelper countryNamesByCode];
+    for (NSString *code in [[DiallingCodesHelper sharedHelperMethod] countryCodeArray]) {
+        [countryValueArray addObject:[[DiallingCodesHelper sharedHelperMethod] countryNameByCode:code]];
     }
     [self.iddSelectionViewController setPreferredContentSize:CGSizeMake(140, 0)];
     [self.countrySelectionViewController setPreferredContentSize:CGSizeMake(250, 0)];
@@ -99,14 +104,14 @@
     if (iddIndex == IDNoSelection ) {
         [self.iddBtn setTitle:@"IDD" forState:UIControlStateNormal];
     } else {
-        NSString *iddCode = idds[iddIndex][IDD];
+        NSString *iddCode = [[[DiallingCodesHelper sharedHelperMethod] iddArray][iddIndex] iddCode];
         [self.iddBtn setTitle:iddCode forState:UIControlStateNormal];
     }
     NSInteger ccIndex = self.countrySelectionViewController.selectedIndex;
     if (ccIndex == IDNoSelection) {
         [self.countryBtn setTitle:@"Country" forState:UIControlStateNormal];
     } else {
-        NSString *country = [DiallingCodesHelper countryNameByCode:countries[ccIndex]];
+        NSString *country = [[DiallingCodesHelper sharedHelperMethod] countryNameByCode:[[DiallingCodesHelper sharedHelperMethod] countryCodeArray][ccIndex]];
         [self.countryBtn setTitle:country forState:UIControlStateNormal];
     }
 }
@@ -297,10 +302,10 @@
 
     NSString *plain = [self plainNumberByPhone:phone];
     if (!isEmptyString(plain) && plain.length > 5) {
-        for (NSDictionary *iddObj in idds) {
-            NSString *idd = iddObj[IDD];
+        for (IDDRecord *iddObj in [[DiallingCodesHelper sharedHelperMethod] iddArray]) {
+            NSString *idd = iddObj.iddCode;
             if ([[plain substringToIndex:5] rangeOfString:idd].location != NSNotFound) {
-                index = [idds indexOfObject:iddObj];
+                index = [[[DiallingCodesHelper sharedHelperMethod] iddArray] indexOfObject:iddObj];
                 break;
             }
         }
@@ -313,10 +318,10 @@
     NSInteger index = -1;
 
     if (preference) {
-        for (NSDictionary *iddObj in idds) {
-            NSString *idd = iddObj[IDD];
+        for (IDDRecord *iddObj in [[DiallingCodesHelper sharedHelperMethod] iddArray]) {
+            NSString *idd = iddObj.iddCode;
             if ([idd isEqualToString:preference]) {
-                index = [idds indexOfObject:iddObj];
+                index = [[[DiallingCodesHelper sharedHelperMethod] iddArray] indexOfObject:iddObj];
                 break;
             }
         }
@@ -326,7 +331,7 @@
 }
 
 - (NSInteger)iddIndexByCode:(NSString *)code {
-    return [self iddIndexByPreference:[DiallingCodesHelper preferenceByCode:code]];
+    return [self iddIndexByPreference:[[DiallingCodesHelper sharedHelperMethod] preferenceByCode:code]];
 }
 
 - (NSInteger)countryIndexByPhone:(NSString *)phone {
@@ -336,13 +341,13 @@
         NSString *plain = [self noZeroNumberByPhone:[self plainNumberByPhone:noIddPhone]];
 
         if (!isEmptyString(plain) && plain.length > 3) {
-            for (NSString *code in countries) {
-                NSString *diallingCode = [DiallingCodesHelper diallingCodeByCode:code];
+            for (NSString *code in [[DiallingCodesHelper sharedHelperMethod] countryCodeArray]) {
+                NSString *diallingCode = [[DiallingCodesHelper sharedHelperMethod] diallingCodeByCode:code];
                 BOOL isInternational = [self isInternationalByPhone:phone];
                 if (isInternational) {
                     NSRange range = NSMakeRange(0, 3);
                     if ([[plain substringWithRange:range] rangeOfString:diallingCode].location == 0) {
-                        index = [countries indexOfObject:code];
+                        index = [[[DiallingCodesHelper sharedHelperMethod] countryCodeArray] indexOfObject:code];
                         break;
                     }
                 }
@@ -357,7 +362,7 @@
     NSString *result = @"";
     NSInteger iddIndex = [self iddIndexByPhone:phone];
     if (iddIndex != -1) {
-        NSString *idd = idds[iddIndex][IDD];
+        NSString *idd = [((IDDRecord*)[[DiallingCodesHelper sharedHelperMethod] iddArray][iddIndex]) iddCode];
         BLog(@"idd found = %@", idd);
         result = [phone stringByReplacingOccurrencesOfString:idd withString:@""];
     } else {
@@ -382,7 +387,7 @@
 
     // remove country code
     if (countryIndex != -1) {
-        NSString *country = [DiallingCodesHelper diallingCodeByCode:countries[countryIndex]];
+        NSString *country = [[DiallingCodesHelper sharedHelperMethod] diallingCodeByCode:[[DiallingCodesHelper sharedHelperMethod] countryCodeArray][countryIndex]];
         BLog(@"country found = %@", country);
         result = [result stringByReplacingOccurrencesOfString:country withString:@""];
     }
@@ -410,8 +415,12 @@
     if (!isEmptyString(number)) {
         NSString *doubleZero = @"";
         if (!isEmptyString(idd)) {
-            id temp00Zero = [self getObjectFromArrayWithValue:idd Key:IDD wantedKey:IDD_WITH00 array:idds];
-            BOOL withDoubleZero = [temp00Zero boolValue];
+            BOOL withDoubleZero = NO;
+            for (IDDRecord * iddObj in [[DiallingCodesHelper sharedHelperMethod] iddArray]) {
+                if (iddObj.iddCode == idd){
+                    withDoubleZero = iddObj.with00;
+                }
+            }
             doubleZero = withDoubleZero ? @"00" : @"";
             outIdd = [idd stringByAppendingString:divider];
         } else {
@@ -439,7 +448,7 @@
     if (isReload) {
         indexCC = [self countryIndexByPhone:self.inputTF.text];
         if (indexCC != -1) {
-            indexIDD = [self iddIndexByCode:countries[indexCC]];
+            indexIDD = [self iddIndexByCode:[[DiallingCodesHelper sharedHelperMethod] countryCodeArray][indexCC]];
         }
         if (indexCC == -1 || indexIDD == -1) {
             indexIDD = [self iddIndexByPhone:self.inputTF.text];
@@ -458,10 +467,10 @@
     indexIDD = self.iddSelectionViewController.selectedIndex;
     indexCC = self.countrySelectionViewController.selectedIndex;
     if (indexIDD != -1) {
-        idd = idds[indexIDD][IDD];
+        idd = ((IDDRecord*)[[DiallingCodesHelper sharedHelperMethod] iddArray][indexIDD]).iddCode;
     }
     if (indexCC != -1) {
-        country = [DiallingCodesHelper diallingCodeByCode:countries[indexCC]];
+        country = [DiallingCodesHelper diallingCodeByCode:[DiallingCodesHelper sharedHelperMethod].countryCodeArray[indexCC]];
     }
     NSString *result = [self formattedPhoneByIdd:idd country:country number:number];
     BLog(@"Final Output = %@", result);

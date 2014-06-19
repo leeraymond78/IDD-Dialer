@@ -21,7 +21,7 @@ static DiallingCodesHelper *_helper;
 - (instancetype)init {
     self.iddArray = [DiallingCodesHelper initialIDDs];
     self.countryCodeArray = [DiallingCodesHelper initialCountryCodes];
-    self.disabledCountryCodeArray = [DiallingCodesHelper initialDisabledCountryCodes];
+    self.disabledCountryCodeArray = [DiallingCodesHelper initialDisabledCountryCodes:self.countryCodeArray];
     self.preferenceDict = [DiallingCodesHelper initialPreference];
     return [super init];
 }
@@ -75,7 +75,7 @@ static DiallingCodesHelper *_helper;
     static NSDictionary *_diallingCodesByCodeDict;
     if (!_diallingCodesByCodeDict) {
         NSString *path = [[NSBundle mainBundle] pathForResource:
-                @"DiallingCodes"                         ofType:@"plist"];
+                          @"DiallingCodes"                         ofType:@"plist"];
         NSDictionary *diallingCodesDict = [[NSDictionary alloc] initWithContentsOfFile:path];
         _diallingCodesByCodeDict = [diallingCodesDict copy];
     }
@@ -85,38 +85,44 @@ static DiallingCodesHelper *_helper;
 #pragma mark - init data
 
 + (NSMutableArray *)initialIDDs {
-    NSString *path = [[self documentsDirectory] stringByAppendingPathComponent:@"idd_data"];
+    static NSString *fileName = @"idd_record.plist";
+    NSString *path = [[self documentsDirectory] stringByAppendingPathComponent:fileName];
     NSMutableArray *iddArray = [NSMutableArray arrayWithContentsOfFile:path];;
     //write default
     if (!iddArray || [iddArray count] == 0) {
         NSString *path = [[NSBundle mainBundle] pathForResource:
-                @"IDDData"                              ofType:@"plist"];
-
+                          @"IDDData"                              ofType:@"plist"];
+        
         iddArray = [[NSMutableArray alloc] initWithContentsOfFile:path];
+        NSLog(@"INIT: %@ not exsist, creat default with size = %lu", fileName, iddArray.count);
+    }else{
+        NSLog(@"INIT: idd code = %lu", (unsigned long) iddArray.count);
     }
-    NSLog(@"INIT: idd = %lu", (unsigned long) iddArray.count);
     return iddArray;
 }
 
 + (NSMutableArray *)initialCountryCodes {
-    NSString *path = [[self documentsDirectory] stringByAppendingPathComponent:@"countryCode_data"];
+    static NSString *fileName = @"cc_record.plist";
+    NSString *path = [[self documentsDirectory] stringByAppendingPathComponent:fileName];
     NSMutableArray *countryArray = [NSMutableArray arrayWithContentsOfFile:path];
-
+    
     //write default
     if (!countryArray || [countryArray count] == 0) {
         path = [[NSBundle mainBundle] pathForResource:
                 @"CountryCodeData"            ofType:@"plist"];
         countryArray = [[NSMutableArray alloc] initWithContentsOfFile:path];
+        NSLog(@"INIT: %@ not exsist, creat default with size = %lu",fileName, countryArray.count);
+    }else{
+        NSLog(@"INIT: enabled country = %lu", (unsigned long) countryArray.count);
     }
-    NSLog(@"INIT: enabled country = %lu", (unsigned long) countryArray.count);
     return countryArray;
 }
 
-+ (NSMutableArray *)initialDisabledCountryCodes {
-    NSString *path = [[self documentsDirectory] stringByAppendingPathComponent:@"DisabledCountryCodeData.plist"];
++ (NSMutableArray *)initialDisabledCountryCodes:(NSArray*) countryArray {
+    static NSString *fileName = @"dcc_record.plist";
+    NSString *path = [[self documentsDirectory] stringByAppendingPathComponent:fileName];
     NSMutableArray *dCountryArray = [NSMutableArray arrayWithContentsOfFile:path];
-
-    NSMutableArray *countryArray = [self initialCountryCodes];
+    
     if (!dCountryArray || [dCountryArray count] == 0) {
         dCountryArray = [NSMutableArray new];
         for (NSString *code in [self countryCodes]) {
@@ -124,18 +130,23 @@ static DiallingCodesHelper *_helper;
                 [dCountryArray addObject:code];
             }
         }
+        NSLog(@"INIT: %@ not exsist, creat default with size = %lu",fileName, dCountryArray.count);
+    }else{
+        NSLog(@"INIT: disabled country = %lu", (unsigned long) dCountryArray.count);
     }
-    NSLog(@"INIT: disabled country = %lu", (unsigned long) dCountryArray.count);
     return dCountryArray;
 }
 
 + (NSMutableDictionary *)initialPreference {
-    NSString *path = [[self documentsDirectory] stringByAppendingPathComponent:@"Preference.plist"];
+    static NSString *fileName = @"preference.plist";
+    NSString *path = [[self documentsDirectory] stringByAppendingPathComponent:fileName];
     NSMutableDictionary *preDict = [NSMutableDictionary dictionaryWithContentsOfFile:path];
     if (!preDict) {
         preDict = [NSMutableDictionary dictionaryWithCapacity:0];
+        NSLog(@"INIT: %@ not exsist",fileName);
+    }else{
+        NSLog(@"INIT: preference = %lu", (unsigned long) preDict.count);
     }
-    NSLog(@"INIT: preference = %lu", (unsigned long) preDict.count);
     return preDict;
 }
 
@@ -164,7 +175,7 @@ static DiallingCodesHelper *_helper;
                 return preference;
             } else {
                 [self setPreference:nil code:code];
-
+                
             }
         }
     }
@@ -179,11 +190,12 @@ static DiallingCodesHelper *_helper;
             } else {
                 [preferenceIDDs removeObjectForKey:code];
             }
-            NSString *path = [[self documentsDirectory] stringByAppendingPathComponent:@"Preference.plist"];
+            NSString *path = [[self documentsDirectory] stringByAppendingPathComponent:@"preference.plist"];
             [preferenceIDDs writeToFile:path atomically:YES];
+            NSLog(@"preference saved");
         }
     } else {
-        NSLog(@"code is nil");
+        BLog(@"code is nil");
     }
 }
 

@@ -33,14 +33,6 @@
 
 + (NSDictionary *)diallingCodesByCode;
 
-+ (NSMutableArray *)initialIDDs;
-
-+ (NSMutableArray *)initialCountryCodes;
-
-+ (NSMutableArray *)initialDisabledCountryCodes;
-
-+ (NSMutableDictionary *)initialPreference;
-
 + (NSString *)countryNameByCode:(NSString *)code;
 
 + (NSString *)diallingCodeByCode:(NSString *)code;
