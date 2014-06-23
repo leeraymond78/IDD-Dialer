@@ -82,7 +82,7 @@
     NSString *buildNumber = [[NSBundle mainBundle] infoDictionary][@"CFBundleShortVersionString"];
     NSString * appVersion= [[NSBundle mainBundle] infoDictionary][(NSString *) kCFBundleVersionKey];
     [self.aboutView setText:[NSString stringWithFormat:@"\n\n\n\n \
-                             IDD Dialer\
+                             IDD Dialler\
                              Developed by Raymond Lee\
                              Version:%@\
                              Build:%@", appVersion, buildNumber]];

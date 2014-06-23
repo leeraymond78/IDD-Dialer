@@ -83,21 +83,21 @@
 		1D663AB918D1846700B3B537 /* IDNumPadView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = IDNumPadView.h; sourceTree = "<group>"; };
 		1D663ABA18D1846700B3B537 /* IDNumPadView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = IDNumPadView.m; sourceTree = "<group>"; };
 		1D6B4B8718A9DA940098ADDB /* XCTest.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = XCTest.framework; path = Library/Frameworks/XCTest.framework; sourceTree = DEVELOPER_DIR; };
-		1D6B4B8D18A9DACE0098ADDB /* IDD Dialer Tests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "IDD Dialer Tests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
-		1D6B4B9318A9DACE0098ADDB /* IDD Dialer Tests-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "IDD Dialer Tests-Info.plist"; sourceTree = "<group>"; };
+		1D6B4B8D18A9DACE0098ADDB /* IDD Dialler Tests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "IDD Dialler Tests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
+		1D6B4B9318A9DACE0098ADDB /* IDD Dialler Tests-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "IDD Dialler Tests-Info.plist"; sourceTree = "<group>"; };
 		1D6B4B9518A9DACE0098ADDB /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		1D6B4B9718A9DACE0098ADDB /* IDD_Dialer_Tests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = IDD_Dialer_Tests.m; sourceTree = "<group>"; };
-		1D6B4B9918A9DACE0098ADDB /* IDD Dialer Tests-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "IDD Dialer Tests-Prefix.pch"; sourceTree = "<group>"; };
+		1D6B4B9918A9DACE0098ADDB /* IDD Dialler Tests-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "IDD Dialler Tests-Prefix.pch"; sourceTree = "<group>"; };
 		1DD83895192F427700589C3E /* MRoundedButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MRoundedButton.h; sourceTree = "<group>"; };
 		1DD83896192F427700589C3E /* MRoundedButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MRoundedButton.m; sourceTree = "<group>"; };
-		3D592E4B177DFD9800C82F74 /* IDD Dialer.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "IDD Dialer.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		3D592E4B177DFD9800C82F74 /* IDD Dialler.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "IDD Dialler.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		3D592E4E177DFD9800C82F74 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		3D592E50177DFD9800C82F74 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		3D592E52177DFD9800C82F74 /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
-		3D592E56177DFD9800C82F74 /* IDD Dialer-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "IDD Dialer-Info.plist"; sourceTree = "<group>"; };
+		3D592E56177DFD9800C82F74 /* IDD Dialler-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "IDD Dialler-Info.plist"; sourceTree = "<group>"; };
 		3D592E58177DFD9800C82F74 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		3D592E5A177DFD9800C82F74 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
-		3D592E5C177DFD9800C82F74 /* IDD Dialer-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "IDD Dialer-Prefix.pch"; sourceTree = "<group>"; };
+		3D592E5C177DFD9800C82F74 /* IDD Dialler-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "IDD Dialler-Prefix.pch"; sourceTree = "<group>"; };
 		3D592E5D177DFD9800C82F74 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
 		3D592E5E177DFD9800C82F74 /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
 		3D592E60177DFD9800C82F74 /* Default.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Default.png; sourceTree = "<group>"; };
@@ -214,9 +214,9 @@
 		1D6B4B9218A9DACE0098ADDB /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
-				1D6B4B9318A9DACE0098ADDB /* IDD Dialer Tests-Info.plist */,
+				1D6B4B9318A9DACE0098ADDB /* IDD Dialler Tests-Info.plist */,
 				1D6B4B9418A9DACE0098ADDB /* InfoPlist.strings */,
-				1D6B4B9918A9DACE0098ADDB /* IDD Dialer Tests-Prefix.pch */,
+				1D6B4B9918A9DACE0098ADDB /* IDD Dialler Tests-Prefix.pch */,
 			);
 			name = "Supporting Files";
 			sourceTree = "<group>";
@@ -247,8 +247,8 @@
 		3D592E4C177DFD9800C82F74 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				3D592E4B177DFD9800C82F74 /* IDD Dialer.app */,
-				1D6B4B8D18A9DACE0098ADDB /* IDD Dialer Tests.xctest */,
+				3D592E4B177DFD9800C82F74 /* IDD Dialler.app */,
+				1D6B4B8D18A9DACE0098ADDB /* IDD Dialler Tests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -301,10 +301,10 @@
 				1D56711518C5BCDA00412DC5 /* DiallingCodes.plist */,
 				3D6C52F5177EB89500203EB6 /* CountryCodeData.plist */,
 				3D6C52F6177EB89500203EB6 /* IDDData.plist */,
-				3D592E56177DFD9800C82F74 /* IDD Dialer-Info.plist */,
+				3D592E56177DFD9800C82F74 /* IDD Dialler-Info.plist */,
 				3D592E57177DFD9800C82F74 /* InfoPlist.strings */,
 				3D592E5A177DFD9800C82F74 /* main.m */,
-				3D592E5C177DFD9800C82F74 /* IDD Dialer-Prefix.pch */,
+				3D592E5C177DFD9800C82F74 /* IDD Dialler-Prefix.pch */,
 				3D592E60177DFD9800C82F74 /* Default.png */,
 				3D592E62177DFD9800C82F74 /* Default@2x.png */,
 				3D592E64177DFD9800C82F74 /* Default-568h@2x.png */,
@@ -315,9 +315,9 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		1D6B4B8C18A9DACE0098ADDB /* IDD Dialer Tests */ = {
+		1D6B4B8C18A9DACE0098ADDB /* IDD Dialler Tests */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 1D6B4B9C18A9DACE0098ADDB /* Build configuration list for PBXNativeTarget "IDD Dialer Tests" */;
+			buildConfigurationList = 1D6B4B9C18A9DACE0098ADDB /* Build configuration list for PBXNativeTarget "IDD Dialler Tests" */;
 			buildPhases = (
 				1D6B4B8918A9DACE0098ADDB /* Sources */,
 				1D6B4B8A18A9DACE0098ADDB /* Frameworks */,
@@ -328,14 +328,14 @@
 			dependencies = (
 				1D6B4B9B18A9DACE0098ADDB /* PBXTargetDependency */,
 			);
-			name = "IDD Dialer Tests";
+			name = "IDD Dialler Tests";
 			productName = "IDD Dialer Tests";
-			productReference = 1D6B4B8D18A9DACE0098ADDB /* IDD Dialer Tests.xctest */;
+			productReference = 1D6B4B8D18A9DACE0098ADDB /* IDD Dialler Tests.xctest */;
 			productType = "com.apple.product-type.bundle.unit-test";
 		};
-		3D592E4A177DFD9800C82F74 /* IDD Dialer */ = {
+		3D592E4A177DFD9800C82F74 /* IDD Dialler */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 3D592E6E177DFD9900C82F74 /* Build configuration list for PBXNativeTarget "IDD Dialer" */;
+			buildConfigurationList = 3D592E6E177DFD9900C82F74 /* Build configuration list for PBXNativeTarget "IDD Dialler" */;
 			buildPhases = (
 				3D592E47177DFD9800C82F74 /* Sources */,
 				3D592E48177DFD9800C82F74 /* Frameworks */,
@@ -346,9 +346,9 @@
 			);
 			dependencies = (
 			);
-			name = "IDD Dialer";
+			name = "IDD Dialler";
 			productName = "IDD Dialer";
-			productReference = 3D592E4B177DFD9800C82F74 /* IDD Dialer.app */;
+			productReference = 3D592E4B177DFD9800C82F74 /* IDD Dialler.app */;
 			productType = "com.apple.product-type.application";
 		};
 /* End PBXNativeTarget section */
@@ -363,9 +363,12 @@
 					1D6B4B8C18A9DACE0098ADDB = {
 						TestTargetID = 3D592E4A177DFD9800C82F74;
 					};
+					3D592E4A177DFD9800C82F74 = {
+						DevelopmentTeam = 6RQYU9JH5K;
+					};
 				};
 			};
-			buildConfigurationList = 3D592E46177DFD9800C82F74 /* Build configuration list for PBXProject "IDD Dialer" */;
+			buildConfigurationList = 3D592E46177DFD9800C82F74 /* Build configuration list for PBXProject "IDD Dialler" */;
 			compatibilityVersion = "Xcode 3.2";
 			developmentRegion = English;
 			hasScannedForEncodings = 0;
@@ -377,8 +380,8 @@
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				3D592E4A177DFD9800C82F74 /* IDD Dialer */,
-				1D6B4B8C18A9DACE0098ADDB /* IDD Dialer Tests */,
+				3D592E4A177DFD9800C82F74 /* IDD Dialler */,
+				1D6B4B8C18A9DACE0098ADDB /* IDD Dialler Tests */,
 			);
 		};
 /* End PBXProject section */
@@ -467,7 +470,7 @@
 /* Begin PBXTargetDependency section */
 		1D6B4B9B18A9DACE0098ADDB /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			target = 3D592E4A177DFD9800C82F74 /* IDD Dialer */;
+			target = 3D592E4A177DFD9800C82F74 /* IDD Dialler */;
 			targetProxy = 1D6B4B9A18A9DACE0098ADDB /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
@@ -514,7 +517,7 @@
 					"$(DEVELOPER_FRAMEWORKS_DIR)",
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = "IDD Dialer Tests/IDD Dialer Tests-Prefix.pch";
+				GCC_PREFIX_HEADER = "IDD Dialer Tests/IDD Dialler Tests-Prefix.pch";
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"DEBUG=1",
 					"$(inherited)",
@@ -523,9 +526,9 @@
 				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
 				GCC_WARN_UNDECLARED_SELECTOR = YES;
 				GCC_WARN_UNUSED_FUNCTION = YES;
-				INFOPLIST_FILE = "IDD Dialer Tests/IDD Dialer Tests-Info.plist";
+				INFOPLIST_FILE = "IDD Dialer Tests/IDD Dialler Tests-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
-				PRODUCT_NAME = "$(TARGET_NAME)";
+				PRODUCT_NAME = "IDD Dialler Tests";
 				TEST_HOST = "$(BUNDLE_LOADER)";
 				WRAPPER_EXTENSION = xctest;
 			};
@@ -546,14 +549,14 @@
 					"$(DEVELOPER_FRAMEWORKS_DIR)",
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = "IDD Dialer Tests/IDD Dialer Tests-Prefix.pch";
+				GCC_PREFIX_HEADER = "IDD Dialer Tests/IDD Dialler Tests-Prefix.pch";
 				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
 				GCC_WARN_UNDECLARED_SELECTOR = YES;
 				GCC_WARN_UNUSED_FUNCTION = YES;
-				INFOPLIST_FILE = "IDD Dialer Tests/IDD Dialer Tests-Info.plist";
+				INFOPLIST_FILE = "IDD Dialer Tests/IDD Dialler Tests-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
-				PRODUCT_NAME = "$(TARGET_NAME)";
+				PRODUCT_NAME = "IDD Dialler Tests";
 				TEST_HOST = "$(BUNDLE_LOADER)";
 				WRAPPER_EXTENSION = xctest;
 			};
@@ -620,17 +623,18 @@
 			buildSettings = {
 				CLANG_ENABLE_OBJC_ARC = YES;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				DEFINES_MODULE = YES;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(DEVELOPER_FRAMEWORKS_DIR)",
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = "IDD Dialer/IDD Dialer-Prefix.pch";
-				INFOPLIST_FILE = "IDD Dialer/IDD Dialer-Info.plist";
+				GCC_PREFIX_HEADER = "IDD Dialer/IDD Dialler-Prefix.pch";
+				INFOPLIST_FILE = "IDD Dialer/IDD Dialler-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
 				PRODUCT_MODULE_NAME = IDDDailer;
-				PRODUCT_NAME = "$(TARGET_NAME)";
+				PRODUCT_NAME = "IDD Dialler";
 				PROVISIONING_PROFILE = "";
 				WRAPPER_EXTENSION = app;
 			};
@@ -641,18 +645,19 @@
 			buildSettings = {
 				CLANG_ENABLE_OBJC_ARC = YES;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				DEFINES_MODULE = YES;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(DEVELOPER_FRAMEWORKS_DIR)",
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = "IDD Dialer/IDD Dialer-Prefix.pch";
-				INFOPLIST_FILE = "IDD Dialer/IDD Dialer-Info.plist";
+				GCC_PREFIX_HEADER = "IDD Dialer/IDD Dialler-Prefix.pch";
+				INFOPLIST_FILE = "IDD Dialer/IDD Dialler-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
 				PRODUCT_MODULE_NAME = IDDDailer;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "";
+				PRODUCT_NAME = "IDD Dialler";
+				PROVISIONING_PROFILE = "D6BF2DB7-8C5B-4552-8090-F3969C3FB47E";
 				WRAPPER_EXTENSION = app;
 			};
 			name = Release;
@@ -660,7 +665,7 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		1D6B4B9C18A9DACE0098ADDB /* Build configuration list for PBXNativeTarget "IDD Dialer Tests" */ = {
+		1D6B4B9C18A9DACE0098ADDB /* Build configuration list for PBXNativeTarget "IDD Dialler Tests" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				1D6B4B9D18A9DACE0098ADDB /* Debug */,
@@ -669,7 +674,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		3D592E46177DFD9800C82F74 /* Build configuration list for PBXProject "IDD Dialer" */ = {
+		3D592E46177DFD9800C82F74 /* Build configuration list for PBXProject "IDD Dialler" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				3D592E6C177DFD9900C82F74 /* Debug */,
@@ -678,7 +683,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		3D592E6E177DFD9900C82F74 /* Build configuration list for PBXNativeTarget "IDD Dialer" */ = {
+		3D592E6E177DFD9900C82F74 /* Build configuration list for PBXNativeTarget "IDD Dialler" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				3D592E6F177DFD9900C82F74 /* Debug */,

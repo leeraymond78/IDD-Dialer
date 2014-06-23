@@ -2,6 +2,6 @@
 <Workspace
    version = "1.0">
    <FileRef
-      location = "self:IDD Dialer.xcodeproj">
+      location = "self:IDD Dialler.xcodeproj">
    </FileRef>
 </Workspace>

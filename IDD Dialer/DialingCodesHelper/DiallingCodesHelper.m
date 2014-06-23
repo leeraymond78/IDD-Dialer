@@ -49,8 +49,7 @@ static DiallingCodesHelper *_helper;
     if (!_countryNamesByCode) {
         NSMutableDictionary *namesByCode = [NSMutableDictionary dictionary];
         for (NSString *code in [NSLocale ISOCountryCodes]) {
-            NSString *identifier = [NSLocale localeIdentifierFromComponents:@{NSLocaleCountryCode : code}];
-            NSString *countryName = [[NSLocale localeWithLocaleIdentifier:[NSLocale preferredLanguages][0]] displayNameForKey:NSLocaleIdentifier value:identifier];
+            NSString *countryName = [[NSLocale localeWithLocaleIdentifier:[NSLocale preferredLanguages][0]] displayNameForKey:NSLocaleCountryCode value:code];
             if (countryName) namesByCode[code] = countryName;
         }
         _countryNamesByCode = [namesByCode copy];
