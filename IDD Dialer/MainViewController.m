@@ -621,11 +621,7 @@
     return YES;
 }
 
-- (BOOL)peoplePickerNavigationController:
-        (ABPeoplePickerNavigationController *)peoplePicker
-      shouldContinueAfterSelectingPerson:(ABRecordRef)person
-                                property:(ABPropertyID)property
-                              identifier:(ABMultiValueIdentifier)identifier {
+-(void)peoplePickerNavigationController:(ABPeoplePickerNavigationController *)peoplePicker didSelectPerson:(ABRecordRef)person property:(ABPropertyID)property identifier:(ABMultiValueIdentifier)identifier{
     if (property == kABPersonPhoneProperty) {
         ABMultiValueRef numbers = ABRecordCopyValue(person, property);
         NSString *targetNumber = (__bridge NSString *) ABMultiValueCopyValueAtIndex(numbers, ABMultiValueGetIndexForIdentifier(numbers, identifier));
@@ -635,7 +631,6 @@
         BLog(@"get imported number from %@ with %@", firstname, targetNumber);
     }
     [self dismissViewControllerAnimated:YES completion:nil];
-    return NO;
 }
 
 - (BOOL)personViewController:(ABPersonViewController *)personViewController shouldPerformDefaultActionForPerson:(ABRecordRef)person property:(ABPropertyID)property identifier:(ABMultiValueIdentifier)identifier {
