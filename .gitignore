@@ -1,0 +1,10 @@
+
+*.xcuserstate
+
+*.xcscheme
+
+*.plist
+
+Resources/.DS_Store
+
+.DS_Store
