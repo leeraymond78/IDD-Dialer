@@ -68,6 +68,7 @@
             [centerView setBackgroundColor:[self colorForHeaderInSection:x]];
             [centerView setTextAlignment:NSTextAlignmentCenter];
             [[centerView layer] setCornerRadius:10];
+            centerView.clipsToBounds = YES;
             [centerView setFont:[UIFont fontWithName:@"HelveticaNeue-Light" size:12.f]];
             [centerView setTextColor:[UIColor whiteColor]];
             [centerView setText:[self tableView:self.tableView titleForHeaderInSection:x]];
